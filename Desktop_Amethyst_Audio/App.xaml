@@ -4,6 +4,11 @@
              xmlns:local="clr-namespace:Desktop_Amethyst_Audio"
              StartupUri="/Views/Windows/LayoutWindow.xaml">
     <Application.Resources>
-         
+         <ResourceDictionary>
+             <ResourceDictionary.MergedDictionaries>
+                 <ResourceDictionary Source="Resources/Themes/Themes.Dark.xaml" />
+                 <ResourceDictionary Source="Resources/Styles/Style.Button.xaml"/>
+             </ResourceDictionary.MergedDictionaries>
+         </ResourceDictionary>
     </Application.Resources>
 </Application>

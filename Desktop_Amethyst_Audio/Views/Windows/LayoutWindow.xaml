@@ -3,8 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:l="clr-namespace:Desktop_Amethyst_Audio.Resources.Locales"
         mc:Ignorable="d" Title="Amethyst Audio" 
-        Height="1080" Width="1920">
+        Background="{DynamicResource SurfaceBaseBrush}"
+        Height="1080" Width="1920"
+        MinHeight="600" MinWidth="800">
     <!--xmlns:vm="clr-namespace:Desktop_Amethyst_Audio.ViewModels"
         xmlns:uc="clr-namespace:Desktop_Amethyst_Audio.Views.UserControls"-->
     <Grid>
@@ -19,8 +22,7 @@
         </Grid.RowDefinitions>
         
         <StackPanel x:Name="SideBar" Orientation="Vertical"
-                    Grid.Row="0" Grid.Column="0" 
-                    Background="#2F2D2D">
+                    Grid.Row="0" Grid.Column="0">
             <Grid Margin="10 10 10 5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -39,52 +41,66 @@
                 </StackPanel>
             </Grid>
             
-            <Button Margin="10 5" Padding="10" Background="#424141">
-                <Viewbox Stretch="Uniform" StretchDirection="DownOnly" MaxHeight="40">
-                    <TextBlock Text="Поиск" FontSize="28" Foreground="White" FontFamily="Inter"/>
-                </Viewbox>
-            </Button>
+            <Border Background="{DynamicResource SurfaceContainerBrush}"
+                     Margin="10 5" Padding="10" CornerRadius="10">
+                <Button x:Name="SearchButton" Content="Поиск" 
+                        Background="Transparent" Foreground="{DynamicResource ContentPrimaryBrush}"
+                        BorderBrush="Transparent" FontSize="28" FontFamily="Inter"/>
+            </Border>
             
-            <Button Margin="10 5" Padding="10" Background="#424141">
-                <Viewbox Stretch="Uniform" StretchDirection="DownOnly" MaxHeight="40">
-                    <TextBlock Text="Моя пластинка" FontSize="28" Foreground="White" FontFamily="Inter"/>
-                </Viewbox>
-            </Button>
+            <Border Background="{DynamicResource SurfaceContainerBrush}"
+                    Margin="10 5" Padding="10" CornerRadius="10">
+                <Button x:Name="ResonanceButton" Content="Резонанс" 
+                        Background="Transparent" Foreground="{DynamicResource ContentPrimaryBrush}"
+                        BorderBrush="Transparent" FontSize="28" FontFamily="Inter"/>
+            </Border>
             
-            <Button Margin="10 5" Padding="10" Background="#424141">
-                <Viewbox Stretch="Uniform" StretchDirection="DownOnly" MaxHeight="40">
-                    <TextBlock Text="Библиотека" FontSize="28" Foreground="White" FontFamily="Inter"/>
-                </Viewbox>
-            </Button>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button x:Name="Playlists" Content="Плейлисты" 
-                        FontSize="26" FontWeight="Regular"
-                        FontFamily="Inter"
-                        Foreground="White" Background="#9157ca"
-                        Margin="5" Padding="10"/>
-                <Button x:Name="Albums" Content="Альбомы" 
-                        FontSize="26" FontWeight="Regular"
-                        FontFamily="Inter"
-                        Foreground="White" Background="#424141"
-                        Margin="5" Padding="10" />
-            </StackPanel>
+            <Border Background="{DynamicResource SurfaceContainerBrush}"
+                    Margin="10 5" Padding="10" CornerRadius="10">
+                <Button x:Name="LibraryButton" Content="Библиотека" 
+                        Background="Transparent" Foreground="{DynamicResource ContentPrimaryBrush}"
+                        BorderBrush="Transparent" FontSize="28" FontFamily="Inter"/>
+            </Border>
+            
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" Background="{DynamicResource SurfaceContainerBrush}"
+                        Margin="10 5 5 5" Padding="10" CornerRadius="10">
+                    <Button x:Name="PlaylistButton" Content="Плейлисты" 
+                            Background="Transparent" Foreground="{DynamicResource ContentPrimaryBrush}"
+                            BorderBrush="Transparent" FontSize="26" FontFamily="Inter"/>
+                </Border>
+                <Border Grid.Column="1" Background="{DynamicResource SurfaceContainerBrush}"
+                        Margin="5 5 10 5" Padding="10" CornerRadius="10">
+                    <Button x:Name="AlbumButton" Content="Альбомы" 
+                            Background="Transparent" Foreground="{DynamicResource ContentPrimaryBrush}"
+                            BorderBrush="Transparent" FontSize="26" FontFamily="Inter"/>
+                </Border>
+            </Grid>
         </StackPanel>
         
         <Frame x:Name="ContentFrame" 
-               Grid.Row="0" Grid.Column="1" 
-               Background="#2F2D2D">
+               Grid.Row="0" Grid.Column="1">
             
         </Frame>
-        <StackPanel x:Name="TrackPanel" Orientation="Horizontal"
-                    Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
-                    Background="#424141">
-            <Grid Margin="10">
+        <Grid x:Name="TrackPanel" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
+                    Background="{DynamicResource SurfaceContainerBrush}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <Grid Grid.Column="0" Margin="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
     
-                <Image x:Name="TrackImage" Width="75" Height="75" />
+                <Image Grid.Column="0" x:Name="TrackImage" Width="75" Height="75" />
     
                 <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
                     <Viewbox Stretch="Uniform" HorizontalAlignment="Left" MaxHeight="30">
@@ -95,6 +111,6 @@
                     </Viewbox>
                 </StackPanel>
             </Grid>
-        </StackPanel>
+        </Grid>
     </Grid>
 </Window>

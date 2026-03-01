@@ -6,7 +6,8 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:Desktop_Amethyst_Audio.Views.Pages"
       mc:Ignorable="d"
-      Title="AuthPage" MinHeight="600" MinWidth="800">
+      Title="AuthPage"
+      d:Background="#2F2D2D" d:DesignWidth="800" d:DesignHeight="600">
     <Page.Resources>
         <DataTemplate DataType="{x:Type vm:AuthViewModel}"/>
     </Page.Resources>
@@ -24,6 +25,15 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         
+        <StackPanel Grid.Row="0" Grid.Column="2">
+            <Button x:Name="ChangeThemeButton" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10">
+                <Image Source="../../Assets/test.jpg" Width="48" />
+            </Button>
+            <Button x:Name="ChangeLanguageButton" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10 0">
+                <Image Source="../../Assets/test.jpg" Width="48" />
+            </Button>
+        </StackPanel>
+        
         <StackPanel Grid.Row="1" Grid.Column="1" 
                     HorizontalAlignment="Center" VerticalAlignment="Center" 
                     Width="300">
@@ -34,10 +44,10 @@
         
             <Border Background="#3D3D3D" CornerRadius="10" Padding="15">
                 <StackPanel>
-                    <TextBlock Text="Никнейм или Email" Foreground="#AAAAAA" Margin="0,0,0,5"/>
+                    <TextBlock Text="Никнейм или Email" Foreground="White" Margin="0,0,0,5"/>
                     <TextBox Height="30" Background="#555555" BorderThickness="0" Margin="0,0,0,10"/>
                 
-                    <TextBlock Text="Пароль" Foreground="#AAAAAA" Margin="0,0,0,5"/>
+                    <TextBlock Text="Пароль" Foreground="White" Margin="0,0,0,5"/>
                     <PasswordBox Height="30" Background="#555555" BorderThickness="0"
                                  Margin="0,0,0,10"/>
                 
@@ -50,9 +60,23 @@
                 </StackPanel>
             </Border>
 
-            <Button Content="Войти" Margin="0,15,0,5" Height="35" Style="{StaticResource RoundedButtonStyle}"/>
-            <Button Content="Войти через Google" Margin="0,5" Height="35"/>
-            <Button Content="Войти через Яндекс" Margin="0,5" Height="35"/>
+            <Border CornerRadius="10" Background="#3D3D3D" Height="40" Margin="0,15,0,5" Padding="5" >
+                <Button Content="Войти" FontSize="16" Foreground="White" Background="Transparent" BorderBrush="Transparent" Style="{StaticResource RoundedButtonStyle}"/>
+            </Border>
+            <StackPanel x:Name="AuthProvidersStackPanel" Orientation="Vertical">
+                <Button Margin="0 5">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Google" Margin="10 10" FontSize="16"/>
+                        <Image Source="../../Assets/test.jpg" Width="24"/>
+                    </StackPanel>
+                </Button>
+                <Button Margin="0 5">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Яндекс" Margin="10 10" FontSize="16"/>
+                        <Image Source="../../Assets/test.jpg" Width="24"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
             <TextBlock x:Name="HaveNoAccountTextBlock" HorizontalAlignment="Center"
                        Text="Ещё нет аккаунта?" Foreground="White" />
             <TextBlock x:Name="RegisterTextBlock" HorizontalAlignment="Center"
@@ -60,7 +84,7 @@
                        FontWeight="Bold" TextDecorations="Underline" Cursor="Hand" />
         </StackPanel>
 
-        <Border Grid.Row="2" Grid.Column="0" Background="#CC3333" CornerRadius="10" Visibility="Visible"
+        <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Background="#CC3333" CornerRadius="10" Visibility="Visible"
                 HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="20" Padding="15">
             <TextBlock Text="Ошибка: Пользователь не найден." Foreground="White"/>
         </Border>

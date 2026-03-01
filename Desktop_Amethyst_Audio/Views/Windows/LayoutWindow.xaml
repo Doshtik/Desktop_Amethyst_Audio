@@ -1,0 +1,100 @@
+﻿<Window x:Class="Desktop_Amethyst_Audio.Views.Windows.LayoutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" Title="Amethyst Audio" 
+        Height="1080" Width="1920">
+    <!--xmlns:vm="clr-namespace:Desktop_Amethyst_Audio.ViewModels"
+        xmlns:uc="clr-namespace:Desktop_Amethyst_Audio.Views.UserControls"-->
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="4*"/>
+        </Grid.ColumnDefinitions>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="12*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <StackPanel x:Name="SideBar" Orientation="Vertical"
+                    Grid.Row="0" Grid.Column="0" 
+                    Background="#2F2D2D">
+            <Grid Margin="10 10 10 5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+    
+                <Image x:Name="AvatarImage" Width="75" Height="75" />
+    
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
+                    <Viewbox Stretch="Uniform" HorizontalAlignment="Left" MaxHeight="30">
+                        <TextBlock Text="Никнейм пользователя" Foreground="White"/>
+                    </Viewbox>
+                    <Viewbox Stretch="Uniform" HorizontalAlignment="Left" MaxHeight="25">
+                        <TextBlock Text="Имя и фамилия пользователя" Foreground="White"/>
+                    </Viewbox>
+                </StackPanel>
+            </Grid>
+            
+            <Button Margin="10 5" Padding="10" Background="#424141">
+                <Viewbox Stretch="Uniform" StretchDirection="DownOnly" MaxHeight="40">
+                    <TextBlock Text="Поиск" FontSize="28" Foreground="White" FontFamily="Inter"/>
+                </Viewbox>
+            </Button>
+            
+            <Button Margin="10 5" Padding="10" Background="#424141">
+                <Viewbox Stretch="Uniform" StretchDirection="DownOnly" MaxHeight="40">
+                    <TextBlock Text="Моя пластинка" FontSize="28" Foreground="White" FontFamily="Inter"/>
+                </Viewbox>
+            </Button>
+            
+            <Button Margin="10 5" Padding="10" Background="#424141">
+                <Viewbox Stretch="Uniform" StretchDirection="DownOnly" MaxHeight="40">
+                    <TextBlock Text="Библиотека" FontSize="28" Foreground="White" FontFamily="Inter"/>
+                </Viewbox>
+            </Button>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button x:Name="Playlists" Content="Плейлисты" 
+                        FontSize="26" FontWeight="Regular"
+                        FontFamily="Inter"
+                        Foreground="White" Background="#9157ca"
+                        Margin="5" Padding="10"/>
+                <Button x:Name="Albums" Content="Альбомы" 
+                        FontSize="26" FontWeight="Regular"
+                        FontFamily="Inter"
+                        Foreground="White" Background="#424141"
+                        Margin="5" Padding="10" />
+            </StackPanel>
+        </StackPanel>
+        
+        <Frame x:Name="ContentFrame" 
+               Grid.Row="0" Grid.Column="1" 
+               Background="#2F2D2D">
+            
+        </Frame>
+        <StackPanel x:Name="TrackPanel" Orientation="Horizontal"
+                    Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
+                    Background="#424141">
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+    
+                <Image x:Name="TrackImage" Width="75" Height="75" />
+    
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
+                    <Viewbox Stretch="Uniform" HorizontalAlignment="Left" MaxHeight="30">
+                        <TextBlock Text="Название трека" Foreground="White"/>
+                    </Viewbox>
+                    <Viewbox Stretch="Uniform" HorizontalAlignment="Left" MaxHeight="25">
+                        <TextBlock Text="Имя исполнителей" Foreground="White"/>
+                    </Viewbox>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</Window>

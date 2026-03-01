@@ -1,0 +1,12 @@
+﻿using System.Configuration;
+using System.Data;
+using System.Windows;
+
+namespace Desktop_Amethyst_Audio;
+
+/// <summary>
+/// Interaction logic for App.xaml
+/// </summary>
+public partial class App : Application
+{
+}

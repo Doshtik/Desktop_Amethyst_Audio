@@ -1,0 +1,68 @@
+<Page x:Class="Desktop_Amethyst_Audio.Views.Pages.AuthPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:vm="clr-namespace:Desktop_Amethyst_Audio.ViewModels"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="clr-namespace:Desktop_Amethyst_Audio.Views.Pages"
+      mc:Ignorable="d"
+      Title="AuthPage" MinHeight="600" MinWidth="800">
+    <Page.Resources>
+        <DataTemplate DataType="{x:Type vm:AuthViewModel}"/>
+    </Page.Resources>
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <StackPanel Grid.Row="1" Grid.Column="1" 
+                    HorizontalAlignment="Center" VerticalAlignment="Center" 
+                    Width="300">
+            <TextBlock Text="Авторизация" 
+                       Foreground="White" FontSize="24" 
+                       HorizontalAlignment="Center" 
+                       Margin="0,0,0,20"/>
+        
+            <Border Background="#3D3D3D" CornerRadius="10" Padding="15">
+                <StackPanel>
+                    <TextBlock Text="Никнейм или Email" Foreground="#AAAAAA" Margin="0,0,0,5"/>
+                    <TextBox Height="30" Background="#555555" BorderThickness="0" Margin="0,0,0,10"/>
+                
+                    <TextBlock Text="Пароль" Foreground="#AAAAAA" Margin="0,0,0,5"/>
+                    <PasswordBox Height="30" Background="#555555" BorderThickness="0"
+                                 Margin="0,0,0,10"/>
+                
+                    <TextBlock x:Name="ForgetPasswordTextBlock"
+                        Text="Забыли пароль?" 
+                        Foreground="White" 
+                        HorizontalAlignment="Right"
+                        TextDecorations="Underline" 
+                        Cursor="Hand"/>
+                </StackPanel>
+            </Border>
+
+            <Button Content="Войти" Margin="0,15,0,5" Height="35" Style="{StaticResource RoundedButtonStyle}"/>
+            <Button Content="Войти через Google" Margin="0,5" Height="35"/>
+            <Button Content="Войти через Яндекс" Margin="0,5" Height="35"/>
+            <TextBlock x:Name="HaveNoAccountTextBlock" HorizontalAlignment="Center"
+                       Text="Ещё нет аккаунта?" Foreground="White" />
+            <TextBlock x:Name="RegisterTextBlock" HorizontalAlignment="Center"
+                       Text="Зарегистрируйся" Foreground="White" 
+                       FontWeight="Bold" TextDecorations="Underline" Cursor="Hand" />
+        </StackPanel>
+
+        <Border Grid.Row="2" Grid.Column="0" Background="#CC3333" CornerRadius="10" Visibility="Visible"
+                HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="20" Padding="15">
+            <TextBlock Text="Ошибка: Пользователь не найден." Foreground="White"/>
+        </Border>
+    </Grid>
+</Page>

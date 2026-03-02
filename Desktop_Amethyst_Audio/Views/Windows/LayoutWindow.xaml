@@ -4,12 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:l="clr-namespace:Desktop_Amethyst_Audio.Resources.Locales"
+        xmlns:vm="clr-namespace:Desktop_Amethyst_Audio.ViewModels"
+        xmlns:uc="clr-namespace:Desktop_Amethyst_Audio.Views.UserControls"
         mc:Ignorable="d" Title="Amethyst Audio" 
         Background="{DynamicResource SurfaceBaseBrush}"
         Height="1080" Width="1920"
         MinHeight="600" MinWidth="800">
-    <!--xmlns:vm="clr-namespace:Desktop_Amethyst_Audio.ViewModels"
-        xmlns:uc="clr-namespace:Desktop_Amethyst_Audio.Views.UserControls"-->
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>

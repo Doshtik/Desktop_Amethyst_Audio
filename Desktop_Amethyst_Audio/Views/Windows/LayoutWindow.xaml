@@ -8,6 +8,8 @@
         xmlns:uc="clr-namespace:Desktop_Amethyst_Audio.Views.UserControls"
         mc:Ignorable="d" Title="Amethyst Audio" 
         Background="{DynamicResource SurfaceBaseBrush}"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
         Height="1080" Width="1920"
         MinHeight="600" MinWidth="800">
     <Grid>
@@ -29,7 +31,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
     
-                <Image x:Name="AvatarImage" Width="75" Height="75" />
+                <Image x:Name="AvatarImage" Width="75" Height="75"/>
     
                 <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
                     <Viewbox Stretch="Uniform" HorizontalAlignment="Left" MaxHeight="30">
@@ -41,44 +43,26 @@
                 </StackPanel>
             </Grid>
             
-            <Border Background="{DynamicResource SurfaceContainerBrush}"
-                     Margin="10 5" Padding="10" CornerRadius="10">
-                <Button x:Name="SearchButton" Content="Поиск" 
-                        Background="Transparent" Foreground="{DynamicResource ContentPrimaryBrush}"
-                        BorderBrush="Transparent" FontSize="28" FontFamily="Inter"/>
-            </Border>
+            <Button x:Name="SearchButton" Content="Поиск" Style="{DynamicResource ButtonPrimary}"
+                FontSize="22" FontFamily="Inter"/>
             
-            <Border Background="{DynamicResource SurfaceContainerBrush}"
-                    Margin="10 5" Padding="10" CornerRadius="10">
-                <Button x:Name="ResonanceButton" Content="Резонанс" 
-                        Background="Transparent" Foreground="{DynamicResource ContentPrimaryBrush}"
-                        BorderBrush="Transparent" FontSize="28" FontFamily="Inter"/>
-            </Border>
+            <Button x:Name="ResonanceButton" Content="Резонанс" Style="{DynamicResource ButtonPrimary}"
+                    FontSize="22" FontFamily="Inter"/>
             
-            <Border Background="{DynamicResource SurfaceContainerBrush}"
-                    Margin="10 5" Padding="10" CornerRadius="10">
-                <Button x:Name="LibraryButton" Content="Библиотека" 
-                        Background="Transparent" Foreground="{DynamicResource ContentPrimaryBrush}"
-                        BorderBrush="Transparent" FontSize="28" FontFamily="Inter"/>
-            </Border>
+            <Button x:Name="LibraryButton" Content="Библиотека" Style="{DynamicResource ButtonPrimary}"
+                    FontSize="22" FontFamily="Inter"/>
             
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Border Grid.Column="0" Background="{DynamicResource SurfaceContainerBrush}"
-                        Margin="10 5 5 5" Padding="10" CornerRadius="10">
-                    <Button x:Name="PlaylistButton" Content="Плейлисты" 
-                            Background="Transparent" Foreground="{DynamicResource ContentPrimaryBrush}"
-                            BorderBrush="Transparent" FontSize="26" FontFamily="Inter"/>
-                </Border>
-                <Border Grid.Column="1" Background="{DynamicResource SurfaceContainerBrush}"
-                        Margin="5 5 10 5" Padding="10" CornerRadius="10">
-                    <Button x:Name="AlbumButton" Content="Альбомы" 
-                            Background="Transparent" Foreground="{DynamicResource ContentPrimaryBrush}"
-                            BorderBrush="Transparent" FontSize="26" FontFamily="Inter"/>
-                </Border>
+            
+                <Button Grid.Column="0" x:Name="PlaylistButton" Content="Плейлист" Style="{DynamicResource ButtonPrimary}"
+                        FontSize="20" FontFamily="Inter"/>
+            
+                <Button Grid.Column="1" x:Name="AlbumButton" Content="Альбом" Style="{DynamicResource ButtonPrimary}"
+                        FontSize="20" FontFamily="Inter"/>
             </Grid>
         </StackPanel>
         

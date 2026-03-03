@@ -46,62 +46,57 @@
             <TextBlock Text="Авторизация" 
                        Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="24" 
                        HorizontalAlignment="Center" 
-                       Margin="0,0,0,20"/>
+                       Margin="0,0,0,10"/>
         
-            <Border Background="{DynamicResource SurfaceContainerBrush}" CornerRadius="10" Padding="15">
+            <Border Background="{DynamicResource SurfaceContainerBrush}" BorderThickness="2" BorderBrush="{DynamicResource OutlineSubtleBrush}" CornerRadius="10" Padding="15">
                 <StackPanel>
                     <TextBlock Text="Никнейм или Email" Foreground="{DynamicResource ContentPrimaryBrush}"
-                               FontSize="16"
+                               FontSize="18"
                                Margin="0,0,0,5"/>
                     <Border Background="{DynamicResource ContentMutedBrush}" CornerRadius="10"
                             Margin="0,0,0,10">
-                        <TextBox x:Name="EmailOrPasswordTextBox" Padding="5" FontSize="16" Background="Transparent" BorderBrush="Transparent"/>
+                        <TextBox x:Name="EmailOrPasswordTextBox" Padding="5" FontSize="18" Background="Transparent" BorderBrush="Transparent"/>
                     </Border>
                     
                 
                     <TextBlock Text="Пароль" 
-                               Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="16"
+                               Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="18"
                                Margin="0,0,0,5"/>
                     <Border Background="{DynamicResource ContentMutedBrush}" CornerRadius="10"
                             Margin="0,0,0,10">
                         <PasswordBox x:Name="PasswordBox" Padding="5"
-                                     FontSize="16" Background="Transparent" BorderThickness="0"/>
+                                     FontSize="18" Background="Transparent" BorderThickness="0"/>
                     </Border>
                 
                     <TextBlock x:Name="ForgetPasswordTextBlock"
                         Text="Забыли пароль?" 
+                        FontSize="14"
                         Foreground="{DynamicResource ContentPrimaryBrush}" 
                         HorizontalAlignment="Right"
                         TextDecorations="Underline" 
                         Cursor="Hand"/>
                 </StackPanel>
             </Border>
-
-            <Border CornerRadius="10" Background="{DynamicResource SurfaceContainerBrush}" 
-                    Height="40" Margin="0,15,0,5">
-                <Button Padding="5" Content="Войти" FontSize="16" Foreground="{DynamicResource ContentPrimaryBrush}" Background="Transparent" BorderBrush="Transparent" Style="{StaticResource RoundedButtonStyle}"/>
-            </Border>
+            
+            <Button x:Name="EnterButton" Content="Войти" Style="{DynamicResource ButtonPrimary}"
+                    FontSize="18" FontFamily="Inter" Margin="0,15,0,5"/>
             <StackPanel x:Name="AuthProvidersStackPanel" Orientation="Vertical">
-                <Border Margin="0 5" 
-                        Background="{DynamicResource SurfaceContainerBrush}" CornerRadius="10">
-                    <Button Padding="5" Background="Transparent" BorderBrush="Transparent">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Google" Margin="0 0 10 0" VerticalAlignment="Center"
-                                       FontSize="16" Foreground="{DynamicResource ContentPrimaryBrush}"/>
-                            <Image Source="../../Assets/test.jpg" Width="24"/>
-                        </StackPanel>
-                    </Button>
-                </Border>
-                <Border Margin="0 5"
-                        Background="{DynamicResource SurfaceContainerBrush}" CornerRadius="10">
-                    <Button Padding="5" Background="Transparent" BorderBrush="Transparent">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Яндекс" Margin="0 0 10 0" VerticalAlignment="Center"
-                                       FontSize="16" Foreground="{DynamicResource ContentPrimaryBrush}"/>
-                            <Image Source="../../Assets/test.jpg" Width="24"/>
-                        </StackPanel>
-                    </Button>
-                </Border>
+                <Button x:Name="GoogleButton" Style="{DynamicResource ButtonPrimary}"
+                        FontSize="18" FontFamily="Inter" Margin="0,5">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Google" Margin="0 0 10 0" VerticalAlignment="Center"
+                                   FontSize="18" Foreground="{DynamicResource ContentPrimaryBrush}"/>
+                        <Image Source="../../Assets/test.jpg" Width="24"/>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="YandexButton" Style="{DynamicResource ButtonPrimary}"
+                        FontSize="18" FontFamily="Inter" Margin="0,5">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Яндекс" Margin="0 0 10 0" VerticalAlignment="Center"
+                                   FontSize="18" Foreground="{DynamicResource ContentPrimaryBrush}"/>
+                        <Image Source="../../Assets/test.jpg" Width="24"/>
+                    </StackPanel>
+                </Button>
             </StackPanel>
             <TextBlock x:Name="HaveNoAccountTextBlock" HorizontalAlignment="Center"
                        Text="Ещё нет аккаунта?" FontSize="16"

@@ -6,8 +6,23 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Desktop_Amethyst_Audio.ViewModels;
 
-public class AuthViewModel : ObservableObject
+public partial class AuthViewModel : ObservableObject
 {
+    [ObservableProperty]
+    private ObservableObject _currentPage;
+    public PageViewModels.AuthViewModel AuthPageViewModel { get; }
+    public PageViewModels.RegisterViewModel RegisterPageViewModel { get; }
+
+    public AuthViewModel()
+    {
+        _currentPage =  new PageViewModels.AuthViewModel();
+    }
+    
+    public void NavigateToAuth() => CurrentPage = AuthPageViewModel;
+    
+    public void NavigateToRegister() => CurrentPage = RegisterPageViewModel;
+    
+    
     public void ChangeTheme(string themeName)
     {
         Uri uri = new Uri($"Themes/Theme.{themeName}.xaml", UriKind.Relative);

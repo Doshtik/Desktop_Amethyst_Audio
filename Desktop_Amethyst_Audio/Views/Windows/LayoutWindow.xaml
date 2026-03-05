@@ -5,6 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:l="clr-namespace:Desktop_Amethyst_Audio.Resources.Locales"
         xmlns:vm="clr-namespace:Desktop_Amethyst_Audio.ViewModels"
+        xmlns:vm-pages="clr-namespace:Desktop_Amethyst_Audio.ViewModels.PageViewModels"
+        xmlns:views="clr-namespace:Desktop_Amethyst_Audio.Views.Pages"
         xmlns:uc="clr-namespace:Desktop_Amethyst_Audio.Views.UserControls"
         mc:Ignorable="d" Title="Amethyst Audio" 
         Background="{DynamicResource SurfaceBaseBrush}"
@@ -12,6 +14,27 @@
         WindowState="Maximized"
         Height="1080" Width="1920"
         MinHeight="600" MinWidth="800">
+    <Window.Resources>
+        <vm:LayoutViewModel x:Key="LayoutViewModel"/>
+        
+        <DataTemplate DataType="{x:Type vm-pages:SearchViewModel}">
+            <views:SearchPage/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm-pages:ResonanceViewModel}">
+            <views:ResonancePage/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm-pages:LibraryViewModel}">
+            <views:LibraryPage/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm-pages:ProfileViewModel}">
+            <views:ProfilePage/>
+        </DataTemplate>
+    </Window.Resources>
+    
+    <Window.DataContext>
+        <StaticResource ResourceKey="LayoutViewModel"/>
+    </Window.DataContext>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -31,45 +54,51 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
     
-                <Image x:Name="AvatarImage" Width="75" Height="75"/>
+                <Image Grid.Column="0" x:Name="AvatarImage" Width="75" Height="75"/>
     
-                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
-                    <Viewbox Stretch="Uniform" HorizontalAlignment="Left" MaxHeight="30">
+                <Grid Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Viewbox Grid.Row="0" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Bottom" MaxHeight="30">
                         <TextBlock Text="Никнейм пользователя" Foreground="White"/>
                     </Viewbox>
-                    <Viewbox Stretch="Uniform" HorizontalAlignment="Left" MaxHeight="25">
+                    <Viewbox Grid.Row="1" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Top" MaxHeight="25">
                         <TextBlock Text="Имя и фамилия пользователя" Foreground="White"/>
                     </Viewbox>
-                </StackPanel>
+                </Grid>
             </Grid>
             
             <Button x:Name="SearchButton" Content="Поиск" Style="{DynamicResource ButtonPrimary}"
-                FontSize="22" FontFamily="Inter"/>
+                FontSize="22" FontFamily="Inter" Margin="0 10 0 5" 
+                Command="{Binding NavigateToSearchCommand}"/>
             
             <Button x:Name="ResonanceButton" Content="Резонанс" Style="{DynamicResource ButtonPrimary}"
-                    FontSize="22" FontFamily="Inter"/>
+                    FontSize="22" FontFamily="Inter" Margin=" 0 5 0 5"
+                    Command="{Binding NavigateToResonanceCommand}"/>
             
             <Button x:Name="LibraryButton" Content="Библиотека" Style="{DynamicResource ButtonPrimary}"
-                    FontSize="22" FontFamily="Inter"/>
+                    FontSize="22" FontFamily="Inter" Margin="0 5 0 10"
+                    Command="{Binding NavigateToLibraryCommand}"/>
             
-            <Grid>
+            <Grid Margin="0 0 0 10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
             
                 <Button Grid.Column="0" x:Name="PlaylistButton" Content="Плейлист" Style="{DynamicResource ButtonPrimary}"
-                        FontSize="20" FontFamily="Inter"/>
+                        FontSize="20" FontFamily="Inter" Margin="0 0 5 0"/>
             
                 <Button Grid.Column="1" x:Name="AlbumButton" Content="Альбом" Style="{DynamicResource ButtonPrimary}"
-                        FontSize="20" FontFamily="Inter"/>
+                        FontSize="20" FontFamily="Inter" Margin="5 0 0 0"/>
             </Grid>
         </StackPanel>
         
-        <Frame x:Name="ContentFrame" 
-               Grid.Row="0" Grid.Column="1">
-            
-        </Frame>
+        <Frame x:Name="ContentFrame" Content="{Binding CurrentPage}"
+               Grid.Row="0" Grid.Column="1" NavigationUIVisibility="Hidden"/>
+        
         <Grid x:Name="TrackPanel" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
                     Background="{DynamicResource SurfaceContainerBrush}">
             <Grid.ColumnDefinitions>
@@ -86,14 +115,19 @@
     
                 <Image Grid.Column="0" x:Name="TrackImage" Width="75" Height="75" />
     
-                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
-                    <Viewbox Stretch="Uniform" HorizontalAlignment="Left" MaxHeight="30">
-                        <TextBlock Text="Название трека" Foreground="White"/>
+                <Grid Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <Viewbox Grid.Row="0" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Bottom" MaxHeight="30">
+                        <TextBlock Text="Название трека" Foreground="{StaticResource ContentPrimaryBrush}"/>
                     </Viewbox>
-                    <Viewbox Stretch="Uniform" HorizontalAlignment="Left" MaxHeight="25">
-                        <TextBlock Text="Имя исполнителей" Foreground="White"/>
+                    <Viewbox Grid.Row="1" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Top" MaxHeight="25">
+                        <TextBlock Text="Имя исполнителей" Foreground="{StaticResource ContentPrimaryBrush}"/>
                     </Viewbox>
-                </StackPanel>
+                </Grid>
             </Grid>
         </Grid>
     </Grid>

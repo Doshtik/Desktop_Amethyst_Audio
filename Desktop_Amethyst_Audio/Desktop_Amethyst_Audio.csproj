@@ -59,4 +59,9 @@
       </Compile>
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Assets\Icon.png" />
+      <Resource Include="Assets\Icon.png" />
+    </ItemGroup>
+
 </Project>

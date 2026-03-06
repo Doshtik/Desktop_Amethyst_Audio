@@ -16,7 +16,7 @@ public partial class App : Application
 
         // 1. Твоя логика проверки (например, через сервис или настройки)
         bool isAuthenticated = true; //CheckUserAuth(); 
-
+        
         if (isAuthenticated)
         {
             // Показываем основное окно

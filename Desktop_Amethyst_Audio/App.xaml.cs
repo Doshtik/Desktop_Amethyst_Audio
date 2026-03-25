@@ -14,7 +14,7 @@ public partial class App : Application
     {
         base.OnStartup(e);
 
-        // 1. Твоя логика проверки (например, через сервис или настройки)
+        // Логика проверки (например, через сервис или настройки)
         bool isAuthenticated = true; //CheckUserAuth(); 
         
         if (isAuthenticated)
@@ -27,7 +27,7 @@ public partial class App : Application
             // Показываем окно входа
             var loginWindow = new AuthWindow();
         
-            // Если нужно открыть главное окно ПОСЛЕ успешного входа:
+            // Главное окно ПОСЛЕ успешного входа:
             if (loginWindow.ShowDialog() == true) 
             {
                 new LayoutWindow().Show();

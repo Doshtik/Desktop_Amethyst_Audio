@@ -10,7 +10,9 @@
 
     <ItemGroup>
       <Folder Include="Models\DTO\" />
-      <Folder Include="Models\Services\Abstraction\" />
+      <Folder Include="Views\UserControls\Library\" />
+      <Folder Include="Views\UserControls\Resonance\" />
+      <Folder Include="Views\UserControls\Search\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -27,6 +29,21 @@
       </Page>
       <Page Update="Resources\Themes\Themes.Dark.xaml">
         <Generator>MSBuild:Compile</Generator>
+      </Page>
+      <Page Update="Views\UserControls\Layout\AlbumControl.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\UserControls\Layout\PlaylistControl.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\UserControls\TrackControl.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
       </Page>
     </ItemGroup>
 

@@ -20,8 +20,9 @@ public partial class AuthViewModel : ObservableObject
         _currentPage = AuthPageViewModel;
     }
     
+    [RelayCommand]
     public void NavigateToAuth() => CurrentPage = AuthPageViewModel;
-    
+    [RelayCommand]
     public void NavigateToRegister() => CurrentPage = RegisterPageViewModel;
     
     

@@ -15,7 +15,7 @@ public partial class App : Application
         base.OnStartup(e);
 
         // Логика проверки (например, через сервис или настройки)
-        bool isAuthenticated = true; //CheckUserAuth(); 
+        bool isAuthenticated = false; //CheckUserAuth(); 
         
         if (isAuthenticated)
         {

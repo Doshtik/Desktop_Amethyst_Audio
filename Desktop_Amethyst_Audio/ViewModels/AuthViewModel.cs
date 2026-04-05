@@ -12,18 +12,17 @@ public partial class AuthViewModel : ObservableObject
     [ObservableProperty]
     private ObservableObject _currentPage;
 
-    public PageViewModels.AuthViewModel AuthPageViewModel { get; } = new();
-    public PageViewModels.RegisterViewModel RegisterPageViewModel { get; } = new();
+    public PageViewModels.AuthPageViewModel AuthPageViewModel { get; }
+    public PageViewModels.RegisterPageViewModel RegisterPageViewModel { get; }
 
     public AuthViewModel()
     {
-        _currentPage = AuthPageViewModel;
+        AuthPageViewModel = new PageViewModels.AuthPageViewModel(NavigateToRegister);
+        RegisterPageViewModel = new PageViewModels.RegisterPageViewModel(NavigateToAuth);
+        
+        CurrentPage = AuthPageViewModel;
     }
     
-    [RelayCommand]
     public void NavigateToAuth() => CurrentPage = AuthPageViewModel;
-    [RelayCommand]
     public void NavigateToRegister() => CurrentPage = RegisterPageViewModel;
-    
-    
 }

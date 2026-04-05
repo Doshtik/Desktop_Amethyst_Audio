@@ -3,8 +3,12 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:vm="clr-namespace:Desktop_Amethyst_Audio.ViewModels.PageViewModels"
       xmlns:local="clr-namespace:Desktop_Amethyst_Audio.Views.Pages"
-      mc:Ignorable="d" d:DesignHeight="600" d:DesignWidth="800" d:Background="{DynamicResource SurfaceContainerBrush}"
+      mc:Ignorable="d" 
+      d:DesignHeight="600" d:DesignWidth="800" 
+      d:Background="{DynamicResource SurfaceContainerBrush}"
+      d:DataContext="{d:DesignInstance Type=vm:RegisterPageViewModel}"
       Title="RegisterPage">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -12,18 +16,16 @@
             <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="3*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Button x:Name="BackToLoginButton" Style="{StaticResource ButtonPrimary}"
-                HorizontalAlignment="Left" VerticalAlignment="Top"
-            Margin="10" Width="50" Height="50" Grid.Row="0" Grid.Column="0">
-                <Image Source="../../Assets/test.jpg" Width="24" />
+                HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding NavigateBackCommand}"
+                Margin="10" Width="50" Height="50" Grid.Row="0" Grid.Column="0">
+            <Image Source="../../Assets/test.jpg" Width="24" />
         </Button>
-        
         <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
             <Button x:Name="ChangeThemeButton" Style="{StaticResource ButtonPrimary}" 
                     Margin="0 10 5 0" Width="50" Height="50">
@@ -35,7 +37,6 @@
                            Foreground="{DynamicResource ContentPrimaryBrush}"/>
             </Button>
         </StackPanel>
-        
         <StackPanel Grid.Row="0" Grid.RowSpan="3" Grid.Column="1" 
                     HorizontalAlignment="Center" VerticalAlignment="Center" 
                     Width="300">
@@ -43,7 +44,6 @@
                        Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="24" 
                        HorizontalAlignment="Center" 
                        Margin="0,0,0,10"/>
-        
             <Border  Background="{DynamicResource SurfaceContainerBrush}" 
                      BorderThickness="2" BorderBrush="{DynamicResource OutlineSubtleBrush}" 
                      CornerRadius="10" Padding="15">
@@ -55,7 +55,6 @@
                             Margin="0,0,0,10">
                         <TextBox x:Name="NicknameTextBox" Padding="5" FontSize="18" Background="Transparent" BorderThickness="0"/>
                     </Border>
-                    
                     <TextBlock Text="Email" Foreground="{DynamicResource ContentPrimaryBrush}"
                                FontSize="18"
                                Margin="5,0,0,5"/>
@@ -63,7 +62,6 @@
                             Margin="0,0,0,10">
                         <TextBox x:Name="EmailTextBox" Padding="5" FontSize="18" Background="Transparent" BorderThickness="0"/>
                     </Border>
-                
                     <TextBlock Text="Пароль" 
                                Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="18"
                                Margin="5,0,0,5"/>
@@ -72,21 +70,17 @@
                         <PasswordBox x:Name="PasswordBox" Padding="5"
                                      FontSize="18" Background="Transparent" BorderThickness="0"/>
                     </Border>
+                    <Border Background="{DynamicResource StatusErrorBrush}"
+                            CornerRadius="10" Visibility="Collapsed" Padding="10">
+                        <TextBlock Text="Ошибка: Email указан неверно." Foreground="{DynamicResource ContentPrimaryBrush}" TextWrapping="Wrap"/>
+                    </Border>
                 </StackPanel>
             </Border>
-
             <Button x:Name="EnterButton" Style="{DynamicResource ButtonPrimary}"
                     Margin="0,15,0,5">
                 <TextBlock Text="Войти" Margin="0 5 10 5" VerticalAlignment="Center"
                            FontSize="18" Foreground="{DynamicResource ContentPrimaryBrush}"/>
             </Button>
         </StackPanel>
-
-        <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" 
-                Background="{DynamicResource StatusErrorBrush}"
-                CornerRadius="10" Visibility="Visible"
-                HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="20" Padding="15">
-            <TextBlock Text="Ошибка: Email указан неверно." Foreground="{DynamicResource ContentPrimaryBrush}"/>
-        </Border>
     </Grid>
 </Page>

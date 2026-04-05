@@ -2,7 +2,7 @@
 
 namespace Desktop_Amethyst_Audio.ViewModels.PageViewModels;
 
-public partial class ResonanceViewModel: ObservableObject
+public partial class LibraryPageViewModel: ObservableObject
 {
     
 }

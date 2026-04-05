@@ -6,10 +6,13 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UseWPF>true</UseWPF>
+        <ApplicationIcon>Assets\icon_256x256.ico</ApplicationIcon>
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Models\DTO\" />
+      <Folder Include="Models\DTO\Albums\" />
+      <Folder Include="Models\DTO\Playlists\" />
+      <Folder Include="Models\DTO\Tracks\" />
       <Folder Include="Views\UserControls\Library\" />
       <Folder Include="Views\UserControls\Resonance\" />
       <Folder Include="Views\UserControls\Search\" />
@@ -50,6 +53,7 @@
     <ItemGroup>
       <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.13" />
+      <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3856.49" />
       <PackageReference Include="NAudio" Version="2.2.1" />
     </ItemGroup>
 
@@ -80,6 +84,23 @@
     <ItemGroup>
       <None Remove="Assets\test.jpg" />
       <Resource Include="Assets\test.jpg" />
+      <None Remove="Assets\yandex_logo.png" />
+      <Resource Include="Assets\yandex_logo.png" />
+      <None Remove="Assets\sun_icon.png" />
+      <Resource Include="Assets\sun_icon.png" />
+      <None Remove="Assets\moon.png" />
+      <Resource Include="Assets\moon_icon.png" />
+      <None Remove="Assets\google_logo.png" />
+      <Resource Include="Assets\google_logo.png" />
+      <None Remove="Assets\icon.png" />
+      <None Remove="Assets\icon_256x256.ico" />
+      <Resource Include="Assets\icon_256x256.ico" />
+      <None Remove="Assets\icon_128x128.ico" />
+      <Resource Include="Assets\icon_128x128.ico" />
+      <None Remove="Assets\icon_128x128.png" />
+      <Resource Include="Assets\icon_128x128.png" />
+      <None Remove="Assets\icon_256x256.png" />
+      <Resource Include="Assets\icon_256x256.png" />
     </ItemGroup>
 
 </Project>

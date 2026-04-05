@@ -9,30 +9,31 @@ namespace Desktop_Amethyst_Audio.ViewModels;
 
 public partial class LayoutViewModel : ObservableObject
 {
-    [ObservableProperty] private ObservableObject _currentPage;
-    public SearchViewModel SearchViewModel { get; } = new();
-    public SearchResultViewModel SearchResultViewModel { get; } = new();
-    public ResonanceViewModel ResonanceViewModel { get; } = new();
-    public LibraryViewModel LibraryViewModel { get; } = new();
-    public ProfileViewModel ProfileViewModel { get; } = new();
+    [ObservableProperty] 
+    private ObservableObject _currentPage;
+    public SearchPageViewModel SearchPageViewModel { get; } = new();
+    public SearchResultPageViewModel SearchResultPageViewModel { get; } = new();
+    public ResonancePageViewModel ResonancePageViewModel { get; } = new();
+    public LibraryPageViewModel LibraryPageViewModel { get; } = new();
+    public ProfilePageViewModel ProfilePageViewModel { get; } = new();
 
     public LayoutViewModel()
     {
-        _currentPage = SearchViewModel;
+        _currentPage = SearchPageViewModel;
     }
 
     [RelayCommand]
-    public void NavigateToSearch() => CurrentPage = SearchViewModel;
+    public void NavigateToSearch() => CurrentPage = SearchPageViewModel;
 
     [RelayCommand]
-    public void NavigateToSearchResult() => CurrentPage = SearchResultViewModel;
+    public void NavigateToSearchResult() => CurrentPage = SearchResultPageViewModel;
 
     [RelayCommand]
-    public void NavigateToResonance() => CurrentPage = ResonanceViewModel;
+    public void NavigateToResonance() => CurrentPage = ResonancePageViewModel;
 
     [RelayCommand]
-    public void NavigateToLibrary() => CurrentPage = LibraryViewModel;
+    public void NavigateToLibrary() => CurrentPage = LibraryPageViewModel;
 
     [RelayCommand]
-    public void NavigateToProfile() => CurrentPage = ProfileViewModel;
+    public void NavigateToProfile() => CurrentPage = ProfilePageViewModel;
 }

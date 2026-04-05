@@ -8,7 +8,7 @@
         xmlns:vm-pages="clr-namespace:Desktop_Amethyst_Audio.ViewModels.PageViewModels"
         xmlns:views="clr-namespace:Desktop_Amethyst_Audio.Views.Pages"
         xmlns:uc="clr-namespace:Desktop_Amethyst_Audio.Views.UserControls"
-        mc:Ignorable="d" Title="Amethyst Audio" 
+        mc:Ignorable="d" Title="Amethyst Audio" Icon="../../Assets/icon_128x128.ico"
         Background="{DynamicResource SurfaceBaseBrush}"
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized"
@@ -17,16 +17,16 @@
     <Window.Resources>
         <vm:LayoutViewModel x:Key="LayoutViewModel"/>
         
-        <DataTemplate DataType="{x:Type vm-pages:SearchViewModel}">
+        <DataTemplate DataType="{x:Type vm-pages:SearchPageViewModel}">
             <views:SearchPage/>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type vm-pages:ResonanceViewModel}">
+        <DataTemplate DataType="{x:Type vm-pages:ResonancePageViewModel}">
             <views:ResonancePage/>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type vm-pages:LibraryViewModel}">
+        <DataTemplate DataType="{x:Type vm-pages:LibraryPageViewModel}">
             <views:LibraryPage/>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type vm-pages:ProfileViewModel}">
+        <DataTemplate DataType="{x:Type vm-pages:ProfilePageViewModel}">
             <views:ProfilePage/>
         </DataTemplate>
     </Window.Resources>

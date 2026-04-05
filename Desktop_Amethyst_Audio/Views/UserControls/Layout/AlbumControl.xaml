@@ -4,17 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Desktop_Amethyst_Audio.Views.UserControls"
-             mc:Ignorable="d"
-             d:DesignHeight="175" d:DesignWidth="150">
+             mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         
-        <Border Grid.Row="0" CornerRadius="10" Margin="10"
+        <Border Grid.Row="0" CornerRadius="10" Margin="10" Padding="3"
                 Background="CornflowerBlue">
-            <Image x:Name="AlbumCoverImage" Source="../../../Assets/test.jpg"/>
+            <Image x:Name="AlbumCoverImage" Source="../../../Assets/test.jpg" Width="150"/>
         </Border>
         <TextBlock x:Name="AlbumNameTextBlock" Grid.Row="1" Text="Название альбома"
                    FontSize="14" Margin="10 0 10 10"/>

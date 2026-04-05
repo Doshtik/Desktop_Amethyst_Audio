@@ -2,7 +2,7 @@
 
 namespace Desktop_Amethyst_Audio.ViewModels.PageViewModels;
 
-public partial class SearchViewModel: ObservableObject
+public partial class SearchPageViewModel: ObservableObject
 {
     
 }

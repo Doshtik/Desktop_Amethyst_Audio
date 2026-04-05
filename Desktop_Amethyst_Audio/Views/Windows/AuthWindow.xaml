@@ -8,15 +8,15 @@
         xmlns:local="clr-namespace:Desktop_Amethyst_Audio.Views.Windows"
         xmlns:views="clr-namespace:Desktop_Amethyst_Audio.Views.Pages"
         mc:Ignorable="d" Background="{DynamicResource SurfaceBaseBrush}"
-        Title="Авторизация" 
+        Title="Авторизация" Icon="../../Assets/icon_128x128.ico"
         Height="720" Width="1280" WindowState="Maximized"
         MinHeight="600" MinWidth="800">
     <Window.Resources>
         <vm:AuthViewModel x:Key="AuthViewModel"/>
-        <DataTemplate DataType="{x:Type vm-pages:AuthViewModel}">
+        <DataTemplate DataType="{x:Type vm-pages:AuthPageViewModel}">
             <views:AuthPage/>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type vm-pages:RegisterViewModel}">
+        <DataTemplate DataType="{x:Type vm-pages:RegisterPageViewModel}">
             <views:RegisterPage/>
         </DataTemplate>
     </Window.Resources>

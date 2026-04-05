@@ -1,6 +1,9 @@
 ﻿using System.Configuration;
 using System.Data;
+using System.IO;
+using System.Text.Json;
 using System.Windows;
+using Desktop_Amethyst_Audio.Models;
 using Desktop_Amethyst_Audio.Views.Windows;
 
 namespace Desktop_Amethyst_Audio;
@@ -13,7 +16,7 @@ public partial class App : Application
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
-
+        
         // Логика проверки (например, через сервис или настройки)
         bool isAuthenticated = false; //CheckUserAuth(); 
         

@@ -69,6 +69,87 @@ namespace Desktop_Amethyst_Audio.Resources.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Email.
+        /// </summary>
+        internal static string AuthEmailText {
+            get {
+                return ResourceManager.GetString("AuthEmailText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Войти.
+        /// </summary>
+        internal static string AuthEnterButton {
+            get {
+                return ResourceManager.GetString("AuthEnterButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Яндекс.
+        /// </summary>
+        internal static string AuthExteralYandexButton {
+            get {
+                return ResourceManager.GetString("AuthExteralYandexButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Google.
+        /// </summary>
+        internal static string AuthExternalGoogleButton {
+            get {
+                return ResourceManager.GetString("AuthExternalGoogleButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Забыли пароль?.
+        /// </summary>
+        internal static string AuthForgetPasswordText {
+            get {
+                return ResourceManager.GetString("AuthForgetPasswordText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Нет аккаунта?.
+        /// </summary>
+        internal static string AuthHaveNoAccountText {
+            get {
+                return ResourceManager.GetString("AuthHaveNoAccountText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Зарегистрируйтесь.
+        /// </summary>
+        internal static string AuthNavigateToRegisterText {
+            get {
+                return ResourceManager.GetString("AuthNavigateToRegisterText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Авторизация.
+        /// </summary>
+        internal static string AuthPageAuthTitleText {
+            get {
+                return ResourceManager.GetString("AuthPageAuthTitleText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Пароль.
+        /// </summary>
+        internal static string AuthPasswordText {
+            get {
+                return ResourceManager.GetString("AuthPasswordText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Библиотека.
         /// </summary>
         internal static string LibraryButtonText {

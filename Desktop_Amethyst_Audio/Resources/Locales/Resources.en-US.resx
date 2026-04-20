@@ -33,4 +33,31 @@
     <data name="AlbumButtonText" xml:space="preserve">
         <value>Album</value>
     </data>
+    <data name="AuthEmailText" xml:space="preserve">
+        <value>Email</value>
+    </data>
+    <data name="AuthEnterButton" xml:space="preserve">
+        <value>Enter</value>
+    </data>
+    <data name="AuthExteralYandexButton" xml:space="preserve">
+        <value>Yandex</value>
+    </data>
+    <data name="AuthExternalGoogleButton" xml:space="preserve">
+        <value>Google</value>
+    </data>
+    <data name="AuthForgetPasswordText" xml:space="preserve">
+        <value>Forget password?</value>
+    </data>
+    <data name="AuthHaveNoAccountText" xml:space="preserve">
+        <value>Have no account?</value>
+    </data>
+    <data name="AuthNavigateToRegisterText" xml:space="preserve">
+        <value>Register</value>
+    </data>
+    <data name="AuthPageAuthTitleText" xml:space="preserve">
+        <value>Authorization</value>
+    </data>
+    <data name="AuthPasswordText" xml:space="preserve">
+        <value>Password</value>
+    </data>
 </root>

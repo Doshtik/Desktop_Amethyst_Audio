@@ -10,7 +10,7 @@
                     <Border x:Name="border" 
                             Background="{TemplateBinding Background}" 
                             BorderBrush="{TemplateBinding BorderBrush}" 
-                            BorderThickness="2" 
+                            BorderThickness="1" 
                             CornerRadius="10">
                     
                         <ContentPresenter HorizontalAlignment="Center" 

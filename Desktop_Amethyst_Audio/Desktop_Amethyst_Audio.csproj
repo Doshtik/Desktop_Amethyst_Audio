@@ -10,6 +10,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Folder Include="Models\Clients\Implementation\" />
       <Folder Include="Models\DTO\Albums\" />
       <Folder Include="Models\DTO\Playlists\" />
       <Folder Include="Models\DTO\Tracks\" />
@@ -27,7 +28,7 @@
       <Page Update="Resources\Styles\Style.Button.xaml">
         <Generator>MSBuild:Compile</Generator>
       </Page>
-      <Page Update="Resources\Themes\Theme.Light.xaml">
+      <Page Update="Resources\Themes\Themes.Light.xaml">
         <Generator>MSBuild:Compile</Generator>
       </Page>
       <Page Update="Resources\Themes\Themes.Dark.xaml">
@@ -82,25 +83,20 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Assets\test.jpg" />
       <Resource Include="Assets\test.jpg" />
+      <Resource Include="Assets\moon_icon.png" />
+      <None Remove="Assets\icon.png" />
       <None Remove="Assets\yandex_logo.png" />
       <Resource Include="Assets\yandex_logo.png" />
-      <None Remove="Assets\sun_icon.png" />
-      <Resource Include="Assets\sun_icon.png" />
-      <None Remove="Assets\moon.png" />
-      <Resource Include="Assets\moon_icon.png" />
-      <None Remove="Assets\google_logo.png" />
+    </ItemGroup>
+
+    <ItemGroup>
       <Resource Include="Assets\google_logo.png" />
-      <None Remove="Assets\icon.png" />
-      <None Remove="Assets\icon_256x256.ico" />
-      <Resource Include="Assets\icon_256x256.ico" />
-      <None Remove="Assets\icon_128x128.ico" />
       <Resource Include="Assets\icon_128x128.ico" />
-      <None Remove="Assets\icon_128x128.png" />
       <Resource Include="Assets\icon_128x128.png" />
-      <None Remove="Assets\icon_256x256.png" />
+      <Resource Include="Assets\icon_256x256.ico" />
       <Resource Include="Assets\icon_256x256.png" />
+      <Resource Include="Assets\sun_icon.png" />
     </ItemGroup>
 
 </Project>

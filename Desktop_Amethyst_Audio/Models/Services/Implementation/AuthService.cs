@@ -1,32 +1,47 @@
 using System.Net.Http;
+using System.Windows;
 using Backend_Amethyst_Audio.DTO;
+using Desktop_Amethyst_Audio.Models.Clients.Abstraction;
 using Desktop_Amethyst_Audio.Models.Services.Abstraction;
 
 namespace Desktop_Amethyst_Audio.Models.Services.Implementation;
 
 public class AuthService : IAuthService
 {
-    private readonly HttpClient _httpClient = new HttpClient(); 
-    private readonly string _baseUrl = Environment.GetEnvironmentVariable("BASE_URL");
+    //private readonly IAuthApiClient _authApiClient = new AuthApiClient();
+    private readonly ISettingsService _settingsService = new SettingsService();
     
     public async Task<bool> TryAutoLoginAsync()
     {
-        /*
-         * Здесь мы должны взять данные из appsettings.json
-         * Если User пустой - вернуть false
-         * Если User заполнен:
-             * Проверяем наличие пользователя в системе, отправив запрос в API
-             * Если пользователь есть -
-                * вернуть true
-             * Если нет:
-                * Удаляем сведения о пользователе из appsettings.json
-                * возвращаем false
-        */
-        throw new NotImplementedException();
+        AppSettings settings = _settingsService.Load();
+        
+        if (settings.User is null)
+            return false;
+        
+        try
+        {
+            UserInfoDto? userFromApi = null; // await _authApiClient.GetUserByIdAsync(settings.User.Id);
+
+            if (userFromApi is not null)
+            {
+                settings.User = userFromApi;
+                _settingsService.Save(settings);
+                return true;
+            }
+        }
+        catch (Exception e)
+        {
+            MessageBox.Show(e.Message);
+        }
+        
+        settings.User = null; 
+        _settingsService.Save(settings);
+        return false;
     }
 
     public async Task<UserInfoDto> LoginAsync(LoginDto dto)
     {
+        //UserInfoDto dto = await _authApiClient.LoginAsync(dto);
         throw new NotImplementedException();
     }
 

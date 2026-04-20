@@ -69,6 +69,87 @@ namespace Desktop_Amethyst_Audio.Resources.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Email.
+        /// </summary>
+        internal static string AuthEmailText {
+            get {
+                return ResourceManager.GetString("AuthEmailText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter.
+        /// </summary>
+        internal static string AuthEnterButton {
+            get {
+                return ResourceManager.GetString("AuthEnterButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yandex.
+        /// </summary>
+        internal static string AuthExteralYandexButton {
+            get {
+                return ResourceManager.GetString("AuthExteralYandexButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Google.
+        /// </summary>
+        internal static string AuthExternalGoogleButton {
+            get {
+                return ResourceManager.GetString("AuthExternalGoogleButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Forget password?.
+        /// </summary>
+        internal static string AuthForgetPasswordText {
+            get {
+                return ResourceManager.GetString("AuthForgetPasswordText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Have no account?.
+        /// </summary>
+        internal static string AuthHaveNoAccountText {
+            get {
+                return ResourceManager.GetString("AuthHaveNoAccountText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Register.
+        /// </summary>
+        internal static string AuthNavigateToRegisterText {
+            get {
+                return ResourceManager.GetString("AuthNavigateToRegisterText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Authorization.
+        /// </summary>
+        internal static string AuthPageAuthTitleText {
+            get {
+                return ResourceManager.GetString("AuthPageAuthTitleText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password.
+        /// </summary>
+        internal static string AuthPasswordText {
+            get {
+                return ResourceManager.GetString("AuthPasswordText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Library.
         /// </summary>
         internal static string LibraryButtonText {

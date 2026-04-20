@@ -1,3 +1,4 @@
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Desktop_Amethyst_Audio.Views.Pages;

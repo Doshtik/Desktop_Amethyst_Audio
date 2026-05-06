@@ -303,6 +303,8 @@ public class ProfileApiClient : IProfileApiClient
         {
             Content = content
         };
+        
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settingsService.Load().User.Token);
     
         using var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
@@ -326,6 +328,8 @@ public class ProfileApiClient : IProfileApiClient
         {
             Content = content
         };
+        
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settingsService.Load().User.Token);
     
         using var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();

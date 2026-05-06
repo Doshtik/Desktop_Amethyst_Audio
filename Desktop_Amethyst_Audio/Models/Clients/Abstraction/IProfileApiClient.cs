@@ -21,6 +21,7 @@ public interface IProfileApiClient
     Task<List<TrackInfoDto>> GetUserLibraryAsync(long id);
     Task AddUserLibraryAsync(long id);
     Task RemoveUserLibraryAsync(long id);
+    
     Task<List<PlaylistInfoDto>> GetUserSavedPlaylistsAsync(long id);
     Task<List<AlbumInfoDto>> GetUserSavedAlbumsAsync(long id);
     

@@ -8,19 +8,25 @@ namespace Desktop_Amethyst_Audio.Models.Clients.Abstraction;
 
 public interface IProfileApiClient
 {
-    Task<UserInfoDto> GetUserByIdAsync(long userId);
+    Task<UserInfoDto> GetUserByIdAsync(long id);
     Task<List<UserInfoDto>> GetUserAllAsync();
     
     Task<UserInfoDto> UpdateUserAsync(ChangeUserInfoDto dto);
-    Task DeleteUserAsync();
+    Task DeleteUserAsync(long id);
+
+    Task<List<UserHistoryDto>> GetUserHistoryAsync();
+    Task AddToHistoryAsync(long trackId);
+    Task UpdateListeningTimeAsync(long trackId, int seconds);
     
-    Task<List<TrackInfoDto>> GetUserLibraryAsync(long userId);
-    Task<List<PlaylistInfoDto>> GetUserSavedPlaylistsAsync(long userId);
-    Task<List<AlbumInfoDto>> GetUserSavedAlbumsAsync(long userId);
+    Task<List<TrackInfoDto>> GetUserLibraryAsync(long id);
+    Task AddUserLibraryAsync(long id);
+    Task RemoveUserLibraryAsync(long id);
+    Task<List<PlaylistInfoDto>> GetUserSavedPlaylistsAsync(long id);
+    Task<List<AlbumInfoDto>> GetUserSavedAlbumsAsync(long id);
     
     Task<BitmapImage> GetUserAvatarAsync(string avatarUrl);
     Task<BitmapImage> GetUserHeaderAsync(string headerUrl);
     
-    Task FollowUserAsync(FollowUserDto dto);
-    Task UnfollowUserAsync(FollowUserDto dto);
+    Task FollowUserAsync(long targetId);
+    Task UnfollowUserAsync(long subscriberId);
 }

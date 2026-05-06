@@ -1,16 +1,15 @@
 using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Windows.Media.Imaging;
 using Desktop_Amethyst_Audio.Models.Clients.Abstraction;
-using Desktop_Amethyst_Audio.Models.DTO.Albums;
+using Desktop_Amethyst_Audio.Models.DTO.Playlists;
 using Desktop_Amethyst_Audio.Models.Services.Implementation;
 
 namespace Desktop_Amethyst_Audio.Models.Clients.Implementation;
 
-public class AlbumApiClient : IAlbumApiClient
+public class PlaylistApiClient : IPlaylistApiClient
 {
     private static readonly HttpClient _httpClient = new();
     
@@ -18,71 +17,71 @@ public class AlbumApiClient : IAlbumApiClient
 
     private static string BaseUrl = Environment.GetEnvironmentVariable("BASE_URL");
     
-    private const string ALBUM_API_PATH = "/api/album/";
+    private const string PLAYLIST_API_PATH = "/api/playlists/";
     
     private static readonly JsonSerializerOptions JsonOptions = new() 
     { 
         PropertyNameCaseInsensitive = true 
     };
-
-    #region Endpoints
-
-    public async Task<AlbumInfoDto> GetByIdAsync(long id)
+    
+    public async Task<PlaylistInfoDto> GetPlaylistByIdAsync(long id)
     {
         var baseUrl = BaseUrl.TrimEnd('/');
-        var path = ALBUM_API_PATH.TrimStart('/');
+        var path = PLAYLIST_API_PATH.TrimStart('/');
         var fullUrl = $"{baseUrl}/{path}/{id}";
-
-        var request = new HttpRequestMessage(HttpMethod.Get, fullUrl);
-        
+    
+        using var request = new HttpRequestMessage(HttpMethod.Get, fullUrl);
+    
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settingsService.Load().User.Token);
     
-        using var response = await _httpClient.SendAsync(request);
+        var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
     
         var json = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<AlbumInfoDto>(json, JsonOptions);
+        return JsonSerializer.Deserialize<PlaylistInfoDto>(json, JsonOptions);
     }
-    
-    public async Task<List<AlbumInfoDto>> GetAllAsync()
+
+    public async Task<List<PlaylistInfoDto>> GetPlaylistAllAsync()
     {
         var baseUrl = BaseUrl.TrimEnd('/');
-        var path = ALBUM_API_PATH.TrimStart('/');
+        var path = PLAYLIST_API_PATH.TrimStart('/');
         var fullUrl = $"{baseUrl}/{path}";
-
-        var request = new HttpRequestMessage(HttpMethod.Get, fullUrl);
-        
+    
+        using var request = new HttpRequestMessage(HttpMethod.Get, fullUrl);
+    
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settingsService.Load().User.Token);
     
-        using var response = await _httpClient.SendAsync(request);
+        var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
     
         var json = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<List<AlbumInfoDto>>(json, JsonOptions);
+        return JsonSerializer.Deserialize<List<PlaylistInfoDto>>(json, JsonOptions);
     }
 
-    public async Task<List<AlbumInfoDto>> GetListByUserIdAsync(long userId)
+    public async Task<PlaylistInfoDto> GetListPlaylistByUserIdAsync(long userId)
     {
         var baseUrl = BaseUrl.TrimEnd('/');
-        var path = ALBUM_API_PATH.TrimStart('/');
+        var path = PLAYLIST_API_PATH.TrimStart('/');
         var fullUrl = $"{baseUrl}/{path}/user/{userId}";
-
-        var request = new HttpRequestMessage(HttpMethod.Get, fullUrl);
-        
+    
+        using var request = new HttpRequestMessage(HttpMethod.Get, fullUrl);
+    
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settingsService.Load().User.Token);
     
-        using var response = await _httpClient.SendAsync(request);
+        var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
     
         var json = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<List<AlbumInfoDto>>(json, JsonOptions);
+        return JsonSerializer.Deserialize<PlaylistInfoDto>(json, JsonOptions);
     }
 
-    public async Task<BitmapImage> GetAlbumCoverAsync(string coverUrl)
+    public async Task<BitmapImage> GetPlaylistCoverAsync(string coverUrl)
     {
         var request = new HttpRequestMessage(HttpMethod.Get, coverUrl);
     
-        using var response = await _httpClient.SendAsync(request);
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settingsService.Load().User.Token);
+    
+        var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
     
         var imageBytes = await response.Content.ReadAsByteArrayAsync();
@@ -97,76 +96,79 @@ public class AlbumApiClient : IAlbumApiClient
         return bitmap;
     }
 
-    public async Task<AlbumInfoDto> CreateAlbumAsync(CreateAlbumDto dto)
+    public async Task<PlaylistInfoDto> CreatePlaylistAsync(CreatePlaylistDto dto)
     {
         using MultipartFormDataContent formData = new MultipartFormDataContent();
-    
-        byte[] fileBytes = await File.ReadAllBytesAsync(dto.AlbumCoverFilePath);
-        ByteArrayContent fileContent = new ByteArrayContent(fileBytes);
         
-        fileContent.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
+        byte[] coverBytes = await File.ReadAllBytesAsync(dto.CoverFilePath);
+        ByteArrayContent coverFileContent = new ByteArrayContent(coverBytes);
+        coverFileContent.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
+        formData.Add(coverFileContent, "CoverFile", Path.GetFileName(dto.CoverFilePath));
         
-        formData.Add(fileContent, "CoverFile", Path.GetFileName(dto.AlbumCoverFilePath));
+        formData.Add(new StringContent(dto.UserId.ToString()), "UserId");
+        formData.Add(new StringContent(dto.IsPublic.ToString().ToLowerInvariant()), "IsPublic");
         formData.Add(new StringContent(dto.Name), "Name");
-        formData.Add(new StringContent(JsonSerializer.Serialize(dto.AuthorsIdList)), "AuthorsIdList");
+        formData.Add(new StringContent(dto.Description), "Description");
         formData.Add(new StringContent(JsonSerializer.Serialize(dto.TracksIdList)), "TracksIdList");
         
         var baseUrl = BaseUrl.TrimEnd('/');
-        var path = ALBUM_API_PATH.TrimStart('/');
+        var path = PLAYLIST_API_PATH.TrimStart('/');
         var fullUrl = $"{baseUrl}/{path}";
     
         var request = new HttpRequestMessage(HttpMethod.Post, fullUrl)
         {
             Content = formData
         };
-        
+    
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settingsService.Load().User.Token);
     
-        using var response = await _httpClient.SendAsync(request);
+        var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
     
         var json = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<AlbumInfoDto>(json, JsonOptions);
+        return JsonSerializer.Deserialize<PlaylistInfoDto>(json, JsonOptions);
     }
 
-    public async Task<AlbumInfoDto> UpdateAlbumAsync(ChangeAlbumInfoDto dto)
+    public async Task<PlaylistInfoDto> UpdatePlaylistAsync(ChangePlaylistInfoDto dto)
     {
         using MultipartFormDataContent formData = new MultipartFormDataContent();
 
-        if (dto.AlbumCoverFilePath is not null)
+        if (dto.CoverFilePath is not null)
         {
-            byte[] fileBytes = await File.ReadAllBytesAsync(dto.AlbumCoverFilePath);
-            ByteArrayContent fileContent = new ByteArrayContent(fileBytes);
-        
-            fileContent.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
-            formData.Add(fileContent, "CoverFile", Path.GetFileName(dto.AlbumCoverFilePath));
+            byte[] coverBytes = await File.ReadAllBytesAsync(dto.CoverFilePath);
+            ByteArrayContent coverFileContent = new ByteArrayContent(coverBytes);
+            coverFileContent.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
+            formData.Add(coverFileContent, "CoverFile", Path.GetFileName(dto.CoverFilePath));
         }
+        
+        formData.Add(new StringContent(dto.IsPublic.ToString().ToLowerInvariant()), "IsPublic");
         formData.Add(new StringContent(dto.Name), "Name");
-        formData.Add(new StringContent(JsonSerializer.Serialize(dto.AddedTrackIdList)), "AddedTrackIdList");
-        formData.Add(new StringContent(JsonSerializer.Serialize(dto.RemovedTrackIdList)), "RemovedTrackIdList");
+        formData.Add(new StringContent(dto.Description), "Description");
+        formData.Add(new StringContent(JsonSerializer.Serialize(dto.AddedTracksIdList)), "AddedTracksIdList");
+        formData.Add(new StringContent(JsonSerializer.Serialize(dto.RemovedTracksIdList)), "RemovedTracksIdList");
         
         var baseUrl = BaseUrl.TrimEnd('/');
-        var path = ALBUM_API_PATH.TrimStart('/');
-        var fullUrl = $"{baseUrl}/{path}/{dto.Id}";
+        var path = PLAYLIST_API_PATH.TrimStart('/');
+        var fullUrl = $"{baseUrl}/{path}";
     
         var request = new HttpRequestMessage(HttpMethod.Put, fullUrl)
         {
             Content = formData
         };
-        
+    
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settingsService.Load().User.Token);
     
-        using var response = await _httpClient.SendAsync(request);
+        var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
     
         var json = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<AlbumInfoDto>(json, JsonOptions);
+        return JsonSerializer.Deserialize<PlaylistInfoDto>(json, JsonOptions);
     }
 
-    public async Task DeleteAlbumAsync(long id)
+    public async Task DeletePlaylistAsync(long id)
     {
         var baseUrl = BaseUrl.TrimEnd('/');
-        var path = ALBUM_API_PATH.TrimStart('/');
+        var path = PLAYLIST_API_PATH.TrimStart('/');
         var fullUrl = $"{baseUrl}/{path}/{id}";
 
         var request = new HttpRequestMessage(HttpMethod.Delete, fullUrl);
@@ -176,11 +178,11 @@ public class AlbumApiClient : IAlbumApiClient
         using var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
     }
-    
-    public async Task SaveAlbumAsync(long id)
+
+    public async Task SavePlaylistAsync(long id)
     {
         var baseUrl = BaseUrl.TrimEnd('/');
-        var path = ALBUM_API_PATH.TrimStart('/');
+        var path = PLAYLIST_API_PATH.TrimStart('/');
         var fullUrl = $"{baseUrl}/{path}/{id}/save";
 
         var request = new HttpRequestMessage(HttpMethod.Post, fullUrl);
@@ -191,10 +193,10 @@ public class AlbumApiClient : IAlbumApiClient
         response.EnsureSuccessStatusCode();
     }
 
-    public async Task UnsaveAlbumAsync(long id)
+    public async Task UnsavePlaylistAsync(long id)
     {
         var baseUrl = BaseUrl.TrimEnd('/');
-        var path = ALBUM_API_PATH.TrimStart('/');
+        var path = PLAYLIST_API_PATH.TrimStart('/');
         var fullUrl = $"{baseUrl}/{path}/{id}/save";
 
         var request = new HttpRequestMessage(HttpMethod.Delete, fullUrl);
@@ -204,6 +206,4 @@ public class AlbumApiClient : IAlbumApiClient
         using var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
     }
-
-    #endregion
 }

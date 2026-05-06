@@ -1,6 +1,7 @@
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
 using System.Windows.Media.Imaging;
 using Desktop_Amethyst_Audio.Models.Clients.Abstraction;
@@ -18,76 +19,74 @@ public class AuthApiClient : IAuthApiClient
 
     private static string BaseUrl = Environment.GetEnvironmentVariable("BASE_URL");
     
-    private const string ALBUM_API_PATH = "/api/auth/";
+    private const string AUTH_API_PATH = "/api/auth/";
+    
+    private static readonly JsonSerializerOptions JsonOptions = new() 
+    { 
+        PropertyNameCaseInsensitive = true 
+    };
     
     public async Task<UserInfoDto> RegisterAsync(CreateUserDto dto)
     {
-        using MultipartFormDataContent formData = new MultipartFormDataContent();
-        
-        formData.Add(new StringContent(dto.Nickname), "Nickname");
-        formData.Add(new StringContent(dto.Email), "Email");
-        formData.Add(new StringContent(dto.Password), "Password");
+        var json = JsonSerializer.Serialize(dto);
+        using var content = new StringContent(json, Encoding.UTF8, "application/json");
         
         var baseUrl = BaseUrl.TrimEnd('/');
-        var path = ALBUM_API_PATH.TrimStart('/');
+        var path = AUTH_API_PATH.TrimStart('/');
         var fullUrl = $"{baseUrl}/{path}/signin";
     
-        var request = new HttpRequestMessage(HttpMethod.Post, fullUrl);
+        using var request = new HttpRequestMessage(HttpMethod.Post, fullUrl)
+        {
+            Content = content
+        };
     
-        var response = await _httpClient.SendAsync(request);
+        using var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
     
-        var json = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<UserInfoDto>(json, new JsonSerializerOptions 
-        { 
-            PropertyNameCaseInsensitive = true 
-        });
+        var responseJson = await response.Content.ReadAsStringAsync();
+        return JsonSerializer.Deserialize<UserInfoDto>(responseJson, JsonOptions);
     }
 
     public async Task<UserInfoDto> LoginUserAsync(LoginDto dto)
     {
-        using MultipartFormDataContent formData = new MultipartFormDataContent();
-        
-        formData.Add(new StringContent(dto.Email), "Email");
-        formData.Add(new StringContent(dto.Password), "Password");
+        var json = JsonSerializer.Serialize(dto);
+        using var content = new StringContent(json, Encoding.UTF8, "application/json");
         
         var baseUrl = BaseUrl.TrimEnd('/');
-        var path = ALBUM_API_PATH.TrimStart('/');
+        var path = AUTH_API_PATH.TrimStart('/');
         var fullUrl = $"{baseUrl}/{path}/login";
     
-        var request = new HttpRequestMessage(HttpMethod.Get, fullUrl);
+        using var request = new HttpRequestMessage(HttpMethod.Get, fullUrl)
+        {
+            Content = content
+        };
     
-        var response = await _httpClient.SendAsync(request);
+        using var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
     
-        var json = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<UserInfoDto>(json, new JsonSerializerOptions 
-        { 
-            PropertyNameCaseInsensitive = true 
-        });
+        var responseJson = await response.Content.ReadAsStringAsync();
+        return JsonSerializer.Deserialize<UserInfoDto>(responseJson, JsonOptions);
     }
 
     public async Task<UserInfoDto> ExternalLoginAsync(ExternalLoginDto dto)
     {
-        using MultipartFormDataContent formData = new MultipartFormDataContent();
-        
-        formData.Add(new StringContent(dto.Provider), "Provider");
-        formData.Add(new StringContent(dto.Token), "Token");
+        var json = JsonSerializer.Serialize(dto);
+        using var content = new StringContent(json, Encoding.UTF8, "application/json");
         
         var baseUrl = BaseUrl.TrimEnd('/');
-        var path = ALBUM_API_PATH.TrimStart('/');
+        var path = AUTH_API_PATH.TrimStart('/');
         var fullUrl = $"{baseUrl}/{path}/external-login";
     
-        var request = new HttpRequestMessage(HttpMethod.Get, fullUrl);
+        using var request = new HttpRequestMessage(HttpMethod.Get, fullUrl)
+        {
+            Content = content
+        };
     
-        var response = await _httpClient.SendAsync(request);
+        using var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
     
-        var json = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<UserInfoDto>(json, new JsonSerializerOptions 
-        { 
-            PropertyNameCaseInsensitive = true 
-        });
+        var responseJson = await response.Content.ReadAsStringAsync();
+        return JsonSerializer.Deserialize<UserInfoDto>(responseJson, JsonOptions);
     }
 
     public Task RefreshTokenAsync()

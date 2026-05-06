@@ -5,15 +5,15 @@ namespace Desktop_Amethyst_Audio.Models.Clients.Abstraction;
 
 public interface IPlaylistApiClient
 {
-    Task<PlaylistInfoDto> GetPlaylistByIdAsync();
+    Task<PlaylistInfoDto> GetPlaylistByIdAsync(long id);
     Task<List<PlaylistInfoDto>> GetPlaylistAllAsync();
-    Task<PlaylistInfoDto> GetListPlaylistByUserIdAsync();
-    Task<BitmapImage> GetPlaylistCoverAsync();
+    Task<PlaylistInfoDto> GetListPlaylistByUserIdAsync(long userId);
+    Task<BitmapImage> GetPlaylistCoverAsync(string coverUrl);
     
-    Task<PlaylistInfoDto> CreatePlaylistAsync();
-    Task<PlaylistInfoDto> UpdatePlaylistAsync();
-    Task DeletePlaylistAsync();
+    Task<PlaylistInfoDto> CreatePlaylistAsync(CreatePlaylistDto dto);
+    Task<PlaylistInfoDto> UpdatePlaylistAsync(ChangePlaylistInfoDto dto);
+    Task DeletePlaylistAsync(long id);
     
-    Task SavePlaylistAsync();
-    Task UnsavePlaylistAsync();
+    Task SavePlaylistAsync(long id);
+    Task UnsavePlaylistAsync(long id);
 }

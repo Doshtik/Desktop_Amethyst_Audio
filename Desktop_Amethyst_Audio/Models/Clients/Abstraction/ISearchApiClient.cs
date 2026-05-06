@@ -1,8 +1,12 @@
+using Backend_Amethyst_Audio.DTO;
+using Desktop_Amethyst_Audio.Models.DTO;
+using Desktop_Amethyst_Audio.Models.DTO.Tracks;
+
 namespace Desktop_Amethyst_Audio.Models.Clients.Abstraction;
 
 public interface ISearchApiClient
 {
-    Task GetGenres();
-    Task GetListByGenre(string genreName);
-    Task GetBySearch(string searchLine);
+    Task<GenreInfoDto> GetGenresAsync();
+    Task<List<TrackInfoDto>> GetListByGenreAsync(string genreName);
+    Task<SearchInfoDto> GetBySearchAsync(string searchLine);
 }

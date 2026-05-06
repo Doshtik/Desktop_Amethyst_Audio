@@ -2,6 +2,7 @@ using System.Net.Http;
 using System.Windows;
 using Backend_Amethyst_Audio.DTO;
 using Desktop_Amethyst_Audio.Models.Clients.Abstraction;
+using Desktop_Amethyst_Audio.Models.DTO.Users;
 using Desktop_Amethyst_Audio.Models.Services.Abstraction;
 
 namespace Desktop_Amethyst_Audio.Models.Services.Implementation;

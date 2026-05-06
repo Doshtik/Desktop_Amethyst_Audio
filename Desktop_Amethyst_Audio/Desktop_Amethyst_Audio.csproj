@@ -10,10 +10,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Models\Clients\Implementation\" />
-      <Folder Include="Models\DTO\Albums\" />
-      <Folder Include="Models\DTO\Playlists\" />
-      <Folder Include="Models\DTO\Tracks\" />
       <Folder Include="Views\UserControls\Library\" />
       <Folder Include="Views\UserControls\Resonance\" />
       <Folder Include="Views\UserControls\Search\" />

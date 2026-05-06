@@ -34,7 +34,7 @@ public class PlaylistApiClient : IPlaylistApiClient
     
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settingsService.Load().User.Token);
     
-        var response = await _httpClient.SendAsync(request);
+        using var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
     
         var json = await response.Content.ReadAsStringAsync();
@@ -51,7 +51,7 @@ public class PlaylistApiClient : IPlaylistApiClient
     
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settingsService.Load().User.Token);
     
-        var response = await _httpClient.SendAsync(request);
+        using var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
     
         var json = await response.Content.ReadAsStringAsync();
@@ -68,7 +68,7 @@ public class PlaylistApiClient : IPlaylistApiClient
     
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settingsService.Load().User.Token);
     
-        var response = await _httpClient.SendAsync(request);
+        using var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
     
         var json = await response.Content.ReadAsStringAsync();
@@ -77,11 +77,11 @@ public class PlaylistApiClient : IPlaylistApiClient
 
     public async Task<BitmapImage> GetPlaylistCoverAsync(string coverUrl)
     {
-        var request = new HttpRequestMessage(HttpMethod.Get, coverUrl);
+        using var request = new HttpRequestMessage(HttpMethod.Get, coverUrl);
     
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settingsService.Load().User.Token);
     
-        var response = await _httpClient.SendAsync(request);
+        using var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
     
         var imageBytes = await response.Content.ReadAsByteArrayAsync();
@@ -115,14 +115,14 @@ public class PlaylistApiClient : IPlaylistApiClient
         var path = PLAYLIST_API_PATH.TrimStart('/');
         var fullUrl = $"{baseUrl}/{path}";
     
-        var request = new HttpRequestMessage(HttpMethod.Post, fullUrl)
+        using var request = new HttpRequestMessage(HttpMethod.Post, fullUrl)
         {
             Content = formData
         };
     
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settingsService.Load().User.Token);
     
-        var response = await _httpClient.SendAsync(request);
+        using var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
     
         var json = await response.Content.ReadAsStringAsync();
@@ -151,14 +151,14 @@ public class PlaylistApiClient : IPlaylistApiClient
         var path = PLAYLIST_API_PATH.TrimStart('/');
         var fullUrl = $"{baseUrl}/{path}";
     
-        var request = new HttpRequestMessage(HttpMethod.Put, fullUrl)
+        using var request = new HttpRequestMessage(HttpMethod.Put, fullUrl)
         {
             Content = formData
         };
     
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settingsService.Load().User.Token);
     
-        var response = await _httpClient.SendAsync(request);
+        using var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
     
         var json = await response.Content.ReadAsStringAsync();
@@ -171,7 +171,7 @@ public class PlaylistApiClient : IPlaylistApiClient
         var path = PLAYLIST_API_PATH.TrimStart('/');
         var fullUrl = $"{baseUrl}/{path}/{id}";
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, fullUrl);
+        using var request = new HttpRequestMessage(HttpMethod.Delete, fullUrl);
         
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settingsService.Load().User.Token);
     
@@ -185,7 +185,7 @@ public class PlaylistApiClient : IPlaylistApiClient
         var path = PLAYLIST_API_PATH.TrimStart('/');
         var fullUrl = $"{baseUrl}/{path}/{id}/save";
 
-        var request = new HttpRequestMessage(HttpMethod.Post, fullUrl);
+        using var request = new HttpRequestMessage(HttpMethod.Post, fullUrl);
         
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settingsService.Load().User.Token);
     
@@ -199,7 +199,7 @@ public class PlaylistApiClient : IPlaylistApiClient
         var path = PLAYLIST_API_PATH.TrimStart('/');
         var fullUrl = $"{baseUrl}/{path}/{id}/save";
 
-        var request = new HttpRequestMessage(HttpMethod.Delete, fullUrl);
+        using var request = new HttpRequestMessage(HttpMethod.Delete, fullUrl);
         
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settingsService.Load().User.Token);
     

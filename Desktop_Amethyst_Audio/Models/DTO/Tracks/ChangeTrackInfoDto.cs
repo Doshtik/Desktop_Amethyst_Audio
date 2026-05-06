@@ -6,15 +6,15 @@ public class ChangeTrackInfoDto
     
     public string? Name { get; set; }
 
-    public IFormFile? CoverFile { get; set; }
+    public string? CoverFilePath { get; set; }
 
-    public IFormFile? TrackFile { get; set; }
+    public string? TrackFilePath { get; set; }
     
     public short PaceId { get; set; }
 
     public short MoodId { get; set; }
     
-    public string? GenresIdList { get; set; }
+    public List<short> GenresIdList { get; set; }
 
     public bool? IsTextless { get; set; }
 

@@ -1,3 +1,5 @@
+using Desktop_Amethyst_Audio.Models.DTO.Users;
+
 namespace Desktop_Amethyst_Audio.Models.DTO.Tracks;
 
 public class TrackInfoDto

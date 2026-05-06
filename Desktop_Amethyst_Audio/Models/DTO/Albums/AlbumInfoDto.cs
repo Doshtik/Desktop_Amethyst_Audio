@@ -1,3 +1,6 @@
+using Desktop_Amethyst_Audio.Models.DTO.Tracks;
+using Desktop_Amethyst_Audio.Models.DTO.Users;
+
 namespace Desktop_Amethyst_Audio.Models.DTO.Albums;
 
 public class AlbumInfoDto

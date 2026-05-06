@@ -8,9 +8,9 @@ public class ChangePlaylistInfoDto
 
     public string? Description { get; set; }
 
-    public IFormFile? CoverFile { get; set; }
+    public string? CoverFilePath { get; set; }
     
-    public string? AddedTracksIdList { get; set; }
+    public List<long> AddedTracksIdList { get; set; }
     
-    public string? RemovedTracksIdList { get; set; }
+    public List<long> RemovedTracksIdList { get; set; }
 }

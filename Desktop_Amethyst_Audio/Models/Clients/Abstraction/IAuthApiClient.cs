@@ -6,8 +6,7 @@ public interface IAuthApiClient
 {
     Task<UserInfoDto> RegisterAsync(CreateUserDto dto);
     Task<UserInfoDto> LoginUserAsync(LoginDto dto);
-    Task<UserInfoDto> ExternalLoginByGoogleAsync(ExternalLoginDto dto);
-    Task<UserInfoDto> ExternalLoginByYandexAsync(ExternalLoginDto dto);
+    Task<UserInfoDto> ExternalLoginAsync(ExternalLoginDto dto);
     Task RefreshTokenAsync();
     Task LogoutUserAsync();
 }

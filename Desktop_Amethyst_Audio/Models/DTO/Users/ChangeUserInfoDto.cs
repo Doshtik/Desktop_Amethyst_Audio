@@ -14,7 +14,7 @@ public class ChangeUserInfoDto
 
     public string? Country { get; set; }
 
-    public IFormFile? AvatarFile { get; set; }
+    public string? AvatarFilePath { get; set; }
 
-    public IFormFile? HeaderFile { get; set; }
+    public string? HeaderFilePath { get; set; }
 }

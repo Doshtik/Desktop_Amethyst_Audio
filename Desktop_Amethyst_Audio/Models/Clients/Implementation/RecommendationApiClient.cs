@@ -1,4 +1,5 @@
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using Desktop_Amethyst_Audio.Models.Clients.Abstraction;
@@ -17,7 +18,7 @@ public class RecommendationApiClient : IRecommendationApiClient
 
     private static string BaseUrl = Environment.GetEnvironmentVariable("BASE_URL");
     
-    private const string RECOMMENDATION_API_PATH = "/api/profiles/";
+    private const string RECOMMENDATION_API_PATH = "/api/reccomendation/";
     
     private static readonly JsonSerializerOptions JsonOptions = new() 
     { 
@@ -49,6 +50,8 @@ public class RecommendationApiClient : IRecommendationApiClient
         var fullUrl = $"{baseUrl}/{path}/query";
     
         using var request = new HttpRequestMessage(HttpMethod.Get, fullUrl);
+    
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settingsService.Load().User.Token);
     
         using var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();

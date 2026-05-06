@@ -2,9 +2,7 @@ namespace Desktop_Amethyst_Audio.Models.Clients.Abstraction;
 
 public interface ISearchApiClient
 {
-    /* SearchApiClient
-     *
-     * GetGenres
-     * GetBySearch
-     */
+    Task GetGenres();
+    Task GetListByGenre(string genreName);
+    Task GetBySearch(string searchLine);
 }

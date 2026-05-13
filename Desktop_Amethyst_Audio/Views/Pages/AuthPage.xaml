@@ -64,8 +64,8 @@
                                Margin="5,0,0,5"/>
                     <Border Background="{DynamicResource ContentMutedBrush}" CornerRadius="10"
                             Margin="0,0,0,10">
-                        <PasswordBox x:Name="AuthPasswordBox" Padding="5" 
-                                FontSize="18" Background="Transparent" BorderThickness="0"/>
+                        <TextBox x:Name="AuthTextBox" Padding="5" 
+                                 FontSize="18" Background="Transparent" BorderThickness="0"/>
                     </Border>
                 
                     <TextBlock x:Name="AuthForgetPasswordTextBlock"
@@ -87,7 +87,7 @@
             <Button x:Name="AuthEnterButton" Style="{DynamicResource ButtonPrimary}"
                     Margin="0,15,0,5" 
                     Command="{Binding EnterButtonOnClickCommand}"
-                    CommandParameter="{Binding ElementName=AuthPasswordBox}">
+                    CommandParameter="{Binding ElementName=AuthTextBox}">
                 <TextBlock Text="Войти" Margin="0 5 10 5" VerticalAlignment="Center"
                            FontSize="18" Foreground="{DynamicResource ContentPrimaryBrush}"/>
             </Button>

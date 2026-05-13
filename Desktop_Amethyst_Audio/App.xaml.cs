@@ -21,29 +21,17 @@ public partial class App : Application
         base.OnStartup(e);
         _authService = new AuthService();
         
-        // Логика проверки (например, через сервис или настройки)
         bool isAuthenticated = await _authService.TryAutoLoginAsync();
         
         if (isAuthenticated)
         {
-            // Показываем основное окно
-            new LayoutWindow().Show();
+            var layoutWindow = new LayoutWindow();
+            layoutWindow.Show();
         }
         else
         {
-            // Показываем окно входа
             var loginWindow = new AuthWindow();
-        
-            // Главное окно ПОСЛЕ успешного входа:
-            if (loginWindow.ShowDialog() == true) 
-            {
-                new LayoutWindow().Show();
-            }
-            else
-            {
-                // Если пользователь закрыл окно входа, закрываем приложение
-                Shutdown();
-            }
+            loginWindow.Show();
         }
     }
 }

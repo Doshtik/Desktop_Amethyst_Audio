@@ -2,6 +2,7 @@ using System.Net.Http;
 using System.Windows;
 using Backend_Amethyst_Audio.DTO;
 using Desktop_Amethyst_Audio.Models.Clients.Abstraction;
+using Desktop_Amethyst_Audio.Models.Clients.Implementation;
 using Desktop_Amethyst_Audio.Models.DTO.Users;
 using Desktop_Amethyst_Audio.Models.Services.Abstraction;
 
@@ -9,7 +10,7 @@ namespace Desktop_Amethyst_Audio.Models.Services.Implementation;
 
 public class AuthService : IAuthService
 {
-    //private readonly IAuthApiClient _authApiClient = new AuthApiClient();
+    private readonly IProfileApiClient _profileApiClient = new ProfileApiClient();
     private readonly ISettingsService _settingsService = new SettingsService();
     
     public async Task<bool> TryAutoLoginAsync()
@@ -21,7 +22,7 @@ public class AuthService : IAuthService
         
         try
         {
-            UserInfoDto? userFromApi = null; // await _authApiClient.GetUserByIdAsync(settings.User.Id);
+            UserInfoDto? userFromApi = await _profileApiClient.GetUserByIdAsync(settings.User.Id);
 
             if (userFromApi is not null)
             {
@@ -32,22 +33,11 @@ public class AuthService : IAuthService
         }
         catch (Exception e)
         {
-            MessageBox.Show(e.Message);
+            MessageBox.Show(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
         
         settings.User = null; 
         _settingsService.Save(settings);
         return false;
-    }
-
-    public async Task<UserInfoDto> LoginAsync(LoginDto dto)
-    {
-        //UserInfoDto dto = await _authApiClient.LoginAsync(dto);
-        throw new NotImplementedException();
-    }
-
-    public async Task<UserInfoDto> RegistrationAsync(CreateUserDto dto)
-    {
-        throw new NotImplementedException();
     }
 }

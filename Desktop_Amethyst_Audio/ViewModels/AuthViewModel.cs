@@ -25,4 +25,9 @@ public partial class AuthViewModel : ObservableObject
     
     public void NavigateToAuth() => CurrentPage = AuthPageViewModel;
     public void NavigateToRegister() => CurrentPage = RegisterPageViewModel;
+
+    public void NavigateToMainLayout()
+    {
+        
+    }
 }

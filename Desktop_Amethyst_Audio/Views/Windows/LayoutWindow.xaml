@@ -15,7 +15,7 @@
         Height="1080" Width="1920"
         MinHeight="600" MinWidth="800">
     <Window.Resources>
-        <vm:LayoutViewModel x:Key="LayoutViewModel"/>
+        <vm:LayoutWindowViewModel x:Key="LayoutWindowViewModel"/>
         
         <DataTemplate DataType="{x:Type vm-pages:SearchPageViewModel}">
             <views:SearchPage/>
@@ -32,7 +32,7 @@
     </Window.Resources>
     
     <Window.DataContext>
-        <StaticResource ResourceKey="LayoutViewModel"/>
+        <StaticResource ResourceKey="LayoutWindowViewModel"/>
     </Window.DataContext>
     
     <Grid>
@@ -89,9 +89,11 @@
                 </Grid.ColumnDefinitions>
             
                 <Button Grid.Column="0" x:Name="PlaylistButton" Content="Плейлист" Style="{DynamicResource ButtonPrimary}"
+                        Command="{Binding GetSavedPlaylistsCommand}"
                         FontSize="20" FontFamily="Inter" Margin="0 0 5 0"/>
             
                 <Button Grid.Column="1" x:Name="AlbumButton" Content="Альбом" Style="{DynamicResource ButtonPrimary}"
+                        Command="{Binding GetSavedAlbumsCommand}"
                         FontSize="20" FontFamily="Inter" Margin="5 0 0 0"/>
             </Grid>
         </StackPanel>

@@ -1,6 +1,8 @@
 ﻿using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Desktop_Amethyst_Audio.Messages.Navigation;
 
 namespace Desktop_Amethyst_Audio.ViewModels.PageViewModels;
 
@@ -11,34 +13,17 @@ public partial class RegisterPageViewModel: ObservableObject
     [ObservableProperty] private string _errorField;
     [ObservableProperty] private Visibility _errorVisibility;
     
-    private readonly Action _navigateBack;
-
-    public RegisterPageViewModel(Action navigateBack)
+    public RegisterPageViewModel()
     {
-        _navigateBack = navigateBack;
-        _nickname = string.Empty;
-        _email = string.Empty;
-        _errorField = string.Empty;
-        _errorVisibility = Visibility.Collapsed;
+        
     }
     
     [RelayCommand]
-    private void NavigateBack() => _navigateBack?.Invoke();
+    private void NavigateToAuth() 
+        => WeakReferenceMessenger.Default.Send(new NavigateToAuthMessage());
 
     [RelayCommand]
-    private void ChangeTheme()
-    {
-        //TODO: Add change theme 
-    }
-
-    [RelayCommand]
-    private void ChangeLanguage()
-    {
-        //TODO: Add change language 
-    }
-
-    [RelayCommand]
-    private void EnterButtonOnClick()
+    private void RegisterButtonOnClick()
     {
         throw new NotImplementedException();
     }

@@ -51,6 +51,7 @@
       <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.13" />
       <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3856.49" />
+      <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.142" />
       <PackageReference Include="NAudio" Version="2.2.1" />
     </ItemGroup>
 
@@ -84,6 +85,20 @@
       <None Remove="Assets\icon.png" />
       <None Remove="Assets\yandex_logo.png" />
       <Resource Include="Assets\yandex_logo.png" />
+      <None Remove="Assets\angle-small-down.png" />
+      <Resource Include="Assets\angle-small-down.png" />
+      <None Remove="Assets\back.png" />
+      <Resource Include="Assets\back.png" />
+      <None Remove="Assets\dots.png" />
+      <Resource Include="Assets\dots.png" />
+      <None Remove="Assets\heart.png" />
+      <Resource Include="Assets\heart.png" />
+      <None Remove="Assets\next.png" />
+      <Resource Include="Assets\next.png" />
+      <None Remove="Assets\repeat.png" />
+      <Resource Include="Assets\repeat.png" />
+      <None Remove="Assets\shuffle.png" />
+      <Resource Include="Assets\shuffle.png" />
     </ItemGroup>
 
     <ItemGroup>

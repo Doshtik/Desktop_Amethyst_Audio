@@ -1,3 +1,4 @@
+using System.IO;
 using System.Windows.Media.Imaging;
 using Desktop_Amethyst_Audio.Models.DTO.Tracks;
 
@@ -13,6 +14,6 @@ public interface ITrackApiClient
     Task<TrackInfoDto> UpdateAsync(long trackId, ChangeTrackInfoDto dto);
     Task DeleteAsync(long trackId);
     
-    Task<byte[]> GetTrackFileAsync(string trackFileUrl);
+    Task<Stream> GetTrackFileAsync(string trackFileUrl);
     Task<BitmapImage> GetTrackCoverAsync(string trackCoverUrl);
 }

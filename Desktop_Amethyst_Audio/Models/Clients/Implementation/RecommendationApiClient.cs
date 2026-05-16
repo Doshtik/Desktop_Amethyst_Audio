@@ -16,9 +16,9 @@ public class RecommendationApiClient : IRecommendationApiClient
     
     private static readonly SettingsService _settingsService = new();
 
-    private static string BaseUrl = Environment.GetEnvironmentVariable("BASE_URL");
+    private static string BaseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "http://localhost:5278";
     
-    private const string RECOMMENDATION_API_PATH = "/api/reccomendation/";
+    private const string RECOMMENDATION_API_PATH = "api/reccomendation";
     
     private static readonly JsonSerializerOptions JsonOptions = new() 
     { 

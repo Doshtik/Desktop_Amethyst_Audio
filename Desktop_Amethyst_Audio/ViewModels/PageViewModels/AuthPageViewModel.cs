@@ -1,10 +1,7 @@
-﻿using System.Collections.ObjectModel;
-using System.Globalization;
-using System.IO;
+﻿using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Markup;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -25,48 +22,60 @@ public partial class AuthPageViewModel : ObservableObject
     [ObservableProperty] private string _errorField;
     [ObservableProperty] private Visibility _errorVisibility;
     
-    private ISettingsService _settingsService;
+    private ISettingsService _settingsService = new SettingsService();
     
     private readonly IAuthApiClient _authApiClient = new AuthApiClient();
     
-    public AuthPageViewModel()
-    {
-        
-    }
+    public AuthPageViewModel() { }
     
     [RelayCommand]
     private void NavigateToRegister() 
         => WeakReferenceMessenger.Default.Send(new NavigateToRegisterMessage());
 
     [RelayCommand]
-    private void EnterButtonOnClick(object password)
+    private async void EnterButtonOnClick(object password)
     {
-        PasswordBox pb = password as PasswordBox;
-        
-        if (!IsFieldsValidated(pb.Password, out string errorMessage))
-        {
-            ErrorField = errorMessage;
-            ErrorVisibility = Visibility.Visible;
-            return;
-        }
-
-        LoginDto loginDto = new LoginDto()
-        {
-            Email = EmailField,
-            Password = pb.Password
-        };
-        
         try
         {
-            UserInfoDto userDto = _authApiClient.LoginUserAsync(loginDto).Result;
-            AppSettings settings = _settingsService.Load();
+            if (password is not PasswordBox pb)
+                throw new InvalidOperationException("CommandParameter не является PasswordBox");
+
+            if (!IsFieldsValidated(pb.Password, out string errorMessage))
+            {
+                ErrorField = errorMessage;
+                ErrorVisibility = Visibility.Visible;
+                return;
+            }
+
+            var loginDto = new LoginDto { Email = EmailField, Password = pb.Password };
+
+            var userDto = await _authApiClient.LoginUserAsync(loginDto);
+        
+            Debug.WriteLine($"[DEBUG] userDto is null: {userDto == null}");
+            if (userDto == null)
+                throw new InvalidOperationException("Сервер вернул пустой ответ (десериализация не удалась)");
+
+            AppSettings settings = _settingsService?.Load() ?? new AppSettings();
+            Debug.WriteLine($"[DEBUG] settings is null: {settings == null}");
+            if (settings == null)
+                throw new InvalidOperationException("Не удалось загрузить настройки приложения");
+
             settings.User = userDto;
+        
             _settingsService.Save(settings);
             
+            ErrorVisibility = Visibility.Collapsed;
+            
+            WeakReferenceMessenger.Default.Send(new NavigateToMainLayoutMessage());
         }
-        catch
+        catch (Exception ex)
         {
-            MessageBox.Show("Пользователь не найден", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            ErrorField = $"Ошибка: {ex.Message}";
+            ErrorVisibility = Visibility.Visible;
+        
+            Debug.WriteLine($"[EXCEPTION] {ex}");
+            if (ex.InnerException != null)
+                Debug.WriteLine($"[INNER] {ex.InnerException}");
         }
     }
 

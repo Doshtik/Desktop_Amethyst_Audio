@@ -15,28 +15,41 @@ public class AuthService : IAuthService
     
     public async Task<bool> TryAutoLoginAsync()
     {
-        AppSettings settings = _settingsService.Load();
-        
-        if (settings.User is null)
+        var settings = _settingsService.Load();
+    
+        if (settings.User is null || string.IsNullOrWhiteSpace(settings.User.Token))
             return false;
-        
+    
         try
         {
-            UserInfoDto? userFromApi = await _profileApiClient.GetUserByIdAsync(settings.User.Id);
+            var userFromApi = await _profileApiClient.GetUserByIdAsync(settings.User.Id);
 
-            if (userFromApi is not null)
+            if (userFromApi?.Token is not null)
             {
                 settings.User = userFromApi;
                 _settingsService.Save(settings);
                 return true;
             }
-        }
-        catch (Exception e)
-        {
-            MessageBox.Show(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
         
-        settings.User = null; 
+            return false;
+        }
+        catch (HttpRequestException httpEx) when (httpEx.StatusCode == System.Net.HttpStatusCode.Unauthorized 
+                                                  || httpEx.StatusCode == System.Net.HttpStatusCode.Forbidden)
+        {
+            Console.WriteLine($"[AutoLogin] Token expired or invalid: {httpEx.Message}");
+        }
+        catch (TaskCanceledException)
+        {
+            Console.WriteLine("[AutoLogin] Request timeout, keeping user data");
+            return false;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[AutoLogin] Temporary error, keeping user data: {ex.Message}");
+            return false;
+        }
+    
+        settings.User = null;
         _settingsService.Save(settings);
         return false;
     }

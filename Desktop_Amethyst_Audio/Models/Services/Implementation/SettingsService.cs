@@ -21,12 +21,34 @@ public class SettingsService : ISettingsService
     
     public AppSettings Load()
     {
+        var jsonOptions = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+            AllowTrailingCommas = true
+        };
+
         if (!File.Exists(_filePath))
             return new AppSettings();
-        
+    
         string existingJson = File.ReadAllText(_filePath);
-        AppSettings currentSettings = JsonSerializer.Deserialize<AppSettings>(existingJson);
-        return currentSettings;
+    
+        if (string.IsNullOrWhiteSpace(existingJson))
+            return new AppSettings();
+    
+        try
+        {
+            var currentSettings = JsonSerializer.Deserialize<AppSettings>(existingJson, jsonOptions);
+            return currentSettings ?? new AppSettings();
+        }
+        catch (JsonException ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[SettingsService] Ошибка парсинга: {ex.Message}");
+        
+            var backupPath = _filePath + $".broken.{DateTime.Now:yyyyMMddHHmmss}.bak";
+            File.Copy(_filePath, backupPath, overwrite: true);
+        
+            return new AppSettings();
+        }
     }
 
     public void Save(AppSettings settings)

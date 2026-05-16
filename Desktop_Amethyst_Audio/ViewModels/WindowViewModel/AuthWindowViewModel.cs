@@ -2,7 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Desktop_Amethyst_Audio.Messages.Navigation;
 
-namespace Desktop_Amethyst_Audio.ViewModels;
+namespace Desktop_Amethyst_Audio.ViewModels.WindowViewModel;
 
 public partial class AuthWindowViewModel : ObservableObject
 {

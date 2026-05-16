@@ -1,3 +1,4 @@
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -15,9 +16,9 @@ public class TrackApiClient : ITrackApiClient
     
     private static readonly SettingsService _settingsService = new();
 
-    private static string BaseUrl = Environment.GetEnvironmentVariable("BASE_URL");
+    private static string BaseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "http://localhost:5278";
     
-    private const string TRACK_API_PATH = "/api/tracks/";
+    private const string TRACK_API_PATH = "api/tracks";
     
     private static readonly JsonSerializerOptions JsonOptions = new() 
     { 
@@ -129,29 +130,36 @@ public class TrackApiClient : ITrackApiClient
         response.EnsureSuccessStatusCode();
     }
 
-    public async Task<byte[]> GetTrackFileAsync(string trackFileUrl)
+    public async Task<Stream> GetTrackFileAsync(string trackFileUrl)
     {
         using var request = new HttpRequestMessage(HttpMethod.Get, trackFileUrl);
     
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settingsService.Load().User.Token);
-    
-        using var response = await _httpClient.SendAsync(request);
+        using var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
         response.EnsureSuccessStatusCode();
     
-        var responseJson = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<byte[]>(responseJson, JsonOptions);
+        return await response.Content.ReadAsStreamAsync();
     }
 
     public async Task<BitmapImage> GetTrackCoverAsync(string trackCoverUrl)
     {
         using var request = new HttpRequestMessage(HttpMethod.Get, trackCoverUrl);
     
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settingsService.Load().User.Token);
-    
         using var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
     
-        var responseJson = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<BitmapImage>(responseJson, JsonOptions);
+        var imageBytes = await response.Content.ReadAsByteArrayAsync();
+    
+        return LoadBitmapFromBytes(imageBytes);
+    }
+    
+    private BitmapImage LoadBitmapFromBytes(byte[] bytes)
+    {
+        var bitmap = new BitmapImage();
+        bitmap.BeginInit();
+        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+        bitmap.StreamSource = new MemoryStream(bytes);
+        bitmap.EndInit();
+        bitmap.Freeze(); // Делаем потокобезопасным для WPF (обязательно для async!)
+        return bitmap;
     }
 }

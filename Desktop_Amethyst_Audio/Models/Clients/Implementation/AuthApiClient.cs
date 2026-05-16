@@ -17,9 +17,9 @@ public class AuthApiClient : IAuthApiClient
     
     private static readonly SettingsService _settingsService = new();
 
-    private static string BaseUrl = Environment.GetEnvironmentVariable("BASE_URL");
+    private static string BaseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "http://localhost:5278";
     
-    private const string AUTH_API_PATH = "/api/auth/";
+    private const string AUTH_API_PATH = "api/auth";
     
     private static readonly JsonSerializerOptions JsonOptions = new() 
     { 
@@ -56,12 +56,7 @@ public class AuthApiClient : IAuthApiClient
         var path = AUTH_API_PATH.TrimStart('/');
         var fullUrl = $"{baseUrl}/{path}/login";
     
-        using var request = new HttpRequestMessage(HttpMethod.Get, fullUrl)
-        {
-            Content = content
-        };
-    
-        using var response = await _httpClient.SendAsync(request);
+        using var response = await _httpClient.PostAsync(fullUrl, content);
         response.EnsureSuccessStatusCode();
     
         var responseJson = await response.Content.ReadAsStringAsync();

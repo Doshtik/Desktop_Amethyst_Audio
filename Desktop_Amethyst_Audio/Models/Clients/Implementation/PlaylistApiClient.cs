@@ -15,9 +15,9 @@ public class PlaylistApiClient : IPlaylistApiClient
     
     private static readonly SettingsService _settingsService = new();
 
-    private static string BaseUrl = Environment.GetEnvironmentVariable("BASE_URL");
+    private static string BaseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "http://localhost:5278";
     
-    private const string PLAYLIST_API_PATH = "/api/playlists/";
+    private const string PLAYLIST_API_PATH = "api/playlists";
     
     private static readonly JsonSerializerOptions JsonOptions = new() 
     { 
@@ -86,13 +86,17 @@ public class PlaylistApiClient : IPlaylistApiClient
     
         var imageBytes = await response.Content.ReadAsByteArrayAsync();
     
+        return LoadBitmapFromBytes(imageBytes);
+    }
+    
+    private BitmapImage LoadBitmapFromBytes(byte[] bytes)
+    {
         var bitmap = new BitmapImage();
         bitmap.BeginInit();
-        bitmap.CacheOption = BitmapCacheOption.OnLoad; 
-        bitmap.StreamSource = new MemoryStream(imageBytes);
-        bitmap.Freeze(); // делаем потокобезопасным (важно для async!)
+        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+        bitmap.StreamSource = new MemoryStream(bytes);
         bitmap.EndInit();
-    
+        bitmap.Freeze(); // Делаем потокобезопасным для WPF (обязательно для async!)
         return bitmap;
     }
 

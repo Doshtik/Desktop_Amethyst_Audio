@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:l="clr-namespace:Desktop_Amethyst_Audio.Resources.Locales"
-        xmlns:vm="clr-namespace:Desktop_Amethyst_Audio.ViewModels"
+        xmlns:vm="clr-namespace:Desktop_Amethyst_Audio.ViewModels.WindowViewModel"
         xmlns:vm-pages="clr-namespace:Desktop_Amethyst_Audio.ViewModels.PageViewModels"
         xmlns:views="clr-namespace:Desktop_Amethyst_Audio.Views.Pages"
         xmlns:uc="clr-namespace:Desktop_Amethyst_Audio.Views.UserControls"
@@ -37,8 +37,8 @@
     
     <Grid>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="4*"/>
         </Grid.ColumnDefinitions>
         
         <Grid.RowDefinitions>
@@ -61,12 +61,22 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Viewbox Grid.Row="0" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Bottom" MaxHeight="30">
-                        <TextBlock Text="Никнейм пользователя" Foreground="White"/>
-                    </Viewbox>
-                    <Viewbox Grid.Row="1" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Top" MaxHeight="25">
-                        <TextBlock Text="Имя и фамилия пользователя" Foreground="White"/>
-                    </Viewbox>
+                    <TextBlock x:Name="UserNicknameTextBlock" Grid.Row="0" Text="Никнейм пользователя" Foreground="White"/>
+                    <Button Grid.Row="1" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Left">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Выпадашка" Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="14" VerticalAlignment="Center"/>
+                                <Image Source="../../Assets/angle-small-down.png" Width="25"/>
+                            </StackPanel>
+                        </Button.Content>
+                        <Button.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Уведомления"/>
+                                <MenuItem Header="Настройки"/>
+                                <MenuItem Header="Выйти"/>
+                            </ContextMenu>
+                        </Button.ContextMenu>
+                    </Button>
                 </Grid>
             </Grid>
             
@@ -104,33 +114,88 @@
         <Grid x:Name="TrackPanel" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
                     Background="{DynamicResource SurfaceContainerBrush}">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="5*"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             
-            <Grid Grid.Column="0" Margin="10">
+            <Grid x:Name="TrackInfoGrid" Grid.Column="0" Margin="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
     
-                <Image Grid.Column="0" x:Name="TrackImage" Width="75" Height="75" />
+                <Image Grid.Column="0" x:Name="TrackImage" Source="../../Assets/test.jpg" Width="75"/>
     
                 <Grid Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    
-                    <Viewbox Grid.Row="0" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Bottom" MaxHeight="30">
-                        <TextBlock Text="Название трека" Foreground="{StaticResource ContentPrimaryBrush}"/>
-                    </Viewbox>
-                    <Viewbox Grid.Row="1" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Top" MaxHeight="25">
-                        <TextBlock Text="Имя исполнителей" Foreground="{StaticResource ContentPrimaryBrush}"/>
-                    </Viewbox>
+                    <TextBlock Grid.Row="0" Text="Название трека" FontSize="16" Foreground="{StaticResource ContentPrimaryBrush}"/>
+                    <TextBlock Grid.Row="1" Text="Имя исполнителей" FontSize="14" Foreground="{StaticResource ContentPrimaryBrush}"/>
                 </Grid>
             </Grid>
+            <Grid x:Name="TrackNavigationGrid" Grid.Column="1">
+                 <Grid.ColumnDefinitions>
+                     <ColumnDefinition Width="Auto"/>
+                     <ColumnDefinition Width="*"/>
+                 </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="RepeatButton" Grid.Column="0" Background="Transparent" Padding="10" BorderThickness="0" VerticalAlignment="Center">
+                        <Button.Content>
+                            <Image Source="../../Assets/repeat.png" Width="25"/>
+                        </Button.Content>
+                    </Button>
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Button x:Name="BackButton" Grid.Column="0" Background="Transparent" Padding="10"  BorderThickness="0" VerticalAlignment="Center">
+                            <Button.Content>
+                                <Image Source="../../Assets/back.png" Width="25"/>
+                            </Button.Content>
+                        </Button>
+                        <Button x:Name="PlayPauseButton" Grid.Column="1" Background="{DynamicResource OutlineSubtleBrush}" Padding="10"  BorderThickness="0" VerticalAlignment="Center">
+                            <Button.Content>
+                                <Image Source="../../Assets/test.jpg" Width="25"/>
+                            </Button.Content>
+                        </Button>
+                        <Button x:Name="NextButton" Grid.Column="2" Background="Transparent" Padding="10"  BorderThickness="0" VerticalAlignment="Center">
+                            <Button.Content>
+                                <Image Source="../../Assets/next.png" Width="25"/>
+                            </Button.Content>
+                        </Button>
+                    </Grid>
+                    <Button x:Name="ShuffleButton" Grid.Column="2" Background="Transparent" Padding="10"  BorderThickness="0" VerticalAlignment="Center">
+                        <Button.Content>
+                            <Image Source="../../Assets/shuffle.png" Width="25"/>
+                        </Button.Content>
+                    </Button>
+                </Grid>
+                <Grid Grid.Column="1" Margin="10 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" x:Name="CurrentTrackTimeTextBlock" Text="00:00"
+                               VerticalAlignment="Center" FontSize="16" Foreground="{DynamicResource ContentPrimaryBrush}"/>
+                    <ProgressBar Grid.Column="1" Margin="10 0" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="2" x:Name="TotalTrackTimeTextBlock" Text="04:24"
+                               VerticalAlignment="Center" FontSize="16" Foreground="{DynamicResource ContentPrimaryBrush}"/>
+                </Grid>
+            </Grid>
+            <StackPanel x:Name="TrackActions" Grid.Column="1">
+                
+            </StackPanel>
         </Grid>
     </Grid>
 </Window>

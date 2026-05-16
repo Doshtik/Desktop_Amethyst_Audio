@@ -18,7 +18,7 @@ public interface IProfileApiClient
     Task AddToHistoryAsync(long trackId);
     Task UpdateListeningTimeAsync(long trackId, int seconds);
     
-    Task<List<TrackInfoDto>> GetUserLibraryAsync(long id);
+    Task<List<TrackInfoDto>> GetUserLibraryAsync();
     Task AddUserLibraryAsync(long id);
     Task RemoveUserLibraryAsync(long id);
     

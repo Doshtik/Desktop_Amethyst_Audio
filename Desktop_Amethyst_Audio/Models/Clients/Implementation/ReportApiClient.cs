@@ -15,9 +15,9 @@ public class ReportApiClient : IReportApiClient
     
     private static readonly SettingsService _settingsService = new();
 
-    private static string BaseUrl = Environment.GetEnvironmentVariable("BASE_URL");
+    private static string BaseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "http://localhost:5278";
     
-    private const string RECOMMENDATION_API_PATH = "/api/reports/";
+    private const string RECOMMENDATION_API_PATH = "api/reports";
     
     private static readonly JsonSerializerOptions JsonOptions = new() 
     { 

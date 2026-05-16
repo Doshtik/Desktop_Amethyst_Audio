@@ -4,9 +4,43 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Desktop_Amethyst_Audio.Views.UserControls"
-             mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-        
-    </Grid>
+             mc:Ignorable="d" Background="Transparent" Loaded="TrackControl_OnLoaded"
+             d:DesignHeight="75" d:DesignWidth="500"
+             Height="75">
+    <Border BorderThickness="2" BorderBrush="{DynamicResource OutlineSubtleBrush}" CornerRadius="10" Background="{DynamicResource SurfaceContainerBrush}">
+        <Grid>
+             <Grid.ColumnDefinitions>
+                 <ColumnDefinition Width="Auto"/>
+                 <ColumnDefinition Width="*"/>
+                 <ColumnDefinition Width="Auto"/>
+             </Grid.ColumnDefinitions>
+            <Image x:Name="TrackImage" Grid.Column="0" Source="../../Assets/test.jpg" Margin="10"/>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock x:Name="TrackNameTextBlock" Text="Название трека" 
+                           Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="18"
+                           VerticalAlignment="Bottom" Grid.Row="0"/>
+                <TextBlock x:Name="TrackAuthorsTextBlock" Text="Исполнители" 
+                           Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="14"
+                           VerticalAlignment="Top" Grid.Row="1"/>
+            </Grid>
+            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10">
+                <TextBlock x:Name="DurationTextBlock" Text="00:00" VerticalAlignment="Center" FontSize="18" Foreground="{DynamicResource ContentPrimaryBrush}"/>
+                <Image Source="../../Assets/heart.png" Width="25" Margin="10"/>
+                <Button Background="Transparent" BorderThickness="0">
+                    <Button.Content>
+                        <Image Source="../../Assets/dots.png" Width="25"/>
+                    </Button.Content>
+                    <Button.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Добавить в плейлист"/>
+                        </ContextMenu>
+                    </Button.ContextMenu>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Border>
 </UserControl>

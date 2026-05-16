@@ -20,18 +20,18 @@ public partial class App : Application
     {
         base.OnStartup(e);
         _authService = new AuthService();
-        
+
         bool isAuthenticated = await _authService.TryAutoLoginAsync();
         
         if (isAuthenticated)
         {
             var layoutWindow = new LayoutWindow();
-            layoutWindow.Show();
+            layoutWindow.ShowDialog();
         }
         else
         {
             var loginWindow = new AuthWindow();
-            loginWindow.Show();
+            loginWindow.ShowDialog();
         }
     }
 }

@@ -16,9 +16,9 @@ public class AlbumApiClient : IAlbumApiClient
     
     private static readonly SettingsService _settingsService = new();
 
-    private static string BaseUrl = Environment.GetEnvironmentVariable("BASE_URL");
+    private static string BaseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "http://localhost:5278";
     
-    private const string ALBUM_API_PATH = "/api/album/";
+    private const string ALBUM_API_PATH = "api/album";
     
     private static readonly JsonSerializerOptions JsonOptions = new() 
     { 
@@ -87,13 +87,17 @@ public class AlbumApiClient : IAlbumApiClient
     
         var imageBytes = await response.Content.ReadAsByteArrayAsync();
     
+        return LoadBitmapFromBytes(imageBytes);
+    }
+    
+    private BitmapImage LoadBitmapFromBytes(byte[] bytes)
+    {
         var bitmap = new BitmapImage();
         bitmap.BeginInit();
-        bitmap.CacheOption = BitmapCacheOption.OnLoad; 
-        bitmap.StreamSource = new MemoryStream(imageBytes);
-        bitmap.Freeze(); // делаем потокобезопасным (важно для async!)
+        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+        bitmap.StreamSource = new MemoryStream(bytes);
         bitmap.EndInit();
-    
+        bitmap.Freeze(); // Делаем потокобезопасным для WPF (обязательно для async!)
         return bitmap;
     }
 

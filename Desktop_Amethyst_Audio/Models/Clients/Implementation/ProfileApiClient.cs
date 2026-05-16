@@ -19,9 +19,9 @@ public class ProfileApiClient : IProfileApiClient
     
     private static readonly SettingsService _settingsService = new();
 
-    private static string BaseUrl = Environment.GetEnvironmentVariable("BASE_URL");
+    private static string BaseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "http://localhost:5278";
     
-    private const string PROFILE_API_PATH = "/api/profiles/";
+    private const string PROFILE_API_PATH = "api/profiles";
     
     private static readonly JsonSerializerOptions JsonOptions = new() 
     { 
@@ -168,15 +168,23 @@ public class ProfileApiClient : IProfileApiClient
         response.EnsureSuccessStatusCode();
     }
         
-    public async Task<List<TrackInfoDto>> GetUserLibraryAsync(long id)
+    public async Task<List<TrackInfoDto>> GetUserLibraryAsync()
     {
+        var settings = _settingsService.Load();
+        var user = settings?.User;
+        
+        Console.WriteLine($"[AUTH] settings is null: {settings == null}");
+        Console.WriteLine($"[AUTH] user is null: {user == null}");
+        Console.WriteLine($"[AUTH] user.Token: '{user?.Token}'");
+        Console.WriteLine($"[AUTH] user.Token is null/empty: {string.IsNullOrWhiteSpace(user?.Token)}");
+        
         var baseUrl = BaseUrl.TrimEnd('/');
         var path = PROFILE_API_PATH.TrimStart('/');
-        var fullUrl = $"{baseUrl}/{path}/library/{id}";
+        var fullUrl = $"{baseUrl}/{path}/library/{user.Id}";
     
-        var request = new HttpRequestMessage(HttpMethod.Put, fullUrl);
+        var request = new HttpRequestMessage(HttpMethod.Get, fullUrl);
         
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settingsService.Load().User.Token);
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", user.Token);
     
         using var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
@@ -256,14 +264,7 @@ public class ProfileApiClient : IProfileApiClient
     
         var imageBytes = await response.Content.ReadAsByteArrayAsync();
     
-        var bitmap = new BitmapImage();
-        bitmap.BeginInit();
-        bitmap.CacheOption = BitmapCacheOption.OnLoad; 
-        bitmap.StreamSource = new MemoryStream(imageBytes);
-        bitmap.Freeze(); // делаем потокобезопасным (важно для async!)
-        bitmap.EndInit();
-    
-        return bitmap;
+        return LoadBitmapFromBytes(imageBytes);
     }
 
     public async Task<BitmapImage> GetUserHeaderAsync(string headerUrl)
@@ -275,13 +276,17 @@ public class ProfileApiClient : IProfileApiClient
     
         var imageBytes = await response.Content.ReadAsByteArrayAsync();
     
+        return LoadBitmapFromBytes(imageBytes);
+    }
+    
+    private BitmapImage LoadBitmapFromBytes(byte[] bytes)
+    {
         var bitmap = new BitmapImage();
         bitmap.BeginInit();
-        bitmap.CacheOption = BitmapCacheOption.OnLoad; 
-        bitmap.StreamSource = new MemoryStream(imageBytes);
-        bitmap.Freeze(); // делаем потокобезопасным (важно для async!)
+        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+        bitmap.StreamSource = new MemoryStream(bytes);
         bitmap.EndInit();
-    
+        bitmap.Freeze(); // Делаем потокобезопасным для WPF (обязательно для async!)
         return bitmap;
     }
 

@@ -1,19 +1,17 @@
 using System.Windows;
 using Microsoft.Web.WebView2.Core;
 
-namespace Desktop_Amethyst_Audio.Views.Windows;
+namespace Desktop_Amethyst_Audio.Views.ModalWindows;
 
-public partial class AuthByProvidersFormWindow : Window
+public partial class AuthByProvidersModalWindow : Window
 {
-    public string StartUrl { get; set; }
-    
-    public AuthByProvidersFormWindow()
+    public AuthByProvidersModalWindow()
     {
         InitializeComponent();
     }
 
     private void ProviderWebView_OnNavigationStarting(object? sender, CoreWebView2NavigationStartingEventArgs e)
     {
-        
+        throw new NotImplementedException();
     }
 }

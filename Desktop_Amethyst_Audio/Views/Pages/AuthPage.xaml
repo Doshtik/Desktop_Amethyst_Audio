@@ -2,13 +2,12 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:vm="clr-namespace:Desktop_Amethyst_Audio.ViewModels.PageViewModels"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:Desktop_Amethyst_Audio.Views.Pages"
       mc:Ignorable="d"
       Title="AuthPage" FontFamily="Inter"
-      d:Background="{DynamicResource SurfaceBaseBrush}" d:DesignWidth="800" d:DesignHeight="600"
-      d:DataContext="{d:DesignInstance Type=vm:AuthPageViewModel}">
+      d:Background="{DynamicResource SurfaceBaseBrush}" 
+      d:DesignWidth="800" d:DesignHeight="600">
     
     <Grid>
         <Grid.ColumnDefinitions>
@@ -26,13 +25,13 @@
         <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
             <Button x:Name="AuthChangeThemeButton" Style="{StaticResource ButtonPrimary}" 
                     Margin="0 10 5 0" Width="50" Height="50" 
-                    Command="{Binding ChangeThemeCommand}">
-                    <Image Source="{Binding ThemeIconPath}" Width="24" />
+                    Click="AuthChangeThemeButton_OnClick">
+                    <Image Source="../../Assets/test.jpg" Width="24" />
             </Button>
             <Button x:Name="AuthChangeLanguageButton" Style="{StaticResource ButtonPrimary}" 
                     Margin="5 10 10 0" Width="50" Height="50"
-                    Command="{Binding ChangeLanguageCommand}">
-                    <TextBlock Text="{Binding LanguageButtonText}" Margin="0 5 0 5" FontSize="18" FontWeight="SemiBold"
+                    Click="AuthChangeLanguageButton_OnClick">
+                    <TextBlock Text="Ru" Margin="0 5 0 5" FontSize="18" FontWeight="SemiBold"
                                Foreground="{DynamicResource ContentPrimaryBrush}"/>
             </Button>
         </StackPanel>
@@ -40,10 +39,11 @@
         <StackPanel Grid.Row="0" Grid.RowSpan="3" Grid.Column="1" 
                     HorizontalAlignment="Center" VerticalAlignment="Center" 
                     Width="300">
+            <Image Source="../../Assets/icon_256x256.png" Width="100"/>
             <TextBlock x:Name="AuthTitleTextBlock" Text="Аутентификация" 
                        Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="24" 
                        HorizontalAlignment="Center" 
-                       Margin="0,0,0,10"/>
+                       Margin="0 10"/>
         
             <Border Background="{DynamicResource SurfaceContainerBrush}" 
                     BorderThickness="1" BorderBrush="{DynamicResource OutlineSubtleBrush}" 
@@ -54,7 +54,7 @@
                                Margin="5,0,0,5"/>
                     <Border Background="{DynamicResource ContentMutedBrush}" CornerRadius="10"
                             Margin="0,0,0,10">
-                        <TextBox x:Name="AuthEmailTextBox" Padding="5" Text="{Binding EmailField}"
+                        <TextBox x:Name="AuthEmailTextBox" Padding="5"
                                 FontSize="18" Background="Transparent" BorderThickness="0"/>
                     </Border>
                     
@@ -69,15 +69,16 @@
                     </Border>
                 
                     <TextBlock x:Name="AuthForgetPasswordTextBlock"
-                        Text="Забыли пароль?" 
-                        FontSize="14"
-                        Foreground="{DynamicResource ContentPrimaryBrush}" 
-                        HorizontalAlignment="Right"
-                        TextDecorations="Underline" 
-                        Cursor="Hand"/>
+                        HorizontalAlignment="Right">
+                        <Hyperlink
+                            FontSize="14"
+                            Foreground="{DynamicResource ContentPrimaryBrush}">
+                            Забыли пароль?
+                        </Hyperlink>
+                    </TextBlock>
                     
                     <Border x:Name="ErrorBorder" Background="{DynamicResource StatusErrorBrush}" CornerRadius="10" 
-                            Visibility="{Binding ErrorVisibility}" Padding="15" Margin="0 10 0 0">
+                            Visibility="Collapsed" Padding="15" Margin="0 10 0 0">
                         <TextBlock x:Name="ErrorTextBlock" Text="{Binding ErrorField}"
                                    Foreground="{DynamicResource ContentPrimaryBrush}" TextWrapping="Wrap"/>
                     </Border>
@@ -86,8 +87,7 @@
             
             <Button x:Name="AuthEnterButton" Style="{DynamicResource ButtonPrimary}"
                     Margin="0,15,0,5" 
-                    Command="{Binding EnterButtonOnClickCommand}"
-                    CommandParameter="{Binding ElementName=AuthPasswordBox}">
+                    Click="AuthEnterButton_OnClick">
                 <TextBlock Text="Войти" Margin="0 5 10 5" VerticalAlignment="Center"
                            FontSize="18" Foreground="{DynamicResource ContentPrimaryBrush}"/>
             </Button>
@@ -114,9 +114,8 @@
                        Text="Ещё нет аккаунта?" FontSize="16"
                        Foreground="{DynamicResource ContentPrimaryBrush}" />
             <TextBlock x:Name="AuthNavigateToRegisterTextBlock" HorizontalAlignment="Center" FontSize="16">
-                <Hyperlink Command="{Binding NavigateToRegisterCommand}" 
-                           Foreground="{DynamicResource ContentPrimaryBrush}"
-                           TextDecorations="Underline">
+                <Hyperlink Click="NavigateToRegister"
+                           Foreground="{DynamicResource ContentPrimaryBrush}">
                     Зарегистрируйся
                 </Hyperlink>
             </TextBlock>

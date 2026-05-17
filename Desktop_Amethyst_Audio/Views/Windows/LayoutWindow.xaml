@@ -3,10 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:l="clr-namespace:Desktop_Amethyst_Audio.Resources.Locales"
-        xmlns:vm="clr-namespace:Desktop_Amethyst_Audio.ViewModels.WindowViewModel"
-        xmlns:vm-pages="clr-namespace:Desktop_Amethyst_Audio.ViewModels.PageViewModels"
-        xmlns:views="clr-namespace:Desktop_Amethyst_Audio.Views.Pages"
         xmlns:uc="clr-namespace:Desktop_Amethyst_Audio.Views.UserControls"
         mc:Ignorable="d" Title="Amethyst Audio" Icon="../../Assets/icon_128x128.ico"
         Background="{DynamicResource SurfaceBaseBrush}"
@@ -14,27 +10,6 @@
         WindowState="Maximized"
         Height="1080" Width="1920"
         MinHeight="600" MinWidth="800">
-    <Window.Resources>
-        <vm:LayoutWindowViewModel x:Key="LayoutWindowViewModel"/>
-        
-        <DataTemplate DataType="{x:Type vm-pages:SearchPageViewModel}">
-            <views:SearchPage/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type vm-pages:ResonancePageViewModel}">
-            <views:ResonancePage/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type vm-pages:LibraryPageViewModel}">
-            <views:LibraryPage/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type vm-pages:ProfilePageViewModel}">
-            <views:ProfilePage/>
-        </DataTemplate>
-    </Window.Resources>
-    
-    <Window.DataContext>
-        <StaticResource ResourceKey="LayoutWindowViewModel"/>
-    </Window.DataContext>
-    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="300"/>
@@ -82,34 +57,32 @@
             
             <Button x:Name="SearchButton" Content="Поиск" Style="{DynamicResource ButtonPrimary}"
                 FontSize="22" FontFamily="Inter" Margin="0 10 0 5" 
-                Command="{Binding NavigateToSearchCommand}"/>
+                Click="NavigateToSearch"/>
             
             <Button x:Name="ResonanceButton" Content="Резонанс" Style="{DynamicResource ButtonPrimary}"
                     FontSize="22" FontFamily="Inter" Margin=" 0 5 0 5"
-                    Command="{Binding NavigateToResonanceCommand}"/>
+                    Click="NavigateToResonance"/>
             
             <Button x:Name="LibraryButton" Content="Библиотека" Style="{DynamicResource ButtonPrimary}"
-                    FontSize="22" FontFamily="Inter" Margin="0 5 0 10"
-                    Command="{Binding NavigateToLibraryCommand}"/>
+                    FontSize="22" FontFamily="Inter" Margin="0 5 0 0"
+                    Click="NavigateToLibrary"/>
             
-            <Grid Margin="0 0 0 10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-            
-                <Button Grid.Column="0" x:Name="PlaylistButton" Content="Плейлист" Style="{DynamicResource ButtonPrimary}"
-                        Command="{Binding GetSavedPlaylistsCommand}"
-                        FontSize="20" FontFamily="Inter" Margin="0 0 5 0"/>
-            
-                <Button Grid.Column="1" x:Name="AlbumButton" Content="Альбом" Style="{DynamicResource ButtonPrimary}"
-                        Command="{Binding GetSavedAlbumsCommand}"
-                        FontSize="20" FontFamily="Inter" Margin="5 0 0 0"/>
-            </Grid>
+            <ComboBox x:Name="UserSavedColectionsComboBox" Margin="0 10">
+                <ComboBoxItem Content="Playlists"/>
+                <ComboBoxItem Content="Playlists"/>
+            </ComboBox>
+            <ListBox x:Name="SavedPlaylistsListBox"/>
+            <ListBox x:Name="SavedAlbumsListBox" Visibility="Collapsed">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="2" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+            </ListBox>
         </StackPanel>
         
-        <Frame x:Name="ContentFrame" Content="{Binding CurrentPage}"
-               Grid.Row="0" Grid.Column="1" NavigationUIVisibility="Hidden"/>
+        <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden"
+               Grid.Row="0" Grid.Column="1"/>
         
         <Grid x:Name="TrackPanel" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
                     Background="{DynamicResource SurfaceContainerBrush}">
@@ -132,8 +105,10 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" Text="Название трека" FontSize="16" Foreground="{StaticResource ContentPrimaryBrush}"/>
-                    <TextBlock Grid.Row="1" Text="Имя исполнителей" FontSize="14" Foreground="{StaticResource ContentPrimaryBrush}"/>
+                    <TextBlock Grid.Row="0" Text="Название трека" FontSize="16" 
+                               Foreground="{StaticResource ContentPrimaryBrush}"/>
+                    <TextBlock Grid.Row="1" Text="Имя исполнителей" FontSize="14" 
+                               Foreground="{StaticResource ContentPrimaryBrush}"/>
                 </Grid>
             </Grid>
             <Grid x:Name="TrackNavigationGrid" Grid.Column="1">
@@ -147,7 +122,8 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="RepeatButton" Grid.Column="0" Background="Transparent" Padding="10" BorderThickness="0" VerticalAlignment="Center">
+                    <Button x:Name="RepeatButton" Grid.Column="0" Background="Transparent" Padding="10" 
+                            BorderThickness="0" VerticalAlignment="Center">
                         <Button.Content>
                             <Image Source="../../Assets/repeat.png" Width="25"/>
                         </Button.Content>
@@ -158,23 +134,27 @@
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Button x:Name="BackButton" Grid.Column="0" Background="Transparent" Padding="10"  BorderThickness="0" VerticalAlignment="Center">
+                        <Button x:Name="BackButton" Grid.Column="0" Background="Transparent" Padding="10"  
+                                BorderThickness="0" VerticalAlignment="Center">
                             <Button.Content>
                                 <Image Source="../../Assets/back.png" Width="25"/>
                             </Button.Content>
                         </Button>
-                        <Button x:Name="PlayPauseButton" Grid.Column="1" Background="{DynamicResource OutlineSubtleBrush}" Padding="10"  BorderThickness="0" VerticalAlignment="Center">
+                        <Button x:Name="PlayPauseButton" Grid.Column="1" Background="{DynamicResource OutlineSubtleBrush}" Padding="10"  
+                                BorderThickness="0" VerticalAlignment="Center">
                             <Button.Content>
                                 <Image Source="../../Assets/test.jpg" Width="25"/>
                             </Button.Content>
                         </Button>
-                        <Button x:Name="NextButton" Grid.Column="2" Background="Transparent" Padding="10"  BorderThickness="0" VerticalAlignment="Center">
+                        <Button x:Name="NextButton" Grid.Column="2" Background="Transparent" Padding="10"  
+                                BorderThickness="0" VerticalAlignment="Center">
                             <Button.Content>
                                 <Image Source="../../Assets/next.png" Width="25"/>
                             </Button.Content>
                         </Button>
                     </Grid>
-                    <Button x:Name="ShuffleButton" Grid.Column="2" Background="Transparent" Padding="10"  BorderThickness="0" VerticalAlignment="Center">
+                    <Button x:Name="ShuffleButton" Grid.Column="2" Background="Transparent" Padding="10"  
+                            BorderThickness="0" VerticalAlignment="Center">
                         <Button.Content>
                             <Image Source="../../Assets/shuffle.png" Width="25"/>
                         </Button.Content>
@@ -188,7 +168,12 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" x:Name="CurrentTrackTimeTextBlock" Text="00:00"
                                VerticalAlignment="Center" FontSize="16" Foreground="{DynamicResource ContentPrimaryBrush}"/>
-                    <ProgressBar Grid.Column="1" Margin="10 0" VerticalAlignment="Center"/>
+                    <Slider Grid.Column="1" Margin="10 0" VerticalAlignment="Center"
+                            Minimum="0"
+                            Maximum="100" 
+                            Value="0"
+                            TickFrequency="1"
+                            IsMoveToPointEnabled="True"/>
                     <TextBlock Grid.Column="2" x:Name="TotalTrackTimeTextBlock" Text="04:24"
                                VerticalAlignment="Center" FontSize="16" Foreground="{DynamicResource ContentPrimaryBrush}"/>
                 </Grid>

@@ -29,13 +29,14 @@
             </Grid>
             <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10">
                 <TextBlock x:Name="DurationTextBlock" Text="00:00" VerticalAlignment="Center" FontSize="18" Foreground="{DynamicResource ContentPrimaryBrush}"/>
-                <Image Source="../../Assets/heart.png" Width="25" Margin="10"/>
                 <Button Background="Transparent" BorderThickness="0">
                     <Button.Content>
                         <Image Source="../../Assets/dots.png" Width="25"/>
                     </Button.Content>
                     <Button.ContextMenu>
                         <ContextMenu>
+                            <MenuItem Header="Добавить в очередь"/>
+                            <MenuItem Header="Добавить в библиотеку"/>
                             <MenuItem Header="Добавить в плейлист"/>
                         </ContextMenu>
                     </Button.ContextMenu>

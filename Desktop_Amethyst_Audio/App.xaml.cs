@@ -21,7 +21,7 @@ public partial class App : Application
         base.OnStartup(e);
         _authService = new AuthService();
 
-        bool isAuthenticated = await _authService.TryAutoLoginAsync();
+        bool isAuthenticated = true;//await _authService.TryAutoLoginAsync();
         
         if (isAuthenticated)
         {

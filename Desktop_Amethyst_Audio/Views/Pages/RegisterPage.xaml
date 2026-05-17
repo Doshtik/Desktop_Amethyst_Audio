@@ -3,12 +3,10 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:vm="clr-namespace:Desktop_Amethyst_Audio.ViewModels.PageViewModels"
       xmlns:local="clr-namespace:Desktop_Amethyst_Audio.Views.Pages"
       mc:Ignorable="d" 
-      d:DesignHeight="600" d:DesignWidth="800" 
+      d:DesignHeight="600" d:DesignWidth="800"
       d:Background="{DynamicResource SurfaceContainerBrush}"
-      d:DataContext="{d:DesignInstance Type=vm:RegisterPageViewModel}"
       Title="RegisterPage">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -22,19 +20,19 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Button x:Name="BackToLoginButton" Style="{StaticResource ButtonPrimary}"
-                HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding NavigateToAuthCommand}"
+                HorizontalAlignment="Left" VerticalAlignment="Top" Click="NavigateToAuth"
                 Margin="10" Width="50" Height="50" Grid.Row="0" Grid.Column="0">
             <Image Source="../../Assets/arrow_left.svg" Width="24" />
         </Button>
         <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
             <Button x:Name="ChangeThemeButton" Style="{StaticResource ButtonPrimary}" 
                     Margin="0 10 5 0" Width="50" Height="50"
-                    Command="{Binding ChangeThemeCommand}">
-                <Image Source="../../Assets/sun_icon.png" Width="24" />
+                    Click="ChangeThemeButton_OnClick">
+                <Image Source="../../Assets/test.jpg" Width="24" />
             </Button>
             <Button x:Name="ChangeLanguageButton" Style="{StaticResource ButtonPrimary}" 
                     Margin="5 10 10 0" Width="50" Height="50"
-                    Command="{Binding ChangeLanguageCommand}">
+                    Click="ChangeLanguageButton_OnClick">
                 <TextBlock Text="Ru" Margin="0 5 0 5" FontSize="18" FontWeight="SemiBold"
                            Foreground="{DynamicResource ContentPrimaryBrush}"/>
             </Button>
@@ -42,6 +40,7 @@
         <StackPanel Grid.Row="0" Grid.RowSpan="3" Grid.Column="1" 
                     HorizontalAlignment="Center" VerticalAlignment="Center" 
                     Width="300">
+            <Image Source="../../Assets/icon_256x256.png" Width="100"/>
             <TextBlock Text="Регистрация" 
                        Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="24" 
                        HorizontalAlignment="Center" 
@@ -73,17 +72,17 @@
                                Margin="5,0,0,5"/>
                     <Border Background="{DynamicResource ContentMutedBrush}" CornerRadius="10"
                             Margin="0,0,0,10">
-                        <PasswordBox x:Name="PasswordBox" Padding="5"
+                        <PasswordBox x:Name="RegisterPasswordBox" Padding="5"
                                      FontSize="18" Background="Transparent" BorderThickness="0"/>
                     </Border>
-                    <Border Background="{DynamicResource StatusErrorBrush}"
-                            CornerRadius="10" Visibility="{Binding ErrorVisibility}" Padding="10">
-                        <TextBlock Text="{Binding ErrorField}" Foreground="{DynamicResource ContentPrimaryBrush}" TextWrapping="Wrap"/>
+                    <Border x:Name="ErrorFieldBorder" Background="{DynamicResource StatusErrorBrush}"
+                            Visibility="Collapsed" CornerRadius="10" Padding="10">
+                        <TextBlock x:Name="ErrorFieldTextBlock" Foreground="{DynamicResource ContentPrimaryBrush}" TextWrapping="Wrap"/>
                     </Border>
                 </StackPanel>
             </Border>
-            <Button x:Name="EnterButton" Style="{DynamicResource ButtonPrimary}"
-                    Margin="0,15,0,5" Command="{Binding RegisterButtonOnClickCommand}" CommandParameter="{Binding ElementName=PasswordBox}">
+            <Button x:Name="RegisterButton" Style="{DynamicResource ButtonPrimary}"
+                    Margin="0,15,0,5" Click="RegisterButton_OnClick">
                 <TextBlock Text="Войти" Margin="0 5 10 5" VerticalAlignment="Center"
                            FontSize="18" Foreground="{DynamicResource ContentPrimaryBrush}"/>
             </Button>

@@ -10,6 +10,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Folder Include="Views\ModalWindows\" />
       <Folder Include="Views\UserControls\Library\" />
       <Folder Include="Views\UserControls\Resonance\" />
       <Folder Include="Views\UserControls\Search\" />

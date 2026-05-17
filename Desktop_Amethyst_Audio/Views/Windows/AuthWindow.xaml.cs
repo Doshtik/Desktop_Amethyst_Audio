@@ -17,9 +17,4 @@ public partial class AuthWindow : Window
             this.Close();
         });
     }
-
-    private void ForgetPasswordTextBlock_OnMouseDown(object sender, MouseButtonEventArgs e)
-    {
-        throw new NotImplementedException();
-    }
 }

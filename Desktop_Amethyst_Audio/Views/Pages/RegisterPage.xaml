@@ -22,7 +22,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Button x:Name="BackToLoginButton" Style="{StaticResource ButtonPrimary}"
-                HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding NavigateBackCommand}"
+                HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding NavigateToAuthCommand}"
                 Margin="10" Width="50" Height="50" Grid.Row="0" Grid.Column="0">
             <Image Source="../../Assets/arrow_left.svg" Width="24" />
         </Button>
@@ -57,7 +57,7 @@
                             Margin="0,0,0,10">
                         <TextBox x:Name="NicknameTextBox" Padding="5" FontSize="18" 
                                  Background="Transparent" BorderThickness="0"
-                                 Text="{Binding Nickname}"/>
+                                 Text="{Binding NicknameField}"/>
                     </Border>
                     <TextBlock Text="Email" Foreground="{DynamicResource ContentPrimaryBrush}"
                                FontSize="18"
@@ -66,7 +66,7 @@
                             Margin="0,0,0,10">
                         <TextBox x:Name="EmailTextBox" Padding="5" FontSize="18" 
                                  Background="Transparent" BorderThickness="0"
-                                 Text="{Binding Email}"/>
+                                 Text="{Binding EmailField}"/>
                     </Border>
                     <TextBlock Text="Пароль" 
                                Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="18"
@@ -83,7 +83,7 @@
                 </StackPanel>
             </Border>
             <Button x:Name="EnterButton" Style="{DynamicResource ButtonPrimary}"
-                    Margin="0,15,0,5" Command="{Binding EnterButtonOnClickCommand}">
+                    Margin="0,15,0,5" Command="{Binding RegisterButtonOnClickCommand}" CommandParameter="{Binding ElementName=PasswordBox}">
                 <TextBlock Text="Войти" Margin="0 5 10 5" VerticalAlignment="Center"
                            FontSize="18" Foreground="{DynamicResource ContentPrimaryBrush}"/>
             </Button>

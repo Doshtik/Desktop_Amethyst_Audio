@@ -35,12 +35,7 @@ public class AuthApiClient : IAuthApiClient
         var path = AUTH_API_PATH.TrimStart('/');
         var fullUrl = $"{baseUrl}/{path}/signin";
     
-        using var request = new HttpRequestMessage(HttpMethod.Post, fullUrl)
-        {
-            Content = content
-        };
-    
-        using var response = await _httpClient.SendAsync(request);
+        using var response = await _httpClient.PostAsync(fullUrl, content);
         response.EnsureSuccessStatusCode();
     
         var responseJson = await response.Content.ReadAsStringAsync();

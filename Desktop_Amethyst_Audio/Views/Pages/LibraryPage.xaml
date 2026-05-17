@@ -6,9 +6,20 @@
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:local="clr-namespace:Desktop_Amethyst_Audio.Views.Pages"
       xmlns:vm="clr-namespace:Desktop_Amethyst_Audio.ViewModels.PageViewModels"
+      xmlns:tracks="clr-namespace:Desktop_Amethyst_Audio.Models.DTO.Tracks"
+      xmlns:userControls="clr-namespace:Desktop_Amethyst_Audio.Views.UserControls"
       mc:Ignorable="d"
       Title="LibraryPage" d:DesignHeight="600" d:DesignWidth="800"
+      SizeChanged="LibraryPage_OnSizeChanged"
       d:DataContext="{d:DesignInstance Type=vm:LibraryPageViewModel}">
+    <Page.Resources>
+        <!-- Шаблон для одного трека -->
+        <DataTemplate DataType="{x:Type tracks:TrackInfoDto}">
+            <userControls:TrackControl 
+                Track="{Binding}" 
+                Width="{Binding PageWidth, RelativeSource={RelativeSource AncestorType=Page}, Converter={StaticResource Minus20Converter}}"/>
+        </DataTemplate>
+    </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>

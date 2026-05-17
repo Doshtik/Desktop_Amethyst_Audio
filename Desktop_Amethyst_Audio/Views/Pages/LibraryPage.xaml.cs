@@ -19,4 +19,10 @@ public partial class LibraryPage : Page
         TrackControl? control = TrackListBox.SelectedItem as TrackControl;
         WeakReferenceMessenger.Default.Send(new TrackChangedMessage(control.Track));
     }
+
+    private void LibraryPage_OnSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        var tmp = DataContext as LibraryPageViewModel;
+        tmp.PageWidth = this.ActualWidth;
+    }
 }

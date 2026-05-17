@@ -13,6 +13,7 @@ public partial class LibraryPageViewModel: ObservableObject
     [ObservableProperty] private List<TrackControl> _controls; 
     private readonly IProfileApiClient _profileApiClient;
     
+    [ObservableProperty] private double _pageWidth;
 
     public LibraryPageViewModel()
     {

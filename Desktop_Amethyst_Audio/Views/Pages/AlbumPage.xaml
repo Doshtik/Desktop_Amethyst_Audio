@@ -5,40 +5,48 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:Desktop_Amethyst_Audio.Views.Pages"
       mc:Ignorable="d" Loaded="AlbumPage_OnLoaded"
+      d:Background="{DynamicResource SurfaceBaseBrush}"
       Title="AlbumPage" Height="600" Width="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="3*"/>
         </Grid.RowDefinitions>
-        
-        <Border Margin="5" Grid.Row="0" Background="Brown" BorderThickness="1"
-                CornerRadius="10">
+        <Border Margin="5" Background="BlueViolet" CornerRadius="10">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <Image x:Name="AlbumCoverImage" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Margin="5" Source="../../Assets/test.jpg" Width="150"/>
-                <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1">
-                    <TextBlock x:Name="NameTextBlock" Text="This Text is a placeholder" FontSize="32" Margin="5 10"/>
-                    <StackPanel x:Name="AuthorStackPanel" Orientation="Horizontal" Margin="5 0">
-                        <TextBlock Text="Author1"/>
-                        <TextBlock Text="Author2"/>
-                        <TextBlock Text="Author3"/>
+                <Image x:Name="AlbumImage" Source="/Assets/test.jpg" Margin="10" Grid.Column="0"/>
+                <StackPanel Orientation="Vertical" VerticalAlignment="Center" Grid.Column="1">
+                    <TextBlock Text="АЛЬБОМ" FontSize="10" Foreground="{DynamicResource ContentPrimaryBrush}"/>
+                    <TextBlock x:Name="AlbumName" Text="Название альбома" FontWeight="Medium"
+                               Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="18" />
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Margin="0 0 5 0">
+                                <Hyperlink x:Name="AuthorNameHyperLink"
+                                           Click="AuthorNameHyperLink_Click" FontWeight="Light"
+                                           Foreground="{DynamicResource ContentPrimaryBrush}">
+                                    Название автора
+                                </Hyperlink>
+                            </TextBlock>
+                        </StackPanel>
+                        <TextBlock x:Name="TrackAmountTextBlock" FontWeight="Light" Text="Количество треков: 150" 
+                                   Foreground="{DynamicResource ContentPrimaryBrush}"/>
                     </StackPanel>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
-                    <Button Content="Добавить" VerticalAlignment="Center" Padding="20 10"/>
-                    <Button Content="Слушать" VerticalAlignment="Center" Padding="20 10"/>
+                <StackPanel Orientation="Horizontal" Grid.Column="1" Margin="0 10" VerticalAlignment="Bottom">
+                    <Button x:Name="PlayAlbumButton" Content="Слушать" Style="{StaticResource ButtonPrimary}"/>
+                    <Button x:Name="NavigateToPrevious" Content="Назад" Style="{StaticResource ButtonPrimary}" Margin="5 0"/>
+                    <ComboBox x:Name="AlbumActionsComboBox" Background="Transparent" BorderThickness="0">
+                        <ComboBoxItem x:Name="AddToSaved" Content="Сохранить альбом" Selected=""/>
+                        <ComboBoxItem x:Name="EditAlbum" Content="Настройки альбома" Visibility="Collapsed" Selected="EditAlbum_Selected"/>
+                    </ComboBox>
                 </StackPanel>
             </Grid>
         </Border>
-        
-        <ListBox x:Name="TrackListBox" BorderThickness="0" Background="Transparent" Grid.Row="1" Margin="5"/>
+        <ListBox x:Name="TrackListBox" Grid.Row="1" Margin="5" Background="Transparent" BorderThickness="0"/>
     </Grid>
 </Page>

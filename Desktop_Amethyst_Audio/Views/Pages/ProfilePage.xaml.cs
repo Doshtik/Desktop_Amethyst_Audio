@@ -8,4 +8,29 @@ public partial class ProfilePage : Page
     {
         InitializeComponent();
     }
+
+    private void NavigateToListOfTracks_Click(object sender, System.Windows.RoutedEventArgs e)
+    {
+
+    }
+
+    private void NavigateToListOfAlbums_Click(object sender, System.Windows.RoutedEventArgs e)
+    {
+
+    }
+
+    private void NavigateToListOfPlaylists_Click(object sender, System.Windows.RoutedEventArgs e)
+    {
+
+    }
+
+    private void FollowUserButton_Click(object sender, System.Windows.RoutedEventArgs e)
+    {
+
+    }
+
+    private void UnfollowUserButton_Click(object sender, System.Windows.RoutedEventArgs e)
+    {
+
+    }
 }

@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.Windows;
 using System.Windows.Media.Imaging;
 using Desktop_Amethyst_Audio.Models.Clients.Abstraction;
 using Desktop_Amethyst_Audio.Models.DTO.Tracks;
@@ -133,7 +134,6 @@ public class TrackApiClient : ITrackApiClient
     public async Task<Stream> GetTrackFileAsync(string trackFileUrl)
     {
         using var request = new HttpRequestMessage(HttpMethod.Get, trackFileUrl);
-    
         using var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
         response.EnsureSuccessStatusCode();
     

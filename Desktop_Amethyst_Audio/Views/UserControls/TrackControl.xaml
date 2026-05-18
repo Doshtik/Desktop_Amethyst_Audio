@@ -23,24 +23,16 @@
                 <TextBlock x:Name="TrackNameTextBlock" Text="Название трека" 
                            Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="18"
                            VerticalAlignment="Bottom" Grid.Row="0"/>
-                <TextBlock x:Name="TrackAuthorsTextBlock" Text="Исполнители" 
-                           Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="14"
-                           VerticalAlignment="Top" Grid.Row="1"/>
+                <StackPanel x:Name="TrackUsersPanel" Orientation="Horizontal" Grid.Row="1" VerticalAlignment="Top"/>
             </Grid>
             <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10">
                 <TextBlock x:Name="DurationTextBlock" Text="00:00" VerticalAlignment="Center" FontSize="18" Foreground="{DynamicResource ContentPrimaryBrush}"/>
-                <Button Background="Transparent" BorderThickness="0">
-                    <Button.Content>
-                        <Image Source="../../Assets/dots.png" Width="25"/>
-                    </Button.Content>
-                    <Button.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Header="Добавить в очередь"/>
-                            <MenuItem Header="Добавить в библиотеку"/>
-                            <MenuItem Header="Добавить в плейлист"/>
-                        </ContextMenu>
-                    </Button.ContextMenu>
-                </Button>
+                <ComboBox Name="trackActions" Background="Transparent" BorderThickness="0" 
+                          Margin="10 0 0 0" Foreground="{DynamicResource ContentPrimaryBrush}">
+                    <ComboBoxItem x:Name="AddTrackInQueue" Content="Добавить в очередь" Selected="AddTrackInQueue_Selected"/>
+                    <ComboBoxItem x:Name="AddTrackInLibrary" Content="Добавить в библиотеку" Selected="AddTrackInLibrary_Selected" Visibility="Collapsed"/>
+                    <ComboBoxItem x:Name="AddTrackInPlaylist" Content="Добавить в плейлист" Selected="AddTrackInPlaylist_Selected"/>
+                </ComboBox>
             </StackPanel>
         </Grid>
     </Border>

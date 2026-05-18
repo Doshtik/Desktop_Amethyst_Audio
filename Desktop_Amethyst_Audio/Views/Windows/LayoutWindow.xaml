@@ -8,7 +8,7 @@
         Background="{DynamicResource SurfaceBaseBrush}"
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized"
-        Height="1080" Width="1920"
+        Height="1080" Width="1920" Loaded="Window_Loaded"
         MinHeight="600" MinWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -22,36 +22,28 @@
         </Grid.RowDefinitions>
         
         <StackPanel x:Name="SideBar" Orientation="Vertical"
-                    Grid.Row="0" Grid.Column="0">
-            <Grid Margin="10 10 10 5">
+                    Grid.Row="0" Grid.Column="0" Margin="10">
+            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
     
-                <Image Grid.Column="0" x:Name="AvatarImage" Width="75" Height="75"/>
+                <Image x:Name="UserAvatarImage" Grid.Column="0" Width="75" Height="75"/>
     
                 <Grid Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <TextBlock x:Name="UserNicknameTextBlock" Grid.Row="0" Text="Никнейм пользователя" Foreground="White"/>
-                    <Button Grid.Row="1" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Left">
-                        <Button.Content>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Выпадашка" Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="14" VerticalAlignment="Center"/>
-                                <Image Source="../../Assets/angle-small-down.png" Width="25"/>
-                            </StackPanel>
-                        </Button.Content>
-                        <Button.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Уведомления"/>
-                                <MenuItem Header="Настройки"/>
-                                <MenuItem Header="Выйти"/>
-                            </ContextMenu>
-                        </Button.ContextMenu>
-                    </Button>
+                    <TextBlock x:Name="UserNicknameTextBlock" Grid.Row="0" Text="Никнейм пользователя" Foreground="White" FontSize="14"/>
+                    <ComboBox x:Name="ProfileActionsComboBox" Grid.Row="1" Foreground="{DynamicResource ContentPrimaryBrush}" 
+                              Background="Transparent" BorderThickness="0">
+                        <ComboBoxItem x:Name="NavigateToProfile" Content="В профиль" Selected="NavigateToProfile_Selected"/>
+                        <ComboBoxItem x:Name="NavigateToNotification" Content="Уведомления" Selected="NavigateToNotification_Selected"/>
+                        <ComboBoxItem x:Name="NavigateToSettings" Content="Настройки" Selected="NavigateToSettings_Selected"/>
+                        <ComboBoxItem x:Name="NavigateToAuth" Content="Выйти" Selected="NavigateToAuth_Selected"/>
+                    </ComboBox>
                 </Grid>
             </Grid>
             
@@ -67,12 +59,12 @@
                     FontSize="22" FontFamily="Inter" Margin="0 5 0 0"
                     Click="NavigateToLibrary"/>
             
-            <ComboBox x:Name="UserSavedColectionsComboBox" Margin="0 10">
+            <ComboBox x:Name="UserSavedColectionsComboBox" Margin="0 10" SelectedIndex="0">
                 <ComboBoxItem Content="Playlists"/>
-                <ComboBoxItem Content="Playlists"/>
+                <ComboBoxItem Content="Albums"/>
             </ComboBox>
-            <ListBox x:Name="SavedPlaylistsListBox"/>
-            <ListBox x:Name="SavedAlbumsListBox" Visibility="Collapsed">
+            <ListBox x:Name="SavedPlaylistsListBox" Visibility="Collapsed" BorderThickness="0" Background="Transparent"/>
+            <ListBox x:Name="SavedAlbumsListBox" Visibility="Collapsed" BorderThickness="0" Background="Transparent">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Columns="2" />
@@ -82,10 +74,10 @@
         </StackPanel>
         
         <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden"
-               Grid.Row="0" Grid.Column="1"/>
+               Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"/>
         
         <Grid x:Name="TrackPanel" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
-                    Background="{DynamicResource SurfaceContainerBrush}">
+                    Background="{DynamicResource SurfaceContainerBrush}" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
@@ -123,7 +115,7 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Button x:Name="RepeatButton" Grid.Column="0" Background="Transparent" Padding="10" 
-                            BorderThickness="0" VerticalAlignment="Center">
+                            BorderThickness="0" VerticalAlignment="Center" Click="RepeatButton_Click">
                         <Button.Content>
                             <Image Source="../../Assets/repeat.png" Width="25"/>
                         </Button.Content>
@@ -135,26 +127,26 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Button x:Name="BackButton" Grid.Column="0" Background="Transparent" Padding="10"  
-                                BorderThickness="0" VerticalAlignment="Center">
+                                BorderThickness="0" VerticalAlignment="Center" Click="BackButton_Click">
                             <Button.Content>
                                 <Image Source="../../Assets/back.png" Width="25"/>
                             </Button.Content>
                         </Button>
                         <Button x:Name="PlayPauseButton" Grid.Column="1" Background="{DynamicResource OutlineSubtleBrush}" Padding="10"  
-                                BorderThickness="0" VerticalAlignment="Center">
+                                BorderThickness="0" VerticalAlignment="Center" Click="PlayPauseButton_Click">
                             <Button.Content>
                                 <Image Source="../../Assets/test.jpg" Width="25"/>
                             </Button.Content>
                         </Button>
                         <Button x:Name="NextButton" Grid.Column="2" Background="Transparent" Padding="10"  
-                                BorderThickness="0" VerticalAlignment="Center">
+                                BorderThickness="0" VerticalAlignment="Center" Click="NextButton_Click">
                             <Button.Content>
                                 <Image Source="../../Assets/next.png" Width="25"/>
                             </Button.Content>
                         </Button>
                     </Grid>
                     <Button x:Name="ShuffleButton" Grid.Column="2" Background="Transparent" Padding="10"  
-                            BorderThickness="0" VerticalAlignment="Center">
+                            BorderThickness="0" VerticalAlignment="Center" Click="ShuffleButton_Click">
                         <Button.Content>
                             <Image Source="../../Assets/shuffle.png" Width="25"/>
                         </Button.Content>
@@ -178,9 +170,55 @@
                                VerticalAlignment="Center" FontSize="16" Foreground="{DynamicResource ContentPrimaryBrush}"/>
                 </Grid>
             </Grid>
-            <StackPanel x:Name="TrackActions" Grid.Column="1">
-                
+            <StackPanel x:Name="TrackActions" Orientation="Horizontal" Grid.Column="2"
+                        VerticalAlignment="Center">
+                <Button x:Name="TrackLyricButton" Content="Тт" Padding="10 10 5 10"
+                        Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="18"
+                        Background="Transparent" BorderThickness="0"/>
+                <Button x:Name="QueueButton" Background="Transparent" BorderThickness="0" Padding="5 10 5 10">
+                    <Button.Content>
+                        <Image Source="/Assets/test.jpg" Width="25"/>
+                    </Button.Content>
+                </Button>
+                <Button x:Name="VolumeButton" Background="Transparent" BorderThickness="0" Padding="5 10 5 10">
+                    <Button.Content>
+                        <Image Source="/Assets/test.jpg" Width="25"/>
+                    </Button.Content>
+                </Button>
+                <Button x:Name="TrackActionsButton" Background="Transparent" BorderThickness="0" Padding="5 10 10 10">
+                    <Button.Content>
+                        <Image Source="/Assets/test.jpg" Width="25"/>
+                    </Button.Content>
+                </Button>
             </StackPanel>
+            <Popup x:Name="VolumePopup"
+                   PlacementTarget="{Binding ElementName=VolumeButton}"
+                   Placement="Top"
+                   StaysOpen="True"
+                   AllowsTransparency="True"
+                   PopupAnimation="Fade">   
+                <Border Background="#2D2D30" 
+                        BorderBrush="#555555" 
+                        BorderThickness="1" 
+                        CornerRadius="6" 
+                        Padding="10"
+                        Margin="0,0,0,10">
+                    <StackPanel>
+                        <Slider x:Name="VolumeSlider"
+                                Minimum="0" Maximum="1"
+                                Value="0.7"
+                                Width="120"
+                                TickFrequency="0.1"
+                                IsSnapToTickEnabled="True"
+                                ValueChanged="VolumeSlider_ValueChanged"/>
+                        <TextBlock Text="{Binding ElementName=VolumeSlider, Path=Value, StringFormat='Громкость: {0:P0}'}"
+                                   Foreground="White"
+                                   HorizontalAlignment="Center"
+                                   FontSize="11"
+                                   Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+            </Popup>
         </Grid>
     </Grid>
 </Window>

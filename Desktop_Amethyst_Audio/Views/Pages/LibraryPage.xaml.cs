@@ -40,7 +40,7 @@ public partial class LibraryPage : Page
     private void TrackListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         TrackControl? control = TrackListBox.SelectedItem as TrackControl;
-        //WeakReferenceMessenger.Default.Send(new TrackChangedMessage(control.Track));
+        WeakReferenceMessenger.Default.Send(new TrackChangedMessage(control.Track));
     }
 
     private void LibraryPage_OnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -53,6 +53,7 @@ public partial class LibraryPage : Page
 
     private void SortComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        throw new NotImplementedException();
+        //TODO: Сделать сортировку
+        return;
     }
 }

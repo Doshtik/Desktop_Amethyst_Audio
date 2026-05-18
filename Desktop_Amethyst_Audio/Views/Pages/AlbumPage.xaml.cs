@@ -18,4 +18,9 @@ public partial class AlbumPage : Page
     {
         
     }
+
+    private void EditAlbum_Selected(object sender, RoutedEventArgs e)
+    {
+
+    }
 }

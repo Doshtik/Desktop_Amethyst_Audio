@@ -1,5 +1,9 @@
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Media.Imaging;
+using CommunityToolkit.Mvvm.Messaging;
+using Desktop_Amethyst_Audio.Messages.Navigation.MainLayout;
 using Desktop_Amethyst_Audio.Models.Clients.Implementation;
 using Desktop_Amethyst_Audio.Models.DTO.Tracks;
 using Desktop_Amethyst_Audio.Models.DTO.Users;
@@ -19,25 +23,49 @@ public partial class TrackControl : UserControl
         TrackApiClient client = new TrackApiClient();
         try
         {
-            var image = await client.GetTrackCoverAsync(Track.CoverUrl);
+            BitmapImage image = await client.GetTrackCoverAsync(Track.CoverUrl);
             TrackImage.Source = image;
         }
         catch (Exception exception)
         {
             Console.WriteLine(exception);
         }
+
         TrackNameTextBlock.Text = Track.Name;
-        string users = string.Empty;
         foreach (UserInfoDto dto in Track.UserList)
         {
-            users += dto.Nickname + ", ";
+            TextBlock user = new TextBlock();
+            Hyperlink link = new Hyperlink();
+            link.Click += (sender, e) => NavigateToProfile(dto.Id);
+            link.SetResourceReference(Hyperlink.ForegroundProperty, "ContentPrimaryBrush");
+            Run runText = new Run(dto.Nickname);
+            link.Inlines.Add(runText);
+            user.Inlines.Add(link);
+            TrackUsersPanel.Children.Add(user);
         }
-        TrackAuthorsTextBlock.Text = users.Substring(0, users.Length - 2);
     }
+
+    private void NavigateToProfile(long userId) 
+        => WeakReferenceMessenger.Default.Send(new NavigateToProfileMessage(userId, false));
 
     public void OnSizeChanged(object sender, SizeChangedEventArgs e)
     {
         Page? parent = sender as Page;
         this.Width = parent.ActualWidth - 30;
+    }
+
+    private void AddTrackInQueue_Selected(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void AddTrackInLibrary_Selected(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void AddTrackInPlaylist_Selected(object sender, RoutedEventArgs e)
+    {
+
     }
 }

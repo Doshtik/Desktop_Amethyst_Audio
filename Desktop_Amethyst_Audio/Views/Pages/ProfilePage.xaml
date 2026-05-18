@@ -4,9 +4,131 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:Desktop_Amethyst_Audio.Views.Pages"
-      mc:Ignorable="d"
+      mc:Ignorable="d" d:Background="{DynamicResource SurfaceBaseBrush}"
       Title="ProfilePage" d:DesignHeight="600" d:DesignWidth="800">
     <Grid>
-        <TextBlock Text="Profile" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="3*"/>
+        </Grid.RowDefinitions>
+        <Image Margin="5" Source="/Assets/test.jpg" Stretch="Fill"/>
+        <Grid VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Image x:Name="UserAvatar" Grid.Column="0" Source="/Assets/test.jpg" Width="75" />
+            <Grid Grid.Column="1" Margin="5 0 0 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Наименование пользователя" VerticalAlignment="Bottom" 
+                       FontSize="18" FontWeight="Medium" Foreground="{DynamicResource ContentPrimaryBrush}"/>
+                <TextBlock Grid.Row="1" Text="Количество подписчиков: 123456789" FontSize="14" Foreground="{DynamicResource ContentPrimaryBrush}"/>
+                <StackPanel Orientation="Horizontal" Grid.Row="2" Visibility="Collapsed">
+                    <Button x:Name="FollowUserButton" Content="Подписаться" Style="{StaticResource ButtonPrimary}" Click="FollowUserButton_Click"/>
+                    <Button x:Name="UnfollowUserButton" Content="Отписаться" Style="{StaticResource ButtonPrimary}" Click="UnfollowUserButton_Click"/>
+                </StackPanel>
+                <ComboBox Grid.Row="2" Visibility="Collapsed">
+                    <ComboBoxItem x:Name="NavigateToSettings" Content="Настройки" Selected="NavigateToSettings_Selected"/>
+                    <ComboBoxItem x:Name="NavigateToAnalytics" Content="Аналитика" Selected="NavigateToAnalytics_Selected"/>
+                    <ComboBoxItem x:Name="CreateTrack" Content="Выпустить трек" Selected="CreateTrack_Selected"/>
+                    <ComboBoxItem x:Name="CreateAlbum" Content="Выпустить альбом" Selected="CreateAlbum_Selected"/>
+                </ComboBox>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Список треков" Grid.Column="0" Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="14"/>
+                    <TextBlock Grid.Column="1" HorizontalAlignment="Right">
+                    <Hyperlink x:Name="NavigateToListOfTracks" Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="14" Click="NavigateToListOfTracks_Click">
+                        Все
+                    </Hyperlink>
+                    </TextBlock>
+                </Grid>
+                <ListBox Grid.Row="1" Margin="0 5 0 0" 
+                     Background="Transparent" BorderThickness="0"
+                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                     ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Rows="3" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
+            </Grid>
+            <Grid Grid.Row="1" Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Список альбомов" Grid.Column="0" Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="14"/>
+                    <TextBlock Grid.Column="1" HorizontalAlignment="Right">
+                        <Hyperlink x:Name="NavigateToListOfAlbums" Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="14" Click="NavigateToListOfAlbums_Click">
+                            Все
+                        </Hyperlink>
+                    </TextBlock>
+                </Grid>
+                <ListBox Grid.Row="1" Margin="0 5 0 0" 
+                     Background="Transparent" BorderThickness="0"
+                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                     ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Rows="2" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
+            </Grid>
+            <Grid Grid.Row="2" Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Список плейлистов" Grid.Column="0" Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="14"/>
+                    <TextBlock Grid.Column="1" HorizontalAlignment="Right">
+                        <Hyperlink x:Name="NavigateToListOfPlaylists" Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="14" Click="NavigateToListOfPlaylists_Click">
+                            Все
+                        </Hyperlink>
+                    </TextBlock>
+                </Grid>
+                <ListBox Grid.Row="1" Margin="0 5 0 0"
+                     Background="Transparent" BorderThickness="0"
+                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                     ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Rows="2" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
+            </Grid>
+        </Grid>
     </Grid>
 </Page>

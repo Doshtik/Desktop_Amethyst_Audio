@@ -70,7 +70,6 @@ public partial class AuthPage : Page
             _settingsService.Save(settings);
             
             ErrorBorder.Visibility = Visibility.Collapsed;
-            WeakReferenceMessenger.Default.Send(new NavigateToMainLayoutMessage());
         }
         catch (Exception ex)
         {
@@ -81,6 +80,7 @@ public partial class AuthPage : Page
             if (ex.InnerException != null)
                 Debug.WriteLine($"[INNER] {ex.InnerException}");
         }
+        WeakReferenceMessenger.Default.Send(new NavigateToMainLayoutMessage());
     }
     
     private bool IsFieldsValidated(out string errorMessage)

@@ -43,7 +43,6 @@ public partial class LayoutWindow : Window
     private Brush _repeatButtonBackground;
     
     private SearchPage SearchPage { get; } = new();
-    private SearchResultPage SearchResultPage { get; } = new();
     private ResonancePage ResonancePage { get; } = new();
     private LibraryPage LibraryPage { get; } = new();
     private ProfilePage ProfilePage { get; } = new();
@@ -74,7 +73,7 @@ public partial class LayoutWindow : Window
         //_repeatButtonBackground = (Brush)cc.ConvertFrom("");
 
         WeakReferenceMessenger.Default.Register<NavigateToSearchMessage>(this, (r, m) => ContentFrame.Navigate(SearchPage));
-        WeakReferenceMessenger.Default.Register<NavigateToSearchResultMessage>(this, (r, m) => ContentFrame.Navigate(SearchResultPage));
+        WeakReferenceMessenger.Default.Register<NavigateToSearchResultMessage>(this, (r, m) => ContentFrame.Navigate(new SearchResultPage("")));
         WeakReferenceMessenger.Default.Register<NavigateToResonanceMessage>(this, (r, m) => ContentFrame.Navigate(ResonancePage));
         WeakReferenceMessenger.Default.Register<NavigateToLibraryMessage>(this, (r, m) => ContentFrame.Navigate(LibraryPage));
         WeakReferenceMessenger.Default.Register<NavigateToProfileMessage>(this, (r, m) => ContentFrame.Navigate(ProfilePage));
@@ -190,5 +189,20 @@ public partial class LayoutWindow : Window
     private void NavigateToAuth_Selected(object sender, RoutedEventArgs e)
     {
 
+    }
+
+    private void VolumeSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        return;
+    }
+
+    private void ChangeCollectiontoPlaylistButton_OnChecked(object sender, RoutedEventArgs e)
+    {
+        
+    }
+
+    private void ChangeCollectiontoAlbumButton_OnChecked(object sender, RoutedEventArgs e)
+    {
+        
     }
 }

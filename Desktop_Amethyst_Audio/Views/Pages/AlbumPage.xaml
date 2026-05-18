@@ -38,11 +38,15 @@
                     </StackPanel>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Column="1" Margin="0 10" VerticalAlignment="Bottom">
-                    <Button x:Name="PlayAlbumButton" Content="Слушать" Style="{StaticResource ButtonPrimary}"/>
-                    <Button x:Name="NavigateToPrevious" Content="Назад" Style="{StaticResource ButtonPrimary}" Margin="5 0"/>
+                    <Button x:Name="PlayAlbumButton" Content="Слушать" Style="{StaticResource ButtonPrimary}"
+                            Click="PlayAlbumButton_OnClick"/>
+                    <Button x:Name="NavigateToPrevious" Content="Назад" Style="{StaticResource ButtonPrimary}" Margin="5 0"
+                            Click="NavigateToPrevious_OnClick"/>
                     <ComboBox x:Name="AlbumActionsComboBox" Background="Transparent" BorderThickness="0">
-                        <ComboBoxItem x:Name="AddToSaved" Content="Сохранить альбом" Selected=""/>
-                        <ComboBoxItem x:Name="EditAlbum" Content="Настройки альбома" Visibility="Collapsed" Selected="EditAlbum_Selected"/>
+                        <ComboBoxItem x:Name="AddToSaved" Content="Сохранить альбом" 
+                                      Selected="AddToSaved_OnSelected"/>
+                        <ComboBoxItem x:Name="EditAlbum" Content="Настройки альбома" Visibility="Collapsed" 
+                                      Selected="EditAlbum_Selected"/>
                     </ComboBox>
                 </StackPanel>
             </Grid>

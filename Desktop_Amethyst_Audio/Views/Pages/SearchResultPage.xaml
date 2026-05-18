@@ -7,29 +7,6 @@
       mc:Ignorable="d" d:Background="{DynamicResource SurfaceBaseBrush}"
       Title="SearchResultPage" d:DesignHeight="600" d:DesignWidth="800">
     <Grid>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Grid Grid.Row="0" Margin="10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-
-                <Border Grid.Column="0" Background="{DynamicResource ContentMutedBrush}" 
-            Margin="0 0 10 0" CornerRadius="10" BorderThickness="0">
-                    <TextBox FontSize="18" VerticalAlignment="Center" Padding="5" Background="Transparent" Foreground="{DynamicResource ContentPrimaryBrush}" 
-                 BorderThickness="0"/>
-                </Border>
-                <Button Grid.Column="1" FontSize="16" Style="{DynamicResource ButtonPrimary}">
-                    <StackPanel Orientation="Horizontal">
-                        <Image x:Name="SearchImage" Width="30" Source="../../Assets/test.jpg" Margin="0 0 5 0"/>
-                        <TextBlock FontSize="18" Text="Поиск" Padding="2.5"/>
-                    </StackPanel>
-                </Button>
-            </Grid>
-        </Grid>
+        
     </Grid>
 </Page>

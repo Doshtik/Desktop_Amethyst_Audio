@@ -16,11 +16,31 @@ public partial class AlbumPage : Page
 
     private void AlbumPage_OnLoaded(object sender, RoutedEventArgs e)
     {
-        
+        throw new NotImplementedException();
     }
 
     private void EditAlbum_Selected(object sender, RoutedEventArgs e)
     {
+        throw new NotImplementedException();
+    }
 
+    private void AuthorNameHyperLink_Click(object sender, RoutedEventArgs e)
+    {
+        throw new NotImplementedException();
+    }
+
+    private void AddToSaved_OnSelected(object sender, RoutedEventArgs e)
+    {
+        throw new NotImplementedException();
+    }
+
+    private void PlayAlbumButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        throw new NotImplementedException();
+    }
+
+    private void NavigateToPrevious_OnClick(object sender, RoutedEventArgs e)
+    {
+        throw new NotImplementedException();
     }
 }

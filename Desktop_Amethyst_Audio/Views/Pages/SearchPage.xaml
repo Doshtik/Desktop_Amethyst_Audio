@@ -32,31 +32,16 @@
             </Grid.RowDefinitions>
             
             <TextBlock Grid.Row="0" Text="Новые альбомы" FontSize="18" Foreground="{DynamicResource ContentPrimaryBrush}" />
-            <ItemsControl Grid.Row="1" ItemsSource="{Binding NewAlbums}">
-                <!-- 1. Делаем список горизонтальным -->
-                <ItemsControl.ItemsPanel>
+            <ListBox Grid.Row="1"
+                     Background="Transparent" BorderThickness="0"
+                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                     ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal"/>
+                        <UniformGrid Rows="2" />
                     </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-
-                <!-- 2. Добавляем прокрутку -->
-                <ItemsControl.Template>
-                    <ControlTemplate TargetType="ItemsControl">
-                        <ScrollViewer HorizontalScrollBarVisibility="Auto" 
-                                      VerticalScrollBarVisibility="Disabled">
-                            <ItemsPresenter />
-                        </ScrollViewer>
-                    </ControlTemplate>
-                </ItemsControl.Template>
-
-                <!-- Используем наш UserControl -->
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <!--<views:AlbumCard />-->
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                </ListBox.ItemsPanel>
+            </ListBox>
         </Grid>
         
         <Grid Margin="10 0 10 10">

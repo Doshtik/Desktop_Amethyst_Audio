@@ -70,9 +70,9 @@
                 <UniformGrid.Resources>
                     <Style TargetType="RadioButton" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
                 </UniformGrid.Resources>
-                <RadioButton GroupName="CollectionMode" x:Name="ChangeCollectiontoPlaylistButton" Content="Playlist" IsChecked="True"
+                <RadioButton GroupName="CollectionMode" x:Name="ChangeCollectiontonPlaylistButton" Content="Playlist" IsChecked="True"
                              Checked="ChangeCollectiontoPlaylistButton_OnChecked"/>
-                <RadioButton GroupName="CollectionMode" x:Name="ChangeCollectiontoAlbumButton" Content="Album" 
+                <RadioButton GroupName="CollectionMode" x:Name="ChangeCollectiontonAlbumButton" Content="Album" 
                              Checked="ChangeCollectiontoAlbumButton_OnChecked"/>
             </UniformGrid>
             <ListBox x:Name="SavedPlaylistsListBox" Visibility="Collapsed" BorderThickness="0" Background="Transparent"/>

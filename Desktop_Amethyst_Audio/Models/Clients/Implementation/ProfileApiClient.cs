@@ -193,7 +193,7 @@ public class ProfileApiClient : IProfileApiClient
         return JsonSerializer.Deserialize<List<TrackInfoDto>>(json, JsonOptions);
     }
 
-    public async Task AddUserLibraryAsync(long id)
+    public async Task AddTrackToUserLibraryAsync(long id)
     {
         var baseUrl = BaseUrl.TrimEnd('/');
         var path = PROFILE_API_PATH.TrimStart('/');
@@ -207,7 +207,7 @@ public class ProfileApiClient : IProfileApiClient
         response.EnsureSuccessStatusCode();
     }
 
-    public async Task RemoveUserLibraryAsync(long id)
+    public async Task RemoveTrackFromUserLibraryAsync(long id)
     {
         var baseUrl = BaseUrl.TrimEnd('/');
         var path = PROFILE_API_PATH.TrimStart('/');

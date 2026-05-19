@@ -11,5 +11,8 @@
     <Compile Update="Views\ModalWindows\SettingsModalWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Windows\TestApiClientWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 </Project>

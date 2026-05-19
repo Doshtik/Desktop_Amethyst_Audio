@@ -25,7 +25,7 @@ public class RecommendationApiClient : IRecommendationApiClient
         PropertyNameCaseInsensitive = true 
     };
     
-    public async Task<ResonanceConfigDto> GetRecommendationConfig()
+    public async Task<ResonanceConfigDto> GetRecommendationConfigAsync()
     {
         var baseUrl = BaseUrl.TrimEnd('/');
         var path = RECOMMENDATION_API_PATH.TrimStart('/');

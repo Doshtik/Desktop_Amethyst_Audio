@@ -19,8 +19,8 @@ public interface IProfileApiClient
     Task UpdateListeningTimeAsync(long trackId, int seconds);
     
     Task<List<TrackInfoDto>> GetUserLibraryAsync();
-    Task AddUserLibraryAsync(long id);
-    Task RemoveUserLibraryAsync(long id);
+    Task AddTrackToUserLibraryAsync(long id);
+    Task RemoveTrackFromUserLibraryAsync(long id);
     
     Task<List<PlaylistInfoDto>> GetUserSavedPlaylistsAsync(long id);
     Task<List<AlbumInfoDto>> GetUserSavedAlbumsAsync(long id);

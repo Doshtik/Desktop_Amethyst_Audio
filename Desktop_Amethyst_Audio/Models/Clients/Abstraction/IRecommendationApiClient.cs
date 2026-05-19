@@ -5,6 +5,6 @@ namespace Desktop_Amethyst_Audio.Models.Clients.Abstraction;
 
 public interface IRecommendationApiClient
 {
-    Task<ResonanceConfigDto> GetRecommendationConfig();
+    Task<ResonanceConfigDto> GetRecommendationConfigAsync();
     Task<List<TrackInfoDto>> GetPersonalizedRecommendationsAsync(PageResonanceDto dto);
 }

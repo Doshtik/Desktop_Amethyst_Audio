@@ -1,0 +1,30 @@
+﻿<Window x:Class="Desktop_Amethyst_Audio.Views.Windows.TestApiClientWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Desktop_Amethyst_Audio.Views.Windows"
+        mc:Ignorable="d"
+        Title="TestApiClientWindow" Height="450" Width="800">
+    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <StackPanel Orientation="Vertical">
+            <Button x:Name="BeginAuthApiClientTestButton" Content="Тест AuthApiClient" 
+        Click="BeginAuthApiClientTestButton_Click"/>
+            <Button x:Name="BeginProfileApiClientTestButton" Content="Тест ProfileApiClient" 
+        Click="BeginProfileApiClientTestButton_Click"/>
+            <Button x:Name="BeginRecommendationApiClientTestButton" Content="Тест RecommendationApiClient" 
+        Click="BeginRecommendationApiClientTestButton_Click"/>
+            <Button x:Name="BeginSearchApiClientTestButton" Content="Тест SearchApiClient" 
+        Click="BeginSearchApiClientTestButton_Click"/>
+            <Button x:Name="BeginTrackApiClientTestButton" Content="Тест TrackApiClient" 
+        Click="BeginTrackApiClientTestButton_Click"/>
+            <Button x:Name="BeginAlbumApiClientTestButton" Content="Тест AlbumApiClient" 
+        Click="BeginAlbumApiClientTestButton_Click"/>
+            <Button x:Name="BeginPlalistApiClientTestButton" Content="Тест PlalisApiClient" 
+        Click="BeginPlalistApiClientTestButton_Click"/>
+            <Button x:Name="BeginReportApiClientTestButton" Content="Тест ReportApiClient" 
+        Click="BeginReportApiClientTestButton_Click"/>
+        </StackPanel>
+        <TextBlock x:Name="TestResultTB" TextWrapping="Wrap"/>
+    </StackPanel>
+</Window>

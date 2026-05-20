@@ -1,4 +1,18 @@
-﻿using System.IO;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using Desktop_Amethyst_Audio.Messages.Action;
+using Desktop_Amethyst_Audio.Messages.Navigation;
+using Desktop_Amethyst_Audio.Messages.Navigation.MainLayout;
+using Desktop_Amethyst_Audio.Models;
+using Desktop_Amethyst_Audio.Models.Clients.Abstraction;
+using Desktop_Amethyst_Audio.Models.Clients.Implementation;
+using Desktop_Amethyst_Audio.Models.DTO.Tracks;
+using Desktop_Amethyst_Audio.Models.DTO.Users;
+using Desktop_Amethyst_Audio.Models.Services.Abstraction;
+using Desktop_Amethyst_Audio.Models.Services.Implementation;
+using Desktop_Amethyst_Audio.Views.Pages;
+using Microsoft.VisualBasic.ApplicationServices;
+using NAudio.Wave;
+using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,17 +23,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using CommunityToolkit.Mvvm.Messaging;
-using Desktop_Amethyst_Audio.Messages.Action;
-using Desktop_Amethyst_Audio.Messages.Navigation.MainLayout;
-using Desktop_Amethyst_Audio.Models.Clients.Abstraction;
-using Desktop_Amethyst_Audio.Models.Clients.Implementation;
-using Desktop_Amethyst_Audio.Models.DTO.Tracks;
-using Desktop_Amethyst_Audio.Models.DTO.Users;
-using Desktop_Amethyst_Audio.Models.Services.Abstraction;
-using Desktop_Amethyst_Audio.Models.Services.Implementation;
-using Desktop_Amethyst_Audio.Views.Pages;
-using NAudio.Wave;
 
 namespace Desktop_Amethyst_Audio.Views.Windows;
 
@@ -85,16 +88,26 @@ public partial class LayoutWindow : Window
 
     private async void Window_Loaded(object sender, RoutedEventArgs e)
     {
+        AppSettings settings = _settingsService.Load();
+
+        if (settings.User is null)
+        {
+            MessageBox.Show("Сессия не найдена. Выполняется возврат к авторизации...", "Вход", MessageBoxButton.OK, MessageBoxImage.Warning);
+            WeakReferenceMessenger.Default.Send(new NavigateToAuthMessage());
+            return;
+        }
+
         try
         {
-            UserInfoDto user = _settingsService.Load().User;
+            UserInfoDto user = settings.User;
             UserNicknameTextBlock.Text = user.Nickname;
             BitmapImage image = await _profileApiClient.GetUserAvatarAsync(user.AvatarUrl);
             UserAvatarImage.Source = image;
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Не удалось загрузить данные пользователя");
+            MessageBox.Show($"Не удалось загрузить данные пользователя: {ex.Message}");
+            Console.WriteLine(ex.InnerException);
         }
     }
 

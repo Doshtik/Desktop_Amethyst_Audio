@@ -15,12 +15,14 @@ namespace Desktop_Amethyst_Audio.Views.Pages;
 
 public partial class AuthPage : Page
 {
-    private ISettingsService _settingsService = new SettingsService();
+    private ISettingsService _settingsService;
     
-    private readonly IAuthApiClient _authApiClient = new AuthApiClient();
+    private readonly IAuthApiClient _authApiClient;
     public AuthPage()
     {
         InitializeComponent();
+        _settingsService = new SettingsService();
+        _authApiClient = new AuthApiClient();
     }
 
     public void NavigateToRegister(object sender, RoutedEventArgs e)
@@ -30,12 +32,12 @@ public partial class AuthPage : Page
 
     private void AuthChangeThemeButton_OnClick(object sender, RoutedEventArgs e)
     {
-        throw new NotImplementedException();
+
     }
 
     private void AuthChangeLanguageButton_OnClick(object sender, RoutedEventArgs e)
     {
-        throw new NotImplementedException();
+
     }
 
     private async void AuthEnterButton_OnClick(object sender, RoutedEventArgs e)
@@ -55,7 +57,7 @@ public partial class AuthPage : Page
                 Password = AuthPasswordBox.Password.Trim()
             };
 
-            var userDto = await _authApiClient.LoginUserAsync(loginDto);
+            UserInfoDto? userDto = await _authApiClient.LoginUserAsync(loginDto);
         
             Debug.WriteLine($"[DEBUG] userDto is null: {userDto == null}");
             if (userDto is null)
@@ -64,12 +66,13 @@ public partial class AuthPage : Page
                 return;
             }
 
-            AppSettings settings = _settingsService?.Load() ?? new AppSettings();
+            AppSettings settings = _settingsService.Load() ?? new AppSettings();
             settings.User = userDto;
         
             _settingsService.Save(settings);
             
             ErrorBorder.Visibility = Visibility.Collapsed;
+            WeakReferenceMessenger.Default.Send(new NavigateToMainLayoutMessage());
         }
         catch (Exception ex)
         {
@@ -79,8 +82,8 @@ public partial class AuthPage : Page
             Debug.WriteLine($"[EXCEPTION] {ex}");
             if (ex.InnerException != null)
                 Debug.WriteLine($"[INNER] {ex.InnerException}");
+            return;
         }
-        WeakReferenceMessenger.Default.Send(new NavigateToMainLayoutMessage());
     }
     
     private bool IsFieldsValidated(out string errorMessage)

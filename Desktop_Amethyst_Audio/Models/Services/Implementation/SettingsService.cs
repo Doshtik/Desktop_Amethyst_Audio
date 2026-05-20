@@ -1,6 +1,7 @@
+using Desktop_Amethyst_Audio.Models.Services.Abstraction;
 using System.IO;
 using System.Text.Json;
-using Desktop_Amethyst_Audio.Models.Services.Abstraction;
+using static System.Windows.Forms.Design.AxImporter;
 
 namespace Desktop_Amethyst_Audio.Models.Services.Implementation;
 
@@ -12,11 +13,19 @@ public class SettingsService : ISettingsService
     public SettingsService()
     {
         string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        _folderPath = Path.Combine(appDataPath, "Amethyst Audio");
+        _folderPath = Path.Combine(appDataPath, "AmethystAudio");
         _filePath = Path.Combine(_folderPath, "appsettings.json");
 
         if (!Directory.Exists(_folderPath))
+        {
             Directory.CreateDirectory(_folderPath);
+
+            var defaultSettings = new AppSettings();
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            string jsonString = JsonSerializer.Serialize(defaultSettings, options);
+
+            File.WriteAllText(_filePath, jsonString);
+        }
     }
     
     public AppSettings Load()

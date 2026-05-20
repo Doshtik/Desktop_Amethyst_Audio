@@ -24,9 +24,11 @@ public class AuthService : IAuthService
         {
             var userFromApi = await _profileApiClient.GetUserByIdAsync(settings.User.Id);
 
-            if (userFromApi?.Token is not null)
+            if (userFromApi is not null)
             {
+                var token = settings.User.Token;
                 settings.User = userFromApi;
+                settings.User.Token = token;
                 _settingsService.Save(settings);
                 return true;
             }

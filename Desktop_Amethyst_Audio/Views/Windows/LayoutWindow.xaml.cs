@@ -63,20 +63,16 @@ public partial class LayoutWindow : Window
         _trackApiClient = new TrackApiClient();
         _settingsService = new SettingsService();
         _audioService = new AudioService();
-        try
-        {
-            _audioService.Initialize(new WaveFormat(44100, 16, 2));
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show("Не удалось загрузить аудиоплеер");
-        }
 
         _isShuffle = false;
         _isRepeat = false;
         BrushConverter cc = new BrushConverter();
         //_shuffleButtonBackground = (Brush)cc.ConvertFrom("");
         //_repeatButtonBackground = (Brush)cc.ConvertFrom("");
+
+        TimeSlider.Minimum = 0;
+        TimeSlider.Maximum = 0; //audioFile.TotalTime.TotalSeconds;
+        TimeSlider.Value = 0;
 
         WeakReferenceMessenger.Default.Register<NavigateToSearchMessage>(this, (r, m) => ContentFrame.Navigate(SearchPage));
         WeakReferenceMessenger.Default.Register<NavigateToSearchResultMessage>(this, (r, m) => ContentFrame.Navigate(new SearchResultPage("")));
@@ -126,29 +122,19 @@ public partial class LayoutWindow : Window
     {
         try
         {
+            // 1. Останавливаем старое
             _audioService.Stop();
             TrackPanel.Visibility = Visibility.Visible;
+
+            // 2. Получаем поток (Убедись, что TrackApiClient НЕ делает 'using' на HttpResponseMessage)
             Stream response = await _trackApiClient.GetTrackFileAsync(track.TrackUrl);
 
-            // Проверяем поток
-            if (response == null)
-            {
-                MessageBox.Show("Сервер вернул null вместо потока", "Ошибка");
-                return;
-            }
-
-            if (!response.CanRead)
-            {
-                MessageBox.Show("Поток не поддерживает чтение", "Ошибка");
-                return;
-            }
-
+            // 3. Запускаем воспроизведение (AudioService сам скачает, декодирует и сыграет)
             await _audioService.StartAsync(response);
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Не удалось воспроизвести трек: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-            Debug.WriteLine(ex.InnerException);
+            MessageBox.Show($"Ошибка воспроизведения: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
@@ -182,7 +168,14 @@ public partial class LayoutWindow : Window
 
     private void PlayPauseButton_Click(object sender, RoutedEventArgs e)
     {
-
+        if (_audioService.State is PlaybackState.Paused)
+        {
+            _audioService.Play();
+        }
+        else
+        {
+            _audioService.Pause();
+        }
     }
 
     private void BackButton_Click(object sender, RoutedEventArgs e)
@@ -209,9 +202,7 @@ public partial class LayoutWindow : Window
     }
 
     private void NavigateToNotification_Selected(object sender, RoutedEventArgs e)
-    {
-
-    }
+        => WeakReferenceMessenger.Default.Send(new NavigateToNotificationMessage());
 
     private void NavigateToSettings_Selected(object sender, RoutedEventArgs e)
         => WeakReferenceMessenger.Default.Send(new NavigateToSettingsMessage());
@@ -233,7 +224,7 @@ public partial class LayoutWindow : Window
 
     private void VolumeSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
-        return;
+        _audioService.SetVolume((float)VolumeSlider.Value);
     }
 
     private void ChangeCollectiontoPlaylistButton_OnChecked(object sender, RoutedEventArgs e)
@@ -244,5 +235,10 @@ public partial class LayoutWindow : Window
     private void ChangeCollectiontoAlbumButton_OnChecked(object sender, RoutedEventArgs e)
     {
         
+    }
+
+    private void QueueButton_Click(object sender, RoutedEventArgs e)
+    {
+
     }
 }

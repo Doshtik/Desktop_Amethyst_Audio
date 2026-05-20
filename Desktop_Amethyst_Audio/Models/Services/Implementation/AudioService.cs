@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Windows;
 using Desktop_Amethyst_Audio.Models.Services.Abstraction;
 using NAudio.Dsp;
 using NAudio.Wave;
@@ -21,6 +22,8 @@ public class AudioService : IAudioService, IDisposable
     private Task? _streamTask;
     private bool _isDisposed;
 
+    private string? _tempFilePath;
+
     public PlaybackState State => _out?.PlaybackState ?? PlaybackState.Stopped;
     public event Action? PlaybackEnded;
 
@@ -30,9 +33,21 @@ public class AudioService : IAudioService, IDisposable
     /// </summary>
     public void Initialize(WaveFormat format)
     {
-        if (_buffer != null) 
-            throw new InvalidOperationException("AudioEngine already initialized.");
+        if (_buffer != null)
+        {
+            _cts?.Cancel();
+            _streamTask?.Wait(1000);
+            _out?.Stop();
+            _out?.Dispose();
+            _out = null;
+            _cts?.Dispose();
+            _cts = null;
+            _buffer = null;        // ← ВОТ ЭТО ВАЖНО!
+            _volumeProvider = null;
+            _grab = null;
+        }
 
+        // 2. Создание новых ресурсов
         _buffer = new BufferedWaveProvider(format)
         {
             BufferDuration = TimeSpan.FromSeconds(BufferSeconds),
@@ -40,7 +55,6 @@ public class AudioService : IAudioService, IDisposable
             ReadFully = true
         };
 
-        // Цепочка: BufferedWaveProvider -> SampleProvider -> Volume -> Grabber -> WaveOut
         var sampleProvider = _buffer.ToSampleProvider();
         _volumeProvider = new VolumeSampleProvider(sampleProvider) { Volume = 1f };
         _grab = new SampleGrabber(_volumeProvider);
@@ -55,77 +69,32 @@ public class AudioService : IAudioService, IDisposable
     /// </summary>
     public async Task StartAsync(Stream networkStream, CancellationToken ct = default)
     {
-        if (_buffer == null)
-            throw new InvalidOperationException("Call Initialize(format) first.");
-
-        // Сохраняем во временный файл для MediaFoundationReader
-        var tempFile = Path.Combine(Path.GetTempPath(), $"audio_{Guid.NewGuid()}.tmp");
+        // Сохраняем во временный файл (MediaFoundationReader требует файл)
+        var tempFile = Path.Combine(Path.GetTempPath(), $"audio_{Guid.NewGuid()}.mp3");
 
         try
         {
-            // Сохраняем поток в файл
+            // Копируем поток в файл
             using (var fileStream = File.Create(tempFile))
             {
                 await networkStream.CopyToAsync(fileStream, ct);
             }
 
-            // Проверяем размер файла
-            var fileInfo = new FileInfo(tempFile);
-            if (fileInfo.Length == 0)
-                throw new InvalidOperationException("Поток пуст - сервер не вернул данные");
+            // Создаем декодер из файла (автоматически определит MP3/AAC/etc.)
+            var decoder = new MediaFoundationReader(tempFile);
 
-            // Читаем заголовок для диагностики
-            var header = new byte[4];
-            using (var fs = File.OpenRead(tempFile))
-            {
-                await fs.ReadAsync(header.AsMemory(0, 4), ct);
-            }
+            // Инициализируем движок РЕАЛЬНЫМ форматом из файла
+            Initialize(decoder.WaveFormat);
 
-            string detectedFormat = "Unknown";
-            if (header[0] == 0xFF && (header[1] & 0xE0) == 0xE0)
-                detectedFormat = "MP3";
-            else if (header[0] == 'I' && header[1] == 'D' && header[2] == '3')
-                detectedFormat = "MP3 (ID3)";
-            else if (header[0] == 'O' && header[1] == 'g' && header[2] == 'g' && header[3] == 'S')
-                detectedFormat = "OGG";
-            else if (header[0] == 'R' && header[1] == 'I' && header[2] == 'F' && header[3] == 'F')
-                detectedFormat = "WAV/RIFF";
-
-            System.Diagnostics.Debug.WriteLine($"[AudioService] Detected format: {detectedFormat}, Size: {fileInfo.Length} bytes, File: {tempFile}");
-
+            // Запускаем чтение УЖЕ ДЕКОДИРОВАННЫХ PCM-данных
             _cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
-
-            // Пробуем Mp3FileReader с файлом
-            if (detectedFormat.StartsWith("MP3"))
-            {
-                try
-                {
-                    var decoder = new Mp3FileReader(tempFile);
-                    Initialize(decoder.WaveFormat);
-                    _streamTask = ReadAndBufferAsync(decoder, _cts.Token);
-                    _out?.Play();
-                    return;
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine($"[AudioService] Mp3FileReader failed: {ex.Message}");
-                    // Продолжаем пробовать MediaFoundationReader
-                }
-            }
-
-            // Fallback: MediaFoundationReader (поддерживает MP3, AAC, WAV, WMA, FLAC)
-            var mfrDecoder = new MediaFoundationReader(tempFile);
-            Initialize(mfrDecoder.WaveFormat);
-            _streamTask = ReadAndBufferAsync(mfrDecoder, _cts.Token);
+            _streamTask = ReadAndBufferAsync(decoder, _cts.Token);
             _out?.Play();
         }
         catch (Exception ex)
         {
-            // Очищаем временный файл при ошибке
-            if (File.Exists(tempFile))
-            {
-                try { File.Delete(tempFile); } catch { }
-            }
+            _tempFilePath = tempFile;
+            CleanupTempFile();
             throw new InvalidOperationException($"Не удалось декодировать аудио: {ex.Message}");
         }
     }
@@ -138,15 +107,26 @@ public class AudioService : IAudioService, IDisposable
         {
             while ((bytesRead = await stream.ReadAsync(readBuffer, ct)) > 0)
             {
-                // Backpressure: ждём, если буфер заполнен
-                while (_buffer.BufferedDuration >= _buffer.BufferDuration && !ct.IsCancellationRequested)
+                // Ждём, пока в буфере не появится место под текущий чанк данных
+                while (_buffer.BufferedBytes + bytesRead > _buffer.BufferLength && !ct.IsCancellationRequested)
+                {
                     await Task.Delay(50, ct);
+                }
+
+                if (ct.IsCancellationRequested) break;
 
                 _buffer.AddSamples(readBuffer, 0, bytesRead);
             }
         }
         catch (OperationCanceledException) { }
         catch (ObjectDisposedException) { }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[AudioService] Ошибка чтения: {ex.Message}");
+            // ⚠️ ВНИМАНИЕ: MessageBox из фонового потока вызовет Cross-Thread Exception.
+            // Используйте Dispatcher или просто логируйте ошибку.
+            // Application.Current?.Dispatcher.Invoke(() => MessageBox.Show(ex.Message));
+        }
         finally
         {
             stream.Dispose();
@@ -180,6 +160,20 @@ public class AudioService : IAudioService, IDisposable
         _out?.Stop(); _out?.Dispose(); _out = null;
         _buffer = null;
         _cts?.Dispose();
+
+        CleanupTempFile();
+    }
+    private void CleanupTempFile()
+    {
+        if (!string.IsNullOrEmpty(_tempFilePath) && File.Exists(_tempFilePath))
+        {
+            try
+            {
+                File.Delete(_tempFilePath);
+                _tempFilePath = null;
+            }
+            catch { }
+        }
     }
 
     // =====================================================================

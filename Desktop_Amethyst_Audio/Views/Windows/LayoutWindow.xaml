@@ -109,10 +109,11 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" Text="Название трека" FontSize="16" 
+                    <TextBlock x:Name="TrackNameTextBlock" Grid.Row="0" Text="Название трека" FontSize="16" 
                                Foreground="{StaticResource ContentPrimaryBrush}"/>
-                    <TextBlock Grid.Row="1" Text="Имя исполнителей" FontSize="14" 
-                               Foreground="{StaticResource ContentPrimaryBrush}"/>
+                    <StackPanel x:Name="TrackAuthorsPanel" Grid.Row="1">
+                        
+                    </StackPanel>
                 </Grid>
             </Grid>
             <Grid x:Name="TrackNavigationGrid" Grid.Column="1">
@@ -172,7 +173,7 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" x:Name="CurrentTrackTimeTextBlock" Text="00:00"
                                VerticalAlignment="Center" FontSize="16" Foreground="{DynamicResource ContentPrimaryBrush}"/>
-                    <Slider Grid.Column="1" Margin="10 0" VerticalAlignment="Center"
+                    <Slider x:Name="TimeSlider" Grid.Column="1" Margin="10 0" VerticalAlignment="Center"
                             Minimum="0"
                             Maximum="100" 
                             Value="0"
@@ -187,7 +188,8 @@
                 <Button x:Name="TrackLyricButton" Content="Тт" Padding="10 10 5 10"
                         Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="18"
                         Background="Transparent" BorderThickness="0"/>
-                <Button x:Name="QueueButton" Background="Transparent" BorderThickness="0" Padding="5 10 5 10">
+                <Button x:Name="QueueButton" Background="Transparent" BorderThickness="0" Padding="5 10 5 10"
+                        Click="QueueButton_Click">
                     <Button.Content>
                         <Image Source="/Assets/test.jpg" Width="25"/>
                     </Button.Content>
@@ -218,7 +220,7 @@
                     <StackPanel>
                         <Slider x:Name="VolumeSlider"
                                 Minimum="0" Maximum="1"
-                                Value="0.7"
+                                Value="0.5"
                                 Width="120"
                                 TickFrequency="0.1"
                                 IsSnapToTickEnabled="True"
@@ -228,6 +230,25 @@
                                    HorizontalAlignment="Center"
                                    FontSize="11"
                                    Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+            </Popup>
+            <Popup x:Name="ActionPopup"
+                   PlacementTarget="{Binding ElementName=TrackActionsButton}"
+                   Placement="Top"
+                   StaysOpen="True"
+                   AllowsTransparency="True"
+                   PopupAnimation="Fade">
+                <Border Background="#2D2D30" 
+                        BorderBrush="#555555" 
+                        BorderThickness="1" 
+                        CornerRadius="6" 
+                        Padding="10"
+                        Margin="0,0,0,10">
+                    <StackPanel>
+                        <Button x:Name="AddToLibrary" Content="Добавить в библиотеку" Click=""/>
+                        <Button x:Name="RemoveFromLibrary" Content="Удалить из библиотеки" Click=""/>
+                        <Button x:Name="AddToPlaylistButton" Content="Добавить в плейлист" Click=""/>
                     </StackPanel>
                 </Border>
             </Popup>

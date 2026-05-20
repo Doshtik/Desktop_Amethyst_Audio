@@ -42,6 +42,9 @@ public partial class TrackControl : UserControl
             link.Inlines.Add(runText);
             user.Inlines.Add(link);
             TrackUsersPanel.Children.Add(user);
+            TextBlock space = new TextBlock();
+            space.Margin = new Thickness(5,0,0,0);
+            TrackUsersPanel.Children.Add(space);
         }
     }
 
@@ -54,17 +57,17 @@ public partial class TrackControl : UserControl
         this.Width = parent.ActualWidth - 30;
     }
 
-    private void AddTrackInQueue_Selected(object sender, RoutedEventArgs e)
+    private void AddTrackInQueue_Click(object sender, RoutedEventArgs e)
     {
 
     }
 
-    private void AddTrackInLibrary_Selected(object sender, RoutedEventArgs e)
+    private void AddTrackInLibrary_Click(object sender, RoutedEventArgs e)
     {
 
     }
 
-    private void AddTrackInPlaylist_Selected(object sender, RoutedEventArgs e)
+    private void AddTrackInPlaylist_Click(object sender, RoutedEventArgs e)
     {
 
     }

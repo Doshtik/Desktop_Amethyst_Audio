@@ -134,9 +134,11 @@ public class TrackApiClient : ITrackApiClient
     public async Task<Stream> GetTrackFileAsync(string trackFileUrl)
     {
         using var request = new HttpRequestMessage(HttpMethod.Get, trackFileUrl);
-        using var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+
+        var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+
         response.EnsureSuccessStatusCode();
-    
+
         return await response.Content.ReadAsStreamAsync();
     }
 

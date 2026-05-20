@@ -47,6 +47,7 @@
                 </ComboBox>
             </Grid>
         </StackPanel>
-        <ListBox x:Name="TrackListBox" ItemsSource="{Binding Controls}" Grid.Row="2" Margin="5 0" Background="Transparent" BorderThickness="0" SelectionChanged="TrackListBox_OnSelectionChanged"/>
+        <ListBox x:Name="TrackListBox" ItemsSource="{Binding Controls}" Grid.Row="2" Margin="5 0" Background="Transparent" BorderThickness="0"
+                 SelectionChanged="TrackListBox_OnSelectionChanged"/>
     </Grid>
 </Page>

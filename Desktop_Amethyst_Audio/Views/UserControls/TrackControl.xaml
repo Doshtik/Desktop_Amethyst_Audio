@@ -26,13 +26,24 @@
                 <StackPanel x:Name="TrackUsersPanel" Orientation="Horizontal" Grid.Row="1" VerticalAlignment="Top"/>
             </Grid>
             <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10">
-                <TextBlock x:Name="DurationTextBlock" Text="00:00" VerticalAlignment="Center" FontSize="18" Foreground="{DynamicResource ContentPrimaryBrush}"/>
-                <ComboBox Name="trackActions" Background="Transparent" BorderThickness="0" 
-                          Margin="10 0 0 0" Foreground="{DynamicResource ContentPrimaryBrush}">
-                    <ComboBoxItem x:Name="AddTrackInQueue" Content="Добавить в очередь" Selected="AddTrackInQueue_Selected"/>
-                    <ComboBoxItem x:Name="AddTrackInLibrary" Content="Добавить в библиотеку" Selected="AddTrackInLibrary_Selected" Visibility="Collapsed"/>
-                    <ComboBoxItem x:Name="AddTrackInPlaylist" Content="Добавить в плейлист" Selected="AddTrackInPlaylist_Selected"/>
-                </ComboBox>
+                <TextBlock x:Name="DurationTextBlock" Text="00:00" VerticalAlignment="Center" Margin="0 0 10 0" FontSize="18" Foreground="{DynamicResource ContentPrimaryBrush}"/>
+                <ToggleButton x:Name="ActionButton">
+                    <ToggleButton.Content>
+                        <Image Source="/Assets/test.jpg" Width="25"/>
+                    </ToggleButton.Content>
+                </ToggleButton>
+                <Popup IsOpen="{Binding IsChecked, ElementName=ActionButton}" 
+                       PlacementTarget="{Binding ElementName=ActionButton}"
+                       Placement="Top" 
+                       StaysOpen="False"
+                       AllowsTransparency="True"
+                       PopupAnimation="Fade">
+                    <StackPanel Orientation="Vertical">
+                        <Button x:Name="AddTrackInQueue" Content="Добавить в очередь" Click="AddTrackInQueue_Click"/>
+                        <Button x:Name="AddTrackInLibrary" Content="Добавить в библиотеку" Click="AddTrackInLibrary_Click" Visibility="Collapsed"/>
+                        <Button x:Name="AddTrackInPlaylist" Content="Добавить в плейлист" Click="AddTrackInPlaylist_Click"/>
+                    </StackPanel>
+                </Popup>
             </StackPanel>
         </Grid>
     </Border>

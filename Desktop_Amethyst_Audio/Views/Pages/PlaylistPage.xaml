@@ -45,6 +45,8 @@
                 </StackPanel>
             </Grid>
         </Border>
-        <ListBox x:Name="TrackListBox" Grid.Row="1" Margin="5" Background="Transparent" BorderThickness="0"/>
+        <StackPanel Grid.Row="1" Margin="5" Orientation="Vertical">
+            <ListBox x:Name="TrackListBox" Background="Transparent" BorderThickness="0"/>
+        </StackPanel>
     </Grid>
 </Page>

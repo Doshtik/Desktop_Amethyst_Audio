@@ -24,14 +24,8 @@
                     <TextBlock x:Name="AlbumName" Text="Название альбома" FontWeight="Medium"
                                Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="18" />
                     <StackPanel Orientation="Horizontal">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Margin="0 0 5 0">
-                                <Hyperlink x:Name="AuthorNameHyperLink"
-                                           Click="AuthorNameHyperLink_Click" FontWeight="Light"
-                                           Foreground="{DynamicResource ContentPrimaryBrush}">
-                                    Название автора
-                                </Hyperlink>
-                            </TextBlock>
+                        <StackPanel x:Name="AuthorListPanel" Orientation="Horizontal">
+                            
                         </StackPanel>
                         <TextBlock x:Name="TrackAmountTextBlock" FontWeight="Light" Text="Количество треков: 150" 
                                    Foreground="{DynamicResource ContentPrimaryBrush}"/>

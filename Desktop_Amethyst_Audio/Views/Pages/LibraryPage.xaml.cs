@@ -40,7 +40,10 @@ public partial class LibraryPage : Page
     private void TrackListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         TrackControl? control = TrackListBox.SelectedItem as TrackControl;
-        WeakReferenceMessenger.Default.Send(new TrackChangedMessage(control.Track));
+        if (control != null && control.Track != null)
+        {
+            WeakReferenceMessenger.Default.Send(new TrackChangedMessage(control.Track));
+        }
     }
 
     private void LibraryPage_OnSizeChanged(object sender, SizeChangedEventArgs e)

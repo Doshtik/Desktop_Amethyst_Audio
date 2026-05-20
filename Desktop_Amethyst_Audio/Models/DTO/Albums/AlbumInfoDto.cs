@@ -9,7 +9,7 @@ public class AlbumInfoDto
     
     public string Name { get; set; } = null!;
 
-    public string? CoverUrl { get; set; }
+    public string CoverUrl { get; set; }
     
     public List<UserInfoDto> AuthorList { get; set; } = null!;
     

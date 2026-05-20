@@ -12,7 +12,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
         
-            <Image x:Name="AlbumCoverImage" Grid.Row="0" Margin="10"  Source="../../../Assets/test.jpg"/>
+            <Image x:Name="AlbumCoverImage" Grid.Row="0" Margin="10" Source="/Assets/test.jpg"/>
             <TextBlock x:Name="AlbumNameTextBlock" Grid.Row="1" Text="Название альбома"
                        Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="14" Margin="10 0 10 10"/>
         </Grid>

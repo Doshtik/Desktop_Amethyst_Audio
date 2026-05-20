@@ -2,6 +2,7 @@
 using Desktop_Amethyst_Audio.Messages.Action;
 using Desktop_Amethyst_Audio.Messages.Navigation;
 using Desktop_Amethyst_Audio.Messages.Navigation.MainLayout;
+using Desktop_Amethyst_Audio.Messages.Navigation.System;
 using Desktop_Amethyst_Audio.Models;
 using Desktop_Amethyst_Audio.Models.Clients.Abstraction;
 using Desktop_Amethyst_Audio.Models.Clients.Implementation;
@@ -12,7 +13,9 @@ using Desktop_Amethyst_Audio.Models.Services.Implementation;
 using Desktop_Amethyst_Audio.Views.Pages;
 using Microsoft.VisualBasic.ApplicationServices;
 using NAudio.Wave;
+using System.Diagnostics;
 using System.IO;
+using System.Net.Sockets;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -66,7 +69,7 @@ public partial class LayoutWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            MessageBox.Show("Не удалось загрузить аудиоплеер");
         }
 
         _isShuffle = false;
@@ -123,13 +126,29 @@ public partial class LayoutWindow : Window
     {
         try
         {
-            Stream response = await _trackApiClient.GetTrackFileAsync(track.TrackUrl);
+            _audioService.Stop();
             TrackPanel.Visibility = Visibility.Visible;
+            Stream response = await _trackApiClient.GetTrackFileAsync(track.TrackUrl);
+
+            // Проверяем поток
+            if (response == null)
+            {
+                MessageBox.Show("Сервер вернул null вместо потока", "Ошибка");
+                return;
+            }
+
+            if (!response.CanRead)
+            {
+                MessageBox.Show("Поток не поддерживает чтение", "Ошибка");
+                return;
+            }
+
             await _audioService.StartAsync(response);
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Не удалось воспроизвести трек: ", ex.Message, MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show($"Не удалось воспроизвести трек: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            Debug.WriteLine(ex.InnerException);
         }
     }
 
@@ -195,13 +214,21 @@ public partial class LayoutWindow : Window
     }
 
     private void NavigateToSettings_Selected(object sender, RoutedEventArgs e)
-    {
-
-    }
+        => WeakReferenceMessenger.Default.Send(new NavigateToSettingsMessage());
 
     private void NavigateToAuth_Selected(object sender, RoutedEventArgs e)
     {
-
+        try
+        {
+            AppSettings settings = _settingsService.Load();
+            settings.User = null;
+            _settingsService.Save(settings); 
+            WeakReferenceMessenger.Default.Send(new NavigateToAuthMessage());
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Возникла неожиданная ошибка");
+        }
     }
 
     private void VolumeSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

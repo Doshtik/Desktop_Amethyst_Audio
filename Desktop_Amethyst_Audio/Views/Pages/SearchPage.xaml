@@ -4,19 +4,24 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:Desktop_Amethyst_Audio.Views.Pages"
-      mc:Ignorable="d"
+      mc:Ignorable="d" Loaded="Page_Loaded"
       Title="SearchPage" d:Background="{DynamicResource SurfaceBaseBrush}" d:DesignHeight="600" d:DesignWidth="800">
-    <StackPanel Orientation="Vertical"> 
-        <Grid VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="10">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Margin="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            
+
             <Border Grid.Column="0" Background="{DynamicResource ContentMutedBrush}" 
-                    Margin="0 0 10 0" CornerRadius="10" BorderThickness="0">
+            Margin="0 0 10 0" CornerRadius="10" BorderThickness="0">
                 <TextBox FontSize="18" VerticalAlignment="Center" Padding="5" Background="Transparent" Foreground="{DynamicResource ContentPrimaryBrush}" 
-                         BorderThickness="0"/>
+                 BorderThickness="0"/>
             </Border>
             <Button Grid.Column="1" FontSize="16" Style="{DynamicResource ButtonPrimary}">
                 <StackPanel Orientation="Horizontal">
@@ -25,17 +30,17 @@
                 </StackPanel>
             </Button>
         </Grid>
-        <Grid Margin="10 0 10 10">
+        <Grid Grid.Row="1" Margin="10 0 10 10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            
+
             <TextBlock Grid.Row="0" Text="Новые альбомы" FontSize="18" Foreground="{DynamicResource ContentPrimaryBrush}" />
             <ListBox Grid.Row="1"
-                     Background="Transparent" BorderThickness="0"
-                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                     ScrollViewer.VerticalScrollBarVisibility="Disabled">
+             Background="Transparent" BorderThickness="0"
+             ScrollViewer.HorizontalScrollBarVisibility="Auto"
+             ScrollViewer.VerticalScrollBarVisibility="Disabled">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Rows="2" />
@@ -43,16 +48,14 @@
                 </ListBox.ItemsPanel>
             </ListBox>
         </Grid>
-        
-        <Grid Margin="10 0 10 10">
+
+        <Grid Grid.Row="2" Margin="10 0 10 10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0" Text="Ваши любимые жанры" FontSize="18" Foreground="{DynamicResource ContentPrimaryBrush}"/>
-            <ItemsControl Grid.Row="1">
-                
-            </ItemsControl>
+            <ListBox Grid.Row="1" Background="Transparent" BorderThickness="0"/>
         </Grid>
-    </StackPanel>
+    </Grid>
 </Page>

@@ -71,9 +71,9 @@
                     <Style TargetType="RadioButton" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
                 </UniformGrid.Resources>
                 <RadioButton GroupName="CollectionMode" x:Name="ChangeCollectiontonPlaylistButton" Content="Playlist" IsChecked="True"
-                             Checked="ChangeCollectiontoPlaylistButton_OnChecked"/>
+                             Checked="ChangeCollectionToPlaylistButton_OnChecked"/>
                 <RadioButton GroupName="CollectionMode" x:Name="ChangeCollectiontonAlbumButton" Content="Album" 
-                             Checked="ChangeCollectiontoAlbumButton_OnChecked"/>
+                             Checked="ChangeCollectionToAlbumButton_OnChecked"/>
             </UniformGrid>
             <ListBox x:Name="SavedPlaylistsListBox" Visibility="Collapsed" BorderThickness="0" Background="Transparent"/>
             <ListBox x:Name="SavedAlbumsListBox" Visibility="Collapsed" BorderThickness="0" Background="Transparent">
@@ -145,7 +145,8 @@
                                 <Image Source="../../Assets/back.png" Width="25"/>
                             </Button.Content>
                         </Button>
-                        <Button x:Name="PlayPauseButton" Grid.Column="1" Background="{DynamicResource OutlineSubtleBrush}" Padding="10"  
+                        <Button x:Name="PlayPauseButton" Grid.Column="1" 
+                                Background="{DynamicResource OutlineSubtleBrush}" Padding="10"  
                                 BorderThickness="0" VerticalAlignment="Center" Click="PlayPauseButton_Click">
                             <Button.Content>
                                 <Image Source="../../Assets/test.jpg" Width="25"/>
@@ -172,7 +173,8 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" x:Name="CurrentTrackTimeTextBlock" Text="00:00"
-                               VerticalAlignment="Center" FontSize="16" Foreground="{DynamicResource ContentPrimaryBrush}"/>
+                               VerticalAlignment="Center" FontSize="16" 
+                               Foreground="{DynamicResource ContentPrimaryBrush}"/>
                     <Slider x:Name="TimeSlider" Grid.Column="1" Margin="10 0" VerticalAlignment="Center"
                             Minimum="0"
                             Maximum="100" 
@@ -180,7 +182,8 @@
                             TickFrequency="1"
                             IsMoveToPointEnabled="True"/>
                     <TextBlock Grid.Column="2" x:Name="TotalTrackTimeTextBlock" Text="04:24"
-                               VerticalAlignment="Center" FontSize="16" Foreground="{DynamicResource ContentPrimaryBrush}"/>
+                               VerticalAlignment="Center" FontSize="16" 
+                               Foreground="{DynamicResource ContentPrimaryBrush}"/>
                 </Grid>
             </Grid>
             <StackPanel x:Name="TrackActions" Orientation="Horizontal" Grid.Column="2"
@@ -246,9 +249,12 @@
                         Padding="10"
                         Margin="0,0,0,10">
                     <StackPanel>
-                        <Button x:Name="AddToLibrary" Content="Добавить в библиотеку" Click=""/>
-                        <Button x:Name="RemoveFromLibrary" Content="Удалить из библиотеки" Click=""/>
-                        <Button x:Name="AddToPlaylistButton" Content="Добавить в плейлист" Click=""/>
+                        <Button x:Name="AddToLibrary" Content="Добавить в библиотеку" 
+                                Click="AddToLibrary_OnClick"/>
+                        <Button x:Name="RemoveFromLibrary" Content="Удалить из библиотеки" 
+                                Click="RemoveFromLibrary_OnClick"/>
+                        <Button x:Name="AddToPlaylistButton" Content="Добавить в плейлист" 
+                                Click="AddToPlaylistButton_OnClick"/>
                     </StackPanel>
                 </Border>
             </Popup>

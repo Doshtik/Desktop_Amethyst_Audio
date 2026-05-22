@@ -52,6 +52,11 @@ public partial class RegisterPage : Page
 
             var userDto = await _authApiClient.RegisterAsync(createUserDto);
 
+            if (userDto is null)
+            {
+                MessageBox.Show("Ошибка пользователя");
+            }
+
             AppSettings settings = _settingsService?.Load() ?? new AppSettings();
             if (settings == null)
                 throw new InvalidOperationException("Не удалось загрузить настройки приложения");

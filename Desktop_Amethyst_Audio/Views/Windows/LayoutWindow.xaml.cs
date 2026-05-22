@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
+﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.Messaging;
 using Desktop_Amethyst_Audio.Messages.Action;
 using Desktop_Amethyst_Audio.Messages.Navigation;
 using Desktop_Amethyst_Audio.Messages.Navigation.MainLayout;
@@ -19,6 +20,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -38,15 +40,14 @@ public partial class LayoutWindow : Window
     private readonly ISettingsService _settingsService;
     private readonly IProfileApiClient _profileApiClient;
     private readonly ITrackApiClient _trackApiClient;
-
-    private int _queuePosition;
-    private List<TrackInfoDto> _trackQueueList;
-    private List<TrackInfoDto> _trackOriginalQueueList;
+    
+    public int CurrentQueuePosition { get; set; }
+    public ObservableCollection<TrackInfoDto> TrackQueueList { get; set; }
 
     private bool _isShuffle;
     private bool _isRepeat;
-    private Brush _shuffleButtonBackground;
-    private Brush _repeatButtonBackground;
+    private Brush _defaultButtonBackground;
+    private Brush _activeButtonBackground;
     
     private SearchPage SearchPage { get; } = new();
     private ResonancePage ResonancePage { get; } = new();
@@ -58,11 +59,13 @@ public partial class LayoutWindow : Window
     public LayoutWindow()
     {
         InitializeComponent();
-        
+
         _profileApiClient = new ProfileApiClient();
         _trackApiClient = new TrackApiClient();
         _settingsService = new SettingsService();
         _audioService = new AudioService();
+
+        TrackQueueList = new ObservableCollection<TrackInfoDto>();
 
         _isShuffle = false;
         _isRepeat = false;
@@ -74,15 +77,25 @@ public partial class LayoutWindow : Window
         TimeSlider.Maximum = 0; //audioFile.TotalTime.TotalSeconds;
         TimeSlider.Value = 0;
 
-        WeakReferenceMessenger.Default.Register<NavigateToSearchMessage>(this, (r, m) => ContentFrame.Navigate(SearchPage));
-        WeakReferenceMessenger.Default.Register<NavigateToSearchResultMessage>(this, (r, m) => ContentFrame.Navigate(new SearchResultPage("")));
-        WeakReferenceMessenger.Default.Register<NavigateToResonanceMessage>(this, (r, m) => ContentFrame.Navigate(ResonancePage));
-        WeakReferenceMessenger.Default.Register<NavigateToLibraryMessage>(this, (r, m) => ContentFrame.Navigate(LibraryPage));
-        WeakReferenceMessenger.Default.Register<NavigateToProfileMessage>(this, (r, m) => ContentFrame.Navigate(ProfilePage));
-        WeakReferenceMessenger.Default.Register<NavigateToAlbumMessage>(this, (r, m) => ContentFrame.Navigate(AlbumPage));
-        WeakReferenceMessenger.Default.Register<NavigateToPlaylistMessage>(this, (r, m) => ContentFrame.Navigate(PlaylistPage));
+        WeakReferenceMessenger.Default.Register<NavigateToSearchMessage>(this, (r, m) 
+            => ContentFrame.Navigate(SearchPage));
+        WeakReferenceMessenger.Default.Register<NavigateToSearchResultMessage>(this, (r, m) 
+            => ContentFrame.Navigate(new SearchResultPage("")));
+        WeakReferenceMessenger.Default.Register<NavigateToResonanceMessage>(this, (r, m) 
+            => ContentFrame.Navigate(ResonancePage));
+        WeakReferenceMessenger.Default.Register<NavigateToLibraryMessage>(this, (r, m) 
+            => ContentFrame.Navigate(LibraryPage));
+        WeakReferenceMessenger.Default.Register<NavigateToProfileMessage>(this, (r, m) 
+            => ContentFrame.Navigate(ProfilePage));
+        WeakReferenceMessenger.Default.Register<NavigateToAlbumMessage>(this, (r, m) 
+            => ContentFrame.Navigate(AlbumPage));
+        WeakReferenceMessenger.Default.Register<NavigateToPlaylistMessage>(this, (r, m) 
+            => ContentFrame.Navigate(PlaylistPage));
+        WeakReferenceMessenger.Default.Register<NavigateToQueueMessage>(this, (r, m) 
+            => ContentFrame.Navigate(new QueuePage(TrackQueueList)));
         
-        WeakReferenceMessenger.Default.Register<TrackChangedMessage>(this, (r, m) => ChangeTrack(m.Track));
+        WeakReferenceMessenger.Default.Register<TrackChangedMessage>(this, (r, m) 
+            => ChangeTrack(m.Track));
     }
 
     private async void Window_Loaded(object sender, RoutedEventArgs e)
@@ -143,12 +156,12 @@ public partial class LayoutWindow : Window
         if (_isRepeat is true)
         {
             _isRepeat = false;
-            RepeatButton.Background = _repeatButtonBackground;
+            RepeatButton.Background = _defaultButtonBackground;
         }
         else
         {
             _isRepeat = true;
-            RepeatButton.Background = _repeatButtonBackground;
+            RepeatButton.Background = _activeButtonBackground;
         }
     }
 
@@ -157,12 +170,12 @@ public partial class LayoutWindow : Window
         if (_isShuffle is true)
         {
             _isShuffle = false;
-            ShuffleButton.Background = _shuffleButtonBackground;
+            ShuffleButton.Background = _defaultButtonBackground;
         }
         else
         {
             _isShuffle = true;
-            ShuffleButton.Background = _shuffleButtonBackground;
+            ShuffleButton.Background = _activeButtonBackground;
         }
     }
 
@@ -224,21 +237,34 @@ public partial class LayoutWindow : Window
 
     private void VolumeSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
-        _audioService.SetVolume((float)VolumeSlider.Value);
+        //_audioService.SetVolume((float)VolumeSlider.Value);
     }
 
-    private void ChangeCollectiontoPlaylistButton_OnChecked(object sender, RoutedEventArgs e)
+    private void ChangeCollectionToPlaylistButton_OnChecked(object sender, RoutedEventArgs e)
     {
         
     }
 
-    private void ChangeCollectiontoAlbumButton_OnChecked(object sender, RoutedEventArgs e)
+    private void ChangeCollectionToAlbumButton_OnChecked(object sender, RoutedEventArgs e)
     {
         
     }
 
     private void QueueButton_Click(object sender, RoutedEventArgs e)
-    {
+        => WeakReferenceMessenger.Default.Send(new NavigateToQueueMessage());
 
+    private void AddToLibrary_OnClick(object sender, RoutedEventArgs e)
+    {
+        
+    }
+
+    private void RemoveFromLibrary_OnClick(object sender, RoutedEventArgs e)
+    {
+        
+    }
+
+    private void AddToPlaylistButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        
     }
 }

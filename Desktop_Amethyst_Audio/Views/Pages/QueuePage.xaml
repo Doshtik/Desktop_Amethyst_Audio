@@ -1,0 +1,35 @@
+﻿<Page x:Class="Desktop_Amethyst_Audio.Views.Pages.QueuePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="clr-namespace:Desktop_Amethyst_Audio.Views.Pages"
+      mc:Ignorable="d" Background="{DynamicResource SurfaceBaseBrush}"
+      Loaded="QueuePage_OnLoaded"
+      Title="QueuePage" Height="600" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Очередь" FontSize="16" 
+                       Foreground="{DynamicResource ContentPrimaryBrush}"
+                       HorizontalAlignment="Left"/>
+            <Button x:Name="ClearQueueButton" Content="Очистить" Click="ClearQueueButton_OnClick"
+                    Grid.Column="1" Margin="5" Style="{StaticResource ButtonPrimary}"
+                    HorizontalAlignment="Right"/>
+        </Grid>
+        <ListBox x:Name="TrackQueueListBox" 
+                 AllowDrop="True"
+                 PreviewMouseLeftButtonDown="TrackQueueListBox_OnPreviewMouseLeftButtonDown"
+                 MouseMove="TrackQueueListBox_OnMouseMove"
+                 Drop="TrackQueueListBox_OnDrop"
+                 Grid.Row="1" Margin="5" 
+                 Background="Transparent" BorderThickness="0"/>
+    </Grid>
+</Page>

@@ -7,8 +7,8 @@
         mc:Ignorable="d" Title="Amethyst Audio" Icon="../../Assets/icon_128x128.ico"
         Background="{DynamicResource SurfaceBaseBrush}"
         WindowStartupLocation="CenterScreen"
-        WindowState="Maximized"
-        Height="1080" Width="1920" Loaded="Window_Loaded"
+        WindowState="Maximized" Loaded="Window_Loaded"
+        Height="1080" Width="1920" 
         MinHeight="600" MinWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -36,7 +36,8 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <TextBlock x:Name="UserNicknameTextBlock" Grid.Row="0" Text="Никнейм пользователя" Foreground="White" FontSize="14"/>
+                    <TextBlock x:Name="UserNicknameTextBlock" Grid.Row="0" Text="Никнейм пользователя" 
+                               Foreground="White" FontSize="14"/>
                     <ToggleButton x:Name="ProfileActionsButton" Grid.Row="1" Content="Я не знаю, что писать"/>
                     <Popup IsOpen="{Binding IsChecked, ElementName=ProfileActionsButton}" 
                            PlacementTarget="{Binding ElementName=ProfileActionsButton}"
@@ -66,17 +67,22 @@
                     FontSize="22" FontFamily="Inter" Margin="0 5 0 0"
                     Click="NavigateToLibrary"/>
             
-            <UniformGrid Margin="0 10 0 0">
+            <Border Margin="0 10 0 10" Background="{DynamicResource ContentPrimaryBrush}" Padding="2" CornerRadius="2"/>
+            
+            <UniformGrid>
                 <UniformGrid.Resources>
                     <Style TargetType="RadioButton" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
                 </UniformGrid.Resources>
-                <RadioButton GroupName="CollectionMode" x:Name="ChangeCollectiontonPlaylistButton" Content="Playlist" IsChecked="True"
+                <RadioButton GroupName="CollectionMode" x:Name="ChangeCollectionPlaylistButton" Content="Playlist" 
+                             IsChecked="True"
                              Checked="ChangeCollectionToPlaylistButton_OnChecked"/>
-                <RadioButton GroupName="CollectionMode" x:Name="ChangeCollectiontonAlbumButton" Content="Album" 
+                <RadioButton GroupName="CollectionMode" x:Name="ChangeCollectionAlbumButton" Content="Album" 
                              Checked="ChangeCollectionToAlbumButton_OnChecked"/>
             </UniformGrid>
-            <ListBox x:Name="SavedPlaylistsListBox" Visibility="Collapsed" BorderThickness="0" Background="Transparent"/>
-            <ListBox x:Name="SavedAlbumsListBox" Visibility="Collapsed" BorderThickness="0" Background="Transparent">
+            <ListBox x:Name="SavedPlaylistsListBox" Visibility="Collapsed" BorderThickness="0" 
+                     Background="Transparent"/>
+            <ListBox x:Name="SavedAlbumsListBox" Visibility="Collapsed" BorderThickness="0" 
+                     Background="Transparent">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Columns="2" />

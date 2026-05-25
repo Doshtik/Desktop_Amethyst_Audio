@@ -27,7 +27,7 @@ public partial class LibraryPage : Page
     {
         TrackListBox.Items.Clear();
         List<TrackInfoDto> tracks = await _profileApiClient.GetUserLibraryAsync();
-
+        
         foreach (TrackInfoDto track in tracks)
         {
             TrackControl control = new TrackControl();
@@ -58,5 +58,10 @@ public partial class LibraryPage : Page
     {
         //TODO: Сделать сортировку
         return;
+    }
+
+    private void PlayLibraryButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -28,7 +28,8 @@ public partial class TrackControl : UserControl
         }
         catch (Exception exception)
         {
-            Console.WriteLine(exception);
+            Console.WriteLine(exception.Message);
+            Console.WriteLine(Track.CoverUrl);
         }
 
         TrackNameTextBlock.Text = Track.Name;

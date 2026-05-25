@@ -17,9 +17,16 @@
             <RowDefinition Height="3*"/>
         </Grid.RowDefinitions>
         <Border Grid.Column="0" Margin="5" Background="BlueViolet" CornerRadius="10">
-            <TextBlock Text="Библиотека" Foreground="{DynamicResource ContentPrimaryBrush}" 
-                       VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="5" FontSize="48"
-                       FontWeight="Bold"/>
+            <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="5 0">
+                <TextBlock Grid.Column="0" Text="Библиотека" Foreground="{DynamicResource ContentPrimaryBrush}" 
+                           HorizontalAlignment="Left" FontSize="48"
+                           FontWeight="Bold"/>
+                <Button Grid.Column="1" x:Name="PlayLibraryButton"
+                        Padding="5 0" Background="Transparent" BorderThickness="0" 
+                        Content="Играть" FontSize="18" Foreground="{DynamicResource ContentPrimaryBrush}"
+                        FontWeight="Medium" Click="PlayLibraryButton_OnClick"
+                        HorizontalAlignment="Left" VerticalAlignment="Bottom" />
+            </StackPanel>
         </Border>
         <StackPanel Grid.Row="1" Orientation="Vertical" Margin="5 0">
             <Border Height="2" Margin="0 3" CornerRadius="2" Background="{DynamicResource ContentPrimaryBrush}"/>
@@ -47,7 +54,8 @@
                 </ComboBox>
             </Grid>
         </StackPanel>
-        <ListBox x:Name="TrackListBox" ItemsSource="{Binding Controls}" Grid.Row="2" Margin="5 0" Background="Transparent" BorderThickness="0"
+        <ListBox x:Name="TrackListBox" ItemsSource="{Binding Controls}" Grid.Row="2" Margin="5" 
+                 Background="Transparent" BorderThickness="0"
                  SelectionChanged="TrackListBox_OnSelectionChanged"/>
     </Grid>
 </Page>

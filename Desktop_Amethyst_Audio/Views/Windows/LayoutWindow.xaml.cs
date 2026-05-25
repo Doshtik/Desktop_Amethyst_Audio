@@ -28,6 +28,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Desktop_Amethyst_Audio.Models.DTO.Albums;
+using Desktop_Amethyst_Audio.Models.DTO.Playlists;
+using Desktop_Amethyst_Audio.Views.UserControls;
 
 namespace Desktop_Amethyst_Audio.Views.Windows;
 
@@ -43,6 +46,8 @@ public partial class LayoutWindow : Window
     
     public int CurrentQueuePosition { get; set; }
     public ObservableCollection<TrackInfoDto> TrackQueueList { get; set; }
+    public List<AlbumInfoDto> AlbumCollection { get; set; }
+    public List<PlaylistInfoDto> PlaylistCollection { get; set; }
 
     private bool _isShuffle;
     private bool _isRepeat;
@@ -65,13 +70,14 @@ public partial class LayoutWindow : Window
         _settingsService = new SettingsService();
         _audioService = new AudioService();
 
+        TrackPanel.Visibility = Visibility.Collapsed;
         TrackQueueList = new ObservableCollection<TrackInfoDto>();
 
         _isShuffle = false;
         _isRepeat = false;
-        BrushConverter cc = new BrushConverter();
-        //_shuffleButtonBackground = (Brush)cc.ConvertFrom("");
-        //_repeatButtonBackground = (Brush)cc.ConvertFrom("");
+        //BrushConverter cc = new BrushConverter();
+        //_defaultButtonBackground = (Brush)cc.ConvertFrom("");
+        //_activeButtonBackground = (Brush)cc.ConvertFrom("");
 
         TimeSlider.Minimum = 0;
         TimeSlider.Maximum = 0; //audioFile.TotalTime.TotalSeconds;
@@ -121,6 +127,38 @@ public partial class LayoutWindow : Window
             MessageBox.Show($"Не удалось загрузить данные пользователя: {ex.Message}");
             Console.WriteLine(ex.InnerException);
         }
+
+        try
+        {
+            UserInfoDto user = settings.User;
+            AlbumCollection = await _profileApiClient.GetUserSavedAlbumsAsync(user.Id) ?? new List<AlbumInfoDto>();
+            foreach (AlbumInfoDto albumDto in AlbumCollection)
+            {
+                AlbumControl control = new AlbumControl();
+                control.Album = albumDto;
+                SavedAlbumsListBox.Items.Add(control);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Не удалось загрузить альбомы");
+        }
+        
+        try
+        {
+            UserInfoDto user = settings.User;
+            PlaylistCollection = await _profileApiClient.GetUserSavedPlaylistsAsync(user.Id) ?? new List<PlaylistInfoDto>();
+            foreach (PlaylistInfoDto playlistDto in PlaylistCollection)
+            {
+                PlaylistControl control = new PlaylistControl();
+                control.Playlist = playlistDto;
+                SavedPlaylistsListBox.Items.Add(control);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Не удалось загрузить плейлисты");
+        }
     }
 
     public void NavigateToSearch(object sender, RoutedEventArgs args)
@@ -137,10 +175,30 @@ public partial class LayoutWindow : Window
         {
             // 1. Останавливаем старое
             _audioService.Stop();
-            TrackPanel.Visibility = Visibility.Visible;
 
             // 2. Получаем поток (Убедись, что TrackApiClient НЕ делает 'using' на HttpResponseMessage)
             Stream response = await _trackApiClient.GetTrackFileAsync(track.TrackUrl);
+            BitmapImage image = await _profileApiClient.GetUserAvatarAsync(track.CoverUrl);
+            
+            TrackImage.Source = image;
+            TrackNameTextBlock.Text = track.Name;
+            foreach (UserInfoDto userDto in track.UserList)
+            {
+                TextBlock user = new TextBlock();
+                Hyperlink link = new Hyperlink();
+                link.Click += (sender, e) 
+                    => WeakReferenceMessenger.Default.Send(new NavigateToProfileMessage(userDto.Id, false));
+                link.SetResourceReference(Hyperlink.ForegroundProperty, "ContentPrimaryBrush");
+                Run runText = new Run(userDto.Nickname);
+                link.Inlines.Add(runText);
+                user.Inlines.Add(link);
+                TrackAuthorsPanel.Children.Add(user);
+                TextBlock space = new TextBlock();
+                space.Margin = new Thickness(5,0,0,0);
+                TrackAuthorsPanel.Children.Add(space);
+            }
+            
+            TrackPanel.Visibility = Visibility.Visible;
 
             // 3. Запускаем воспроизведение (AudioService сам скачает, декодирует и сыграет)
             await _audioService.StartAsync(response);
@@ -174,9 +232,17 @@ public partial class LayoutWindow : Window
         }
         else
         {
+            ObservableCollection<TrackInfoDto> shuffledTracks = ShuffleTracks(TrackQueueList);
             _isShuffle = true;
             ShuffleButton.Background = _activeButtonBackground;
         }
+    }
+
+    private ObservableCollection<TrackInfoDto> ShuffleTracks(ObservableCollection<TrackInfoDto> originalQueue)
+    {
+        return new ObservableCollection<TrackInfoDto>(
+            originalQueue.OrderBy(_ => Random.Shared.Next())
+        );
     }
 
     private void PlayPauseButton_Click(object sender, RoutedEventArgs e)

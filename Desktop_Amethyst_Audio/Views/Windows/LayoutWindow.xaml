@@ -182,9 +182,9 @@
                                VerticalAlignment="Center" FontSize="16" 
                                Foreground="{DynamicResource ContentPrimaryBrush}"/>
                     <Slider x:Name="TimeSlider" Grid.Column="1" Margin="10 0" VerticalAlignment="Center"
-                            Minimum="0"
-                            Maximum="100" 
-                            Value="0"
+                            Minimum="0" Maximum="100" Value="0"
+                            MouseDown="TimeSlider_MouseDown" 
+                            MouseUp="TimeSlider_MouseUp"
                             TickFrequency="1"
                             IsMoveToPointEnabled="True"/>
                     <TextBlock Grid.Column="2" x:Name="TotalTrackTimeTextBlock" Text="04:24"
@@ -229,7 +229,7 @@
                     <StackPanel>
                         <Slider x:Name="VolumeSlider"
                                 Minimum="0" Maximum="1"
-                                Value="0.5"
+                                Value="1"
                                 Width="120"
                                 TickFrequency="0.1"
                                 IsSnapToTickEnabled="True"

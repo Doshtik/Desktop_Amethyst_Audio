@@ -28,6 +28,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using Desktop_Amethyst_Audio.Models.DTO.Albums;
 using Desktop_Amethyst_Audio.Models.DTO.Playlists;
 using Desktop_Amethyst_Audio.Views.UserControls;
@@ -43,11 +44,14 @@ public partial class LayoutWindow : Window
     private readonly ISettingsService _settingsService;
     private readonly IProfileApiClient _profileApiClient;
     private readonly ITrackApiClient _trackApiClient;
-    
-    public List<AlbumInfoDto> AlbumCollection { get; set; }
-    public List<PlaylistInfoDto> PlaylistCollection { get; set; }
 
-    private bool _isShuffle;
+    private List<AlbumInfoDto> AlbumCollection { get; set; }
+    private List<PlaylistInfoDto> PlaylistCollection { get; set; }
+    
+    private DispatcherTimer _progressTimer;
+    
+    private bool _isChangingTrack = false;
+
     private bool _isRepeat;
     private Brush _defaultButtonBackground;
     private Brush _activeButtonBackground;
@@ -77,7 +81,6 @@ public partial class LayoutWindow : Window
 
         TrackPanel.Visibility = Visibility.Collapsed;
 
-        _isShuffle = false;
         _isRepeat = false;
         //BrushConverter cc = new BrushConverter();
         //_defaultButtonBackground = (Brush)cc.ConvertFrom("");
@@ -86,6 +89,11 @@ public partial class LayoutWindow : Window
         TimeSlider.Minimum = 0;
         TimeSlider.Maximum = 0; //audioFile.TotalTime.TotalSeconds;
         TimeSlider.Value = 0;
+        
+        _progressTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(250) };
+        _progressTimer.Tick += ProgressTimer_Tick;
+        
+        _audioService.PlaybackEnded += OnPlaybackEnded;
 
         WeakReferenceMessenger.Default.Register<NavigateToSearchMessage>(this, (r, m) 
             => ContentFrame.Navigate(SearchPage));
@@ -166,6 +174,28 @@ public partial class LayoutWindow : Window
             Console.WriteLine("Не удалось загрузить плейлисты");
         }
     }
+    
+    private async void OnPlaybackEnded()
+    {
+        await Application.Current.Dispatcher.InvokeAsync(async () =>
+        {
+            // Предотвращаем рекурсивный вызов, если очередь пуста
+            if (PlaybackService.Queue.Count == 0) return;
+        
+            PlaybackService.NextTrack();
+        });
+    }
+
+    private void ProgressTimer_Tick(object? sender, EventArgs e)
+    {
+        if (_audioService.State is PlaybackState.Playing or PlaybackState.Paused)
+        {
+            TimeSlider.Maximum = _audioService.Duration;
+            TimeSlider.Value = _audioService.CurrentTime;
+            
+            CurrentTrackTimeTextBlock.Text = TimeSpan.FromSeconds(TimeSlider.Value).ToString(@"mm\:ss");
+        }
+    }
 
     public void NavigateToSearch(object sender, RoutedEventArgs args)
         => WeakReferenceMessenger.Default.Send(new NavigateToSearchMessage());
@@ -177,22 +207,27 @@ public partial class LayoutWindow : Window
 
     private async void ChangeTrack(TrackInfoDto track)
     {
+        if (_isChangingTrack) return;
+        _isChangingTrack = true;
+
         try
         {
             // 1. Останавливаем старое
             _audioService.Stop();
-            
+            _progressTimer.Stop();
+
             // 2. Получаем поток (Убедись, что TrackApiClient НЕ делает 'using' на HttpResponseMessage)
             Stream response = await _trackApiClient.GetTrackFileAsync(track.TrackUrl);
             BitmapImage image = await _profileApiClient.GetUserAvatarAsync(track.CoverUrl);
-            
+
             TrackImage.Source = image;
             TrackNameTextBlock.Text = track.Name;
+            TrackAuthorsPanel.Children.Clear();
             foreach (UserInfoDto userDto in track.UserList)
             {
                 TextBlock user = new TextBlock();
                 Hyperlink link = new Hyperlink();
-                link.Click += (sender, e) 
+                link.Click += (sender, e)
                     => WeakReferenceMessenger.Default.Send(new NavigateToProfileMessage(userDto.Id, false));
                 link.SetResourceReference(Hyperlink.ForegroundProperty, "ContentPrimaryBrush");
                 Run runText = new Run(userDto.Nickname);
@@ -200,18 +235,27 @@ public partial class LayoutWindow : Window
                 user.Inlines.Add(link);
                 TrackAuthorsPanel.Children.Add(user);
                 TextBlock space = new TextBlock();
-                space.Margin = new Thickness(5,0,0,0);
+                space.Margin = new Thickness(5, 0, 0, 0);
                 TrackAuthorsPanel.Children.Add(space);
             }
-            
+
             TrackPanel.Visibility = Visibility.Visible;
+            VolumeSlider.Value = _audioService.Volume;
+            TimeSlider.Value = 0;
+            TimeSlider.Maximum = _audioService.Duration;
 
             // 3. Запускаем воспроизведение (AudioService сам скачает, декодирует и сыграет)
             await _audioService.StartAsync(response);
+            _progressTimer.Start();
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Ошибка воспроизведения: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show($"Ошибка воспроизведения: {ex.Message}", "Ошибка", MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
+        finally
+        {
+            _isChangingTrack = false;
         }
     }
 
@@ -303,7 +347,15 @@ public partial class LayoutWindow : Window
 
     private void VolumeSlider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
-        //_audioService.SetVolume((float)VolumeSlider.Value);
+        if (_audioService is null) return;
+        _audioService.SetVolume((float)e.NewValue);
+    }
+    
+    private void TimeSlider_MouseDown(object sender, MouseButtonEventArgs e) => _progressTimer.Stop();
+    private void TimeSlider_MouseUp(object sender, MouseButtonEventArgs e)
+    {
+        _audioService.Seek(TimeSlider.Value);
+        _progressTimer.Start();
     }
 
     private async void ChangeCollectionToPlaylistButton_OnChecked(object sender, RoutedEventArgs e)

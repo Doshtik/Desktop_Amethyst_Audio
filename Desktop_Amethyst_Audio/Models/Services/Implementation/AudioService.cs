@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using Desktop_Amethyst_Audio.Models.Services.Abstraction;
 using NAudio.Dsp;
@@ -21,8 +22,14 @@ public class AudioService : IAudioService, IDisposable
     private CancellationTokenSource? _cts;
     private Task? _streamTask;
     private bool _isDisposed;
+    private MediaFoundationReader? _decoder;
 
     private string? _tempFilePath;
+    
+    private readonly Stopwatch _stopwatch = new();
+    public double Volume { get; private set; } = 1.0;
+    public double CurrentTime => _decoder?.CurrentTime.TotalSeconds ?? 0;
+    public double Duration => _decoder?.TotalTime.TotalSeconds ?? 0;
 
     public PlaybackState State => _out?.PlaybackState ?? PlaybackState.Stopped;
     public event Action? PlaybackEnded;
@@ -36,7 +43,6 @@ public class AudioService : IAudioService, IDisposable
         if (_buffer != null)
         {
             _cts?.Cancel();
-            _streamTask?.Wait(1000);
             _out?.Stop();
             _out?.Dispose();
             _out = null;
@@ -44,6 +50,7 @@ public class AudioService : IAudioService, IDisposable
             _cts = null;
             _buffer = null;        // ← ВОТ ЭТО ВАЖНО!
             _volumeProvider = null;
+            _decoder?.Dispose();
             _grab = null;
         }
 
@@ -61,7 +68,14 @@ public class AudioService : IAudioService, IDisposable
 
         _out = new WaveOutEvent { DesiredLatency = 100 };
         _out.Init(_grab);
-        _out.PlaybackStopped += (_, _) => PlaybackEnded?.Invoke();
+        _out.PlaybackStopped += OnPlaybackStopped;
+    }
+
+    private void OnPlaybackStopped(object? sender, StoppedEventArgs e)
+    {
+        // Проверяем, что это действительно конец трека, а не ошибка
+        if (e.Exception == null)
+            PlaybackEnded?.Invoke();
     }
 
     /// <summary>
@@ -75,26 +89,26 @@ public class AudioService : IAudioService, IDisposable
         try
         {
             // Копируем поток в файл
-            using (var fileStream = File.Create(tempFile))
-            {
+            await using (var fileStream = File.Create(tempFile))
                 await networkStream.CopyToAsync(fileStream, ct);
-            }
 
             // Создаем декодер из файла (автоматически определит MP3/AAC/etc.)
-            var decoder = new MediaFoundationReader(tempFile);
+            _decoder = new MediaFoundationReader(tempFile);
 
             // Инициализируем движок РЕАЛЬНЫМ форматом из файла
-            Initialize(decoder.WaveFormat);
+            Initialize(_decoder.WaveFormat);
 
             // Запускаем чтение УЖЕ ДЕКОДИРОВАННЫХ PCM-данных
             _cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
-            _streamTask = ReadAndBufferAsync(decoder, _cts.Token);
+            _streamTask = ReadAndBufferAsync(_decoder, _cts.Token);
             _out?.Play();
         }
         catch (Exception ex)
         {
             _tempFilePath = tempFile;
             CleanupTempFile();
+            _decoder?.Dispose();
+            _decoder = null;
             throw new InvalidOperationException($"Не удалось декодировать аудио: {ex.Message}");
         }
     }
@@ -133,20 +147,43 @@ public class AudioService : IAudioService, IDisposable
         }
     }
 
-    public void Play() => _out?.Play();
-    public void Pause() => _out?.Pause();
-    public void Stop() => _out?.Stop();
+    public void Play()
+    {
+        if (_out?.PlaybackState == PlaybackState.Paused) _stopwatch.Start();
+        else _stopwatch.Start();
+        _out?.Play();
+    }
+    public void Pause()
+    {
+        _out?.Pause(); 
+        _stopwatch.Stop();
+    }
+    public void Stop()
+    {
+        _out?.Stop(); 
+        _stopwatch.Reset(); 
+    }
 
     /// <summary>
     /// Перемотка в чистом потоковом режиме не поддерживается без HTTP Range на сервере.
     /// Метод оставлен для совместимости интерфейса.
     /// </summary>
-    public void Seek(double frac) { /* Requires server-side Range support */ }
+    public void Seek(double seconds)
+    {
+        if (_decoder == null) return;
+
+        // 1. Переводим секунды в байты: (секунды * байт/сек)
+        long targetPosition = (long)(seconds * _decoder.WaveFormat.AverageBytesPerSecond);
+
+        // 2. Все аргументы теперь типа long, компилятор подберёт нужную перегрузку
+        _decoder.Position = Math.Clamp(targetPosition, 0L, _decoder.Length);
+    }
 
     public void SetVolume(float v)
     {
-        if (_volumeProvider != null)
-            _volumeProvider.Volume = Math.Clamp(v, 0f, 1f);
+        Volume = Math.Clamp(v, 0f, 1f);
+        if (_volumeProvider != null) 
+            _volumeProvider.Volume = (float)Volume;
     }
 
     public bool GetSpectrum(float[] dest, int bars) => _grab?.FillBars(dest, bars) ?? false;
@@ -155,9 +192,18 @@ public class AudioService : IAudioService, IDisposable
     {
         if (_isDisposed) return;
         _isDisposed = true;
+        
         _cts?.Cancel();
         _streamTask?.Wait(1000);
-        _out?.Stop(); _out?.Dispose(); _out = null;
+        
+        if (_out != null)
+            _out.PlaybackStopped -= OnPlaybackStopped;
+        
+        _decoder?.Dispose();
+        _out?.Stop(); 
+        _out?.Dispose(); 
+        _out = null;
+        
         _buffer = null;
         _cts?.Dispose();
 

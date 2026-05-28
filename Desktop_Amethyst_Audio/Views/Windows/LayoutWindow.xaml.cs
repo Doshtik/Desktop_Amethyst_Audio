@@ -51,6 +51,7 @@ public partial class LayoutWindow : Window
     private DispatcherTimer _progressTimer;
     
     private bool _isChangingTrack = false;
+    private bool _isDraggingSlider = false;
 
     private bool _isRepeat;
     private Brush _defaultButtonBackground;
@@ -89,8 +90,10 @@ public partial class LayoutWindow : Window
         TimeSlider.Minimum = 0;
         TimeSlider.Maximum = 0; //audioFile.TotalTime.TotalSeconds;
         TimeSlider.Value = 0;
+        TimeSlider.PreviewMouseLeftButtonDown += TimeSlider_MouseDown;
+        TimeSlider.PreviewMouseLeftButtonUp += TimeSlider_MouseUp;
         
-        _progressTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(250) };
+        _progressTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(125) };
         _progressTimer.Tick += ProgressTimer_Tick;
         
         _audioService.PlaybackEnded += OnPlaybackEnded;
@@ -188,12 +191,20 @@ public partial class LayoutWindow : Window
 
     private void ProgressTimer_Tick(object? sender, EventArgs e)
     {
-        if (_audioService.State is PlaybackState.Playing or PlaybackState.Paused)
+        // Если пользователь тащит ползунок - НИЧЕГО не делаем
+        if (_isDraggingSlider) return;
+
+        if (_audioService.State is not (PlaybackState.Playing or PlaybackState.Paused)) return;
+
+        double duration = _audioService.Duration;
+        if (duration > 0 && Math.Abs(TimeSlider.Maximum - duration) > 0.1)
+            TimeSlider.Maximum = duration;
+
+        double current = _audioService.CurrentTime;
+        if (current >= 0 && current <= duration)
         {
-            TimeSlider.Maximum = _audioService.Duration;
-            TimeSlider.Value = _audioService.CurrentTime;
-            
-            CurrentTrackTimeTextBlock.Text = TimeSpan.FromSeconds(TimeSlider.Value).ToString(@"mm\:ss");
+            TimeSlider.Value = current;
+            CurrentTrackTimeTextBlock.Text = TimeSpan.FromSeconds(current).ToString(@"mm\:ss");
         }
     }
 
@@ -242,7 +253,6 @@ public partial class LayoutWindow : Window
             TrackPanel.Visibility = Visibility.Visible;
             VolumeSlider.Value = _audioService.Volume;
             TimeSlider.Value = 0;
-            TimeSlider.Maximum = _audioService.Duration;
 
             // 3. Запускаем воспроизведение (AudioService сам скачает, декодирует и сыграет)
             await _audioService.StartAsync(response);
@@ -350,12 +360,27 @@ public partial class LayoutWindow : Window
         if (_audioService is null) return;
         _audioService.SetVolume((float)e.NewValue);
     }
-    
-    private void TimeSlider_MouseDown(object sender, MouseButtonEventArgs e) => _progressTimer.Stop();
+
+    private void TimeSlider_MouseDown(object sender, MouseButtonEventArgs e)
+    {
+        _isDraggingSlider = true;
+        _progressTimer.Stop();
+    }
     private void TimeSlider_MouseUp(object sender, MouseButtonEventArgs e)
     {
-        _audioService.Seek(TimeSlider.Value);
+        _isDraggingSlider = false;
         _progressTimer.Start();
+        _audioService.Seek(TimeSlider.Value);
+    }
+    
+    private void TimeSlider_PreviewMouseLeave(object sender, MouseEventArgs e)
+    {
+        if (_isDraggingSlider)
+        {
+            _isDraggingSlider = false;
+            _audioService.Seek(TimeSlider.Value);
+            _progressTimer.Start();
+        }
     }
 
     private async void ChangeCollectionToPlaylistButton_OnChecked(object sender, RoutedEventArgs e)

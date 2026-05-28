@@ -11,7 +11,7 @@ namespace Desktop_Amethyst_Audio.Models.Services.Implementation;
 public class AudioService : IAudioService, IDisposable
 {
     private const int ChunkSize = 8192;
-    private const int BufferSeconds = 4;
+    private const int BufferSeconds = 1;
     private const int FftLen = 2048;
     private const int FftM = 11; // 2^11 = 2048
 
@@ -25,8 +25,6 @@ public class AudioService : IAudioService, IDisposable
     private MediaFoundationReader? _decoder;
 
     private string? _tempFilePath;
-    
-    private readonly Stopwatch _stopwatch = new();
     public double Volume { get; private set; } = 1.0;
     public double CurrentTime => _decoder?.CurrentTime.TotalSeconds ?? 0;
     public double Duration => _decoder?.TotalTime.TotalSeconds ?? 0;
@@ -149,19 +147,15 @@ public class AudioService : IAudioService, IDisposable
 
     public void Play()
     {
-        if (_out?.PlaybackState == PlaybackState.Paused) _stopwatch.Start();
-        else _stopwatch.Start();
         _out?.Play();
     }
     public void Pause()
     {
         _out?.Pause(); 
-        _stopwatch.Stop();
     }
     public void Stop()
     {
         _out?.Stop(); 
-        _stopwatch.Reset(); 
     }
 
     /// <summary>
@@ -170,13 +164,14 @@ public class AudioService : IAudioService, IDisposable
     /// </summary>
     public void Seek(double seconds)
     {
-        if (_decoder == null) return;
+        if (_decoder == null || _buffer == null || _out == null) return;
 
-        // 1. Переводим секунды в байты: (секунды * байт/сек)
-        long targetPosition = (long)(seconds * _decoder.WaveFormat.AverageBytesPerSecond);
+        double clamped = Math.Clamp(seconds, 0, _decoder.TotalTime.TotalSeconds);
 
-        // 2. Все аргументы теперь типа long, компилятор подберёт нужную перегрузку
-        _decoder.Position = Math.Clamp(targetPosition, 0L, _decoder.Length);
+        _out.Pause();
+        _buffer.ClearBuffer();
+        _decoder.CurrentTime = TimeSpan.FromSeconds(clamped);
+        _out.Play();
     }
 
     public void SetVolume(float v)

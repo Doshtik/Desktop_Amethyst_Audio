@@ -44,8 +44,6 @@ public partial class LayoutWindow : Window
     private readonly IProfileApiClient _profileApiClient;
     private readonly ITrackApiClient _trackApiClient;
     
-    public int CurrentQueuePosition { get; set; }
-    public ObservableCollection<TrackInfoDto> TrackQueueList { get; set; }
     public List<AlbumInfoDto> AlbumCollection { get; set; }
     public List<PlaylistInfoDto> PlaylistCollection { get; set; }
 
@@ -54,12 +52,12 @@ public partial class LayoutWindow : Window
     private Brush _defaultButtonBackground;
     private Brush _activeButtonBackground;
     
-    private SearchPage SearchPage { get; } = new();
-    private ResonancePage ResonancePage { get; } = new();
-    private LibraryPage LibraryPage { get; } = new();
-    private ProfilePage ProfilePage { get; } = new();
-    private AlbumPage AlbumPage { get; } = new();
-    private PlaylistPage PlaylistPage { get; } = new();
+    private SearchPage SearchPage { get; }
+    private ResonancePage ResonancePage { get; }
+    private LibraryPage LibraryPage { get; }
+    private ProfilePage ProfilePage { get; }
+    private AlbumPage AlbumPage { get; }
+    private PlaylistPage PlaylistPage { get; }
     
     public LayoutWindow()
     {
@@ -69,9 +67,15 @@ public partial class LayoutWindow : Window
         _trackApiClient = new TrackApiClient();
         _settingsService = new SettingsService();
         _audioService = new AudioService();
+        
+        SearchPage = new SearchPage();
+        ResonancePage = new ResonancePage();
+        LibraryPage = new LibraryPage();
+        ProfilePage = new ProfilePage();
+        AlbumPage = new AlbumPage();
+        PlaylistPage = new PlaylistPage();
 
         TrackPanel.Visibility = Visibility.Collapsed;
-        TrackQueueList = new ObservableCollection<TrackInfoDto>();
 
         _isShuffle = false;
         _isRepeat = false;
@@ -98,7 +102,9 @@ public partial class LayoutWindow : Window
         WeakReferenceMessenger.Default.Register<NavigateToPlaylistMessage>(this, (r, m) 
             => ContentFrame.Navigate(PlaylistPage));
         WeakReferenceMessenger.Default.Register<NavigateToQueueMessage>(this, (r, m) 
-            => ContentFrame.Navigate(new QueuePage(TrackQueueList)));
+            => ContentFrame.Navigate(new QueuePage()));
+        
+        ContentFrame.Navigate(LibraryPage);
         
         WeakReferenceMessenger.Default.Register<TrackChangedMessage>(this, (r, m) 
             => ChangeTrack(m.Track));
@@ -175,7 +181,7 @@ public partial class LayoutWindow : Window
         {
             // 1. Останавливаем старое
             _audioService.Stop();
-
+            
             // 2. Получаем поток (Убедись, что TrackApiClient НЕ делает 'using' на HttpResponseMessage)
             Stream response = await _trackApiClient.GetTrackFileAsync(track.TrackUrl);
             BitmapImage image = await _profileApiClient.GetUserAvatarAsync(track.CoverUrl);
@@ -225,24 +231,12 @@ public partial class LayoutWindow : Window
 
     private void ShuffleButton_Click(object sender, RoutedEventArgs e)
     {
-        if (_isShuffle is true)
-        {
-            _isShuffle = false;
+        PlaybackService.ToggleShuffle();
+        
+        if (PlaybackService.IsShuffled) 
             ShuffleButton.Background = _defaultButtonBackground;
-        }
-        else
-        {
-            ObservableCollection<TrackInfoDto> shuffledTracks = ShuffleTracks(TrackQueueList);
-            _isShuffle = true;
+        else 
             ShuffleButton.Background = _activeButtonBackground;
-        }
-    }
-
-    private ObservableCollection<TrackInfoDto> ShuffleTracks(ObservableCollection<TrackInfoDto> originalQueue)
-    {
-        return new ObservableCollection<TrackInfoDto>(
-            originalQueue.OrderBy(_ => Random.Shared.Next())
-        );
     }
 
     private void PlayPauseButton_Click(object sender, RoutedEventArgs e)
@@ -259,12 +253,18 @@ public partial class LayoutWindow : Window
 
     private void BackButton_Click(object sender, RoutedEventArgs e)
     {
-
+        if (!PlaybackService.Queue.Any())
+            return;
+        
+        PlaybackService.PreviousTrack();
     }
 
     private void NextButton_Click(object sender, RoutedEventArgs e)
     {
-
+        if (!PlaybackService.Queue.Any())
+            return;
+        
+        PlaybackService.NextTrack();
     }
 
     private void NavigateToProfile_Selected(object sender, RoutedEventArgs e)
@@ -306,14 +306,56 @@ public partial class LayoutWindow : Window
         //_audioService.SetVolume((float)VolumeSlider.Value);
     }
 
-    private void ChangeCollectionToPlaylistButton_OnChecked(object sender, RoutedEventArgs e)
+    private async void ChangeCollectionToPlaylistButton_OnChecked(object sender, RoutedEventArgs e)
     {
+        if (SavedAlbumsListBox is null)
+            return;
         
+        SavedAlbumsListBox.Visibility = Visibility.Collapsed;
+        try
+        {
+            UserInfoDto userDto = _settingsService.Load()?.User;
+            PlaylistCollection = await _profileApiClient.GetUserSavedPlaylistsAsync(userDto.Id);
+            
+            SavedPlaylistsListBox.Items.Clear();
+            foreach (PlaylistInfoDto playlistDto in PlaylistCollection)
+            {
+                PlaylistControl control = new PlaylistControl();
+                control.Playlist = playlistDto;
+                SavedPlaylistsListBox.Items.Add(control);
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Не удалось, увы");
+        }
+        SavedPlaylistsListBox.Visibility = Visibility.Visible;
     }
 
-    private void ChangeCollectionToAlbumButton_OnChecked(object sender, RoutedEventArgs e)
+    private async void ChangeCollectionToAlbumButton_OnChecked(object sender, RoutedEventArgs e)
     {
+        if (SavedPlaylistsListBox is null)
+            return;
         
+        SavedPlaylistsListBox.Visibility = Visibility.Collapsed;
+        try
+        {
+            UserInfoDto userDto = _settingsService.Load()?.User;
+            AlbumCollection = await _profileApiClient.GetUserSavedAlbumsAsync(userDto.Id);
+        
+            SavedAlbumsListBox.Items.Clear();
+            foreach (AlbumInfoDto albumDto in AlbumCollection)
+            {
+                AlbumControl control = new AlbumControl();
+                control.Album = albumDto;
+                SavedAlbumsListBox.Items.Add(control);
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Не удалось, увы");
+        }
+        SavedAlbumsListBox.Visibility = Visibility.Visible;
     }
 
     private void QueueButton_Click(object sender, RoutedEventArgs e)

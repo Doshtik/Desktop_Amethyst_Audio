@@ -37,7 +37,8 @@ public partial class QueueTrackControl : UserControl
         {
             TextBlock user = new TextBlock();
             Hyperlink link = new Hyperlink();
-            link.Click += (sender, e) => NavigateToProfile(dto.Id);
+            link.Click += (sender, e) 
+                => WeakReferenceMessenger.Default.Send(new NavigateToProfileMessage(dto.Id, false));
             link.SetResourceReference(Hyperlink.ForegroundProperty, "ContentPrimaryBrush");
             Run runText = new Run(dto.Nickname);
             link.Inlines.Add(runText);
@@ -47,15 +48,6 @@ public partial class QueueTrackControl : UserControl
             space.Margin = new Thickness(5,0,0,0);
             TrackUsersPanel.Children.Add(space);
         }
-    }
-
-    private void NavigateToProfile(long userId) 
-        => WeakReferenceMessenger.Default.Send(new NavigateToProfileMessage(userId, false));
-    
-    public void OnSizeChanged(object sender, SizeChangedEventArgs e)
-    {
-        Page? parent = sender as Page;
-        this.Width = parent.ActualWidth - 30;
     }
 
     private void QueueTrackControl_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)

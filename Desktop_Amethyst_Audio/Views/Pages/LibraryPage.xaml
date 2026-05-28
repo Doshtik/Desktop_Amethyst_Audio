@@ -50,7 +50,6 @@
                     <ComboBoxItem Content="По дате добавления"/>
                     <ComboBoxItem Content="По названию"/>
                     <ComboBoxItem Content="По исполнителю"/>
-                    <ComboBoxItem Content="По году"/>
                 </ComboBox>
             </Grid>
         </StackPanel>

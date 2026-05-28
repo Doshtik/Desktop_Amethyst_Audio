@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using CommunityToolkit.Mvvm.Messaging;
@@ -5,6 +6,8 @@ using Desktop_Amethyst_Audio.Messages.Action;
 using Desktop_Amethyst_Audio.Models.Clients.Abstraction;
 using Desktop_Amethyst_Audio.Models.Clients.Implementation;
 using Desktop_Amethyst_Audio.Models.DTO.Tracks;
+using Desktop_Amethyst_Audio.Models.Enums;
+using Desktop_Amethyst_Audio.Models.Services.Implementation;
 using Desktop_Amethyst_Audio.Views.UserControls;
 
 namespace Desktop_Amethyst_Audio.Views.Pages;
@@ -12,6 +15,7 @@ namespace Desktop_Amethyst_Audio.Views.Pages;
 public partial class LibraryPage : Page
 {
     private readonly IProfileApiClient _profileApiClient;
+    private SortTracksEnum _sortEnum = SortTracksEnum.Default;
     public LibraryPage()
     {
         InitializeComponent();
@@ -27,6 +31,23 @@ public partial class LibraryPage : Page
     {
         TrackListBox.Items.Clear();
         List<TrackInfoDto> tracks = await _profileApiClient.GetUserLibraryAsync();
+
+        //Да, switch бесполезен, пофиг, don't care
+        switch (_sortEnum)
+        {
+            case SortTracksEnum.Default:
+                tracks = tracks.OrderBy(x => x.Name).ToList();
+                break;
+            case SortTracksEnum.ByName:
+                tracks = tracks.OrderBy(x => x.Name).ToList();
+                break;
+            case SortTracksEnum.ByAuthor:
+                tracks = tracks.OrderBy(x => x.UserList.OrderBy(x => x.Nickname)).ToList();
+                break;
+            case SortTracksEnum.ByDate:
+                tracks = tracks.OrderBy(x => x.Name).ToList();
+                break;
+        }
         
         foreach (TrackInfoDto track in tracks)
         {
@@ -40,9 +61,10 @@ public partial class LibraryPage : Page
     private void TrackListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         TrackControl? control = TrackListBox.SelectedItem as TrackControl;
-        if (control != null && control.Track != null)
+        if (control is not null)
         {
-            WeakReferenceMessenger.Default.Send(new TrackChangedMessage(control.Track));
+            PlaybackService.CurrentTrack = control.Track;
+            WeakReferenceMessenger.Default.Send(new TrackChangedMessage(PlaybackService.CurrentTrack));
         }
     }
 
@@ -56,12 +78,36 @@ public partial class LibraryPage : Page
 
     private void SortComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        //TODO: Сделать сортировку
-        return;
+        if (SortComboBox.SelectedItem is ComboBoxItem selectedItem)
+        {
+            string selectedContent = selectedItem.Content.ToString();
+
+            switch (selectedContent)
+            {
+                case "По-умолчанию":
+                    _sortEnum = SortTracksEnum.Default;
+                    break;
+                case "По дате добавления":
+                    _sortEnum = SortTracksEnum.ByDate;
+                    break;
+                case "По названию":
+                    _sortEnum = SortTracksEnum.ByName;
+                    break;
+                case "По исполнителю":
+                    _sortEnum = SortTracksEnum.ByAuthor;
+                    break;
+            }
+        }
     }
 
     private void PlayLibraryButton_OnClick(object sender, RoutedEventArgs e)
     {
-        throw new NotImplementedException();
+        List<TrackInfoDto> tracks = new List<TrackInfoDto>();
+        foreach (var controlItem in TrackListBox.Items)
+        {
+            TrackControl control = controlItem as TrackControl;
+            tracks.Add(control.Track);
+        }
+        PlaybackService.SetQueue(tracks);
     }
 }

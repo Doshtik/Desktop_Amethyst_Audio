@@ -4,9 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Desktop_Amethyst_Audio.Views.UserControls"
-             mc:Ignorable="d" Loaded="TrackInQueueControl_OnLoaded" MouseLeftButtonUp="QueueTrackControl_OnMouseLeftButtonUp"
-             Height="75" d:DesignWidth="500">
-    <Border BorderThickness="2" BorderBrush="{DynamicResource OutlineSubtleBrush}" CornerRadius="10" Background="{DynamicResource SurfaceContainerBrush}">
+             mc:Ignorable="d"
+             Height="75" d:DesignWidth="500"
+             Loaded="TrackInQueueControl_OnLoaded" 
+             MouseLeftButtonUp="QueueTrackControl_OnMouseLeftButtonUp">
+    <Border BorderThickness="2" BorderBrush="{DynamicResource OutlineSubtleBrush}" 
+            CornerRadius="10" Background="{DynamicResource SurfaceContainerBrush}">
         <Grid>
              <Grid.ColumnDefinitions>
                  <ColumnDefinition Width="Auto"/>
@@ -25,7 +28,9 @@
                 <StackPanel x:Name="TrackUsersPanel" Orientation="Horizontal" Grid.Row="1" VerticalAlignment="Top"/>
             </Grid>
             <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10">
-                <TextBlock x:Name="DurationTextBlock" Text="00:00" VerticalAlignment="Center" Margin="0 0 10 0" FontSize="18" Foreground="{DynamicResource ContentPrimaryBrush}"/>
+                <TextBlock x:Name="DurationTextBlock" Text="00:00" 
+                           VerticalAlignment="Center" Margin="0 0 10 0" 
+                           FontSize="18" Foreground="{DynamicResource ContentPrimaryBrush}"/>
                 <ToggleButton x:Name="ActionButton">
                     <ToggleButton.Content>
                         <Image Source="/Assets/test.jpg" Width="25"/>

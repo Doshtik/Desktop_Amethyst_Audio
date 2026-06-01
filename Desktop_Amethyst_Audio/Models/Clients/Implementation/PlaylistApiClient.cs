@@ -58,7 +58,7 @@ public class PlaylistApiClient : IPlaylistApiClient
         return JsonSerializer.Deserialize<List<PlaylistInfoDto>>(json, JsonOptions);
     }
 
-    public async Task<PlaylistInfoDto> GetListPlaylistByUserIdAsync(long userId)
+    public async Task<List<PlaylistInfoDto>> GetListByUserIdAsync(long userId)
     {
         var baseUrl = BaseUrl.TrimEnd('/');
         var path = PLAYLIST_API_PATH.TrimStart('/');
@@ -72,7 +72,7 @@ public class PlaylistApiClient : IPlaylistApiClient
         response.EnsureSuccessStatusCode();
     
         var json = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<PlaylistInfoDto>(json, JsonOptions);
+        return JsonSerializer.Deserialize<List<PlaylistInfoDto>>(json, JsonOptions);
     }
 
     public async Task<BitmapImage> GetPlaylistCoverAsync(string coverUrl)

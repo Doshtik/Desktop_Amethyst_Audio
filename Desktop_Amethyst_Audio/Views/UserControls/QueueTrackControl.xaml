@@ -43,7 +43,7 @@
                        AllowsTransparency="True"
                        PopupAnimation="Fade">
                     <StackPanel Orientation="Vertical">
-                        <Button x:Name="AddTrackInQueue" Content="Удалить из очереди"/>
+                        <Button x:Name="RemoveTrackFromQueue" Content="Удалить из очереди"/>
                         <Button x:Name="AddTrackInLibrary" Content="Добавить в библиотеку" Visibility="Collapsed"/>
                         <Button x:Name="RemoveTrackFromLibrary" Content="Добавить в библиотеку" Visibility="Collapsed"/>
                         <Button x:Name="AddTrackInPlaylist" Content="Добавить в плейлист" Visibility="Collapsed"/>

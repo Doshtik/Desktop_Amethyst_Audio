@@ -21,7 +21,7 @@ public class PlaybackService
             if (value == null || value == _currentTrack) 
                 return;
             
-            if (Queue.Contains(value))
+            if (Queue.Any(t => t.Id == value.Id))
             {
                 int queueIndex = Queue.IndexOf(value);
                 _playbackIndex = _playbackOrder.IndexOf(queueIndex);
@@ -76,12 +76,39 @@ public class PlaybackService
 
     public static void SetQueue(IEnumerable<TrackInfoDto> tracks)
     {
+        if (tracks == null) return;
+
+        var list = tracks.ToList();
+
+        long? currentTrackId = CurrentTrack?.Id;
+        
         Queue.Clear();
-        foreach (var t in tracks) Queue.Add(t);
+        foreach (var t in list) Queue.Add(t);
         
         RebuildPlaybackOrder();
-        _playbackIndex = Queue.Count > 0 ? 0 : -1;
-        _currentTrack = Queue.ElementAtOrDefault(0);
+        if (currentTrackId.HasValue && Queue.Count > 0)
+        {
+            int newQueueIndex = Queue.ToList().FindIndex(t => t.Id == currentTrackId.Value);
+        
+            if (newQueueIndex >= 0)
+            {
+                // Находим позицию в порядке воспроизведения (с учётом шаффла)
+                _playbackIndex = _playbackOrder.IndexOf(newQueueIndex);
+                _currentTrack = Queue[newQueueIndex];
+            }
+            else
+            {
+                // Трека нет в новой очереди → сбрасываем на первый
+                _playbackIndex = 0;
+                _currentTrack = Queue[0];
+            }
+        }
+        else
+        {
+            // Не было текущего трека или очередь пуста
+            _playbackIndex = Queue.Count > 0 ? 0 : -1;
+            _currentTrack = Queue.ElementAtOrDefault(0);
+        }
         WeakReferenceMessenger.Default.Send(new TrackChangedMessage(CurrentTrack));
     }
 
@@ -123,6 +150,7 @@ public class PlaybackService
     public static void NextTrack()
     {
         if (_playbackOrder.Count == 0) return;
+        if (Queue.Count == 0) return;
         _playbackIndex = (_playbackIndex + 1) % _playbackOrder.Count;
         ApplyCurrentTrackFromIndex();
         WeakReferenceMessenger.Default.Send(new TrackChangedMessage(CurrentTrack));

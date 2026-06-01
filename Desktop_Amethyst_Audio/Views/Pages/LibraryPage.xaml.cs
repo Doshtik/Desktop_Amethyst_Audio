@@ -19,19 +19,29 @@ public partial class LibraryPage : Page
     public LibraryPage()
     {
         InitializeComponent();
+        Loaded += (s, e) => LoadTrackListBox();
         _profileApiClient = new ProfileApiClient();
-    }
-
-    private void LibraryPage_OnLoaded(object sender, RoutedEventArgs e)
-    {
-        LoadTrackListBox();
     }
     
     public async void LoadTrackListBox()
     {
+        if (!IsLoaded || TrackListBox == null)
+            return;
+        
         TrackListBox.Items.Clear();
-        List<TrackInfoDto> tracks = await _profileApiClient.GetUserLibraryAsync();
+        List<TrackInfoDto> tracks = new List<TrackInfoDto>();
+        try
+        {
+            tracks = await _profileApiClient.GetUserLibraryAsync();
+        }
+        catch (Exception e)
+        {
+            MessageBox.Show("Не удалось прогрузить библиотеку");
+            return;
+        }
 
+        AmountOfTrackTextBlock.Text = tracks.Count.ToString();
+        
         //Да, switch бесполезен, пофиг, don't care
         switch (_sortEnum)
         {
@@ -42,7 +52,7 @@ public partial class LibraryPage : Page
                 tracks = tracks.OrderBy(x => x.Name).ToList();
                 break;
             case SortTracksEnum.ByAuthor:
-                tracks = tracks.OrderBy(x => x.UserList.OrderBy(x => x.Nickname)).ToList();
+                tracks = tracks.OrderBy(x => x.UserList.OrderBy(t => t.Nickname)).ToList();
                 break;
             case SortTracksEnum.ByDate:
                 tracks = tracks.OrderBy(x => x.Name).ToList();
@@ -98,16 +108,16 @@ public partial class LibraryPage : Page
                     break;
             }
         }
+        LoadTrackListBox();
     }
 
     private void PlayLibraryButton_OnClick(object sender, RoutedEventArgs e)
     {
-        List<TrackInfoDto> tracks = new List<TrackInfoDto>();
-        foreach (var controlItem in TrackListBox.Items)
-        {
-            TrackControl control = controlItem as TrackControl;
-            tracks.Add(control.Track);
-        }
+        var tracks = TrackListBox.Items
+            .Cast<TrackControl>()
+            .Where(c => c is not null)
+            .Select(c => c.Track)
+            .ToList();
         PlaybackService.SetQueue(tracks);
     }
 }

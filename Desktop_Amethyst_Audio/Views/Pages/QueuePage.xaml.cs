@@ -23,6 +23,7 @@ public partial class QueuePage : Page
 
     private void LoadQueueListBox()
     {
+        TrackQueueListBox.Items.Clear();
         foreach (TrackInfoDto trackDto in PlaybackService.Queue)
         {
             QueueTrackControl control = new QueueTrackControl();
@@ -35,25 +36,21 @@ public partial class QueuePage : Page
     private void ClearQueueButton_OnClick(object sender, RoutedEventArgs e)
     {
         PlaybackService.ClearQueue();
+        LoadQueueListBox();
     }
 
     private void TrackQueueListBox_OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        throw new NotImplementedException();
+        
     }
 
     private void TrackQueueListBox_OnMouseMove(object sender, MouseEventArgs e)
     {
-        throw new NotImplementedException();
+        
     }
 
     private void TrackQueueListBox_OnDrop(object sender, DragEventArgs e)
     {
-        throw new NotImplementedException();
-    }
-    
-    private void TrackClickButton_OnClick(object sender, RoutedEventArgs e)
-    {
-        throw new NotImplementedException();
+        
     }
 }

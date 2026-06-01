@@ -12,16 +12,19 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Margin="5">
+        <Grid Grid.Row="0" Margin="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Text="Очередь" FontSize="16" 
-                       Foreground="{DynamicResource ContentPrimaryBrush}"
-                       HorizontalAlignment="Left"/>
+            <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
+                <TextBlock Text="Треков в очереди:" FontSize="16" Margin=" 0 0 5 0"
+                           VerticalAlignment="Center" Foreground="{DynamicResource ContentPrimaryBrush}"/>
+                <TextBlock x:Name="AmountOfTrackTextBlock" Text="150" FontSize="16" 
+                           VerticalAlignment="Center" Foreground="{DynamicResource ContentPrimaryBrush}"/>
+            </StackPanel>
             <Button x:Name="ClearQueueButton" Content="Очистить" Click="ClearQueueButton_OnClick"
-                    Grid.Column="1" Margin="5" Style="{StaticResource ButtonPrimary}"
+                    Grid.Column="1" Margin="5" Style="{StaticResource ButtonPrimary}" FontSize="16"
                     HorizontalAlignment="Right"/>
         </Grid>
         <ListBox x:Name="TrackQueueListBox" 

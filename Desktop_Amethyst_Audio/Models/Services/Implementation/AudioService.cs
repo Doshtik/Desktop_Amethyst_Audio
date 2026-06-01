@@ -28,6 +28,8 @@ public class AudioService : IAudioService, IDisposable
     public double Volume { get; private set; } = 1.0;
     public double CurrentTime => _decoder?.CurrentTime.TotalSeconds ?? 0;
     public double Duration => _decoder?.TotalTime.TotalSeconds ?? 0;
+    
+    private bool _isManualStop = false;
 
     public PlaybackState State => _out?.PlaybackState ?? PlaybackState.Stopped;
     public event Action? PlaybackEnded;
@@ -72,8 +74,10 @@ public class AudioService : IAudioService, IDisposable
     private void OnPlaybackStopped(object? sender, StoppedEventArgs e)
     {
         // Проверяем, что это действительно конец трека, а не ошибка
-        if (e.Exception == null)
+        if (e.Exception == null && !_isManualStop)
             PlaybackEnded?.Invoke();
+            
+        _isManualStop = false;
     }
 
     /// <summary>
@@ -81,6 +85,8 @@ public class AudioService : IAudioService, IDisposable
     /// </summary>
     public async Task StartAsync(Stream networkStream, CancellationToken ct = default)
     {
+        _isManualStop = false;
+        
         // Сохраняем во временный файл (MediaFoundationReader требует файл)
         var tempFile = Path.Combine(Path.GetTempPath(), $"audio_{Guid.NewGuid()}.mp3");
 
@@ -147,15 +153,21 @@ public class AudioService : IAudioService, IDisposable
 
     public void Play()
     {
-        _out?.Play();
+        if (_out is not null)
+            _out?.Play();
     }
     public void Pause()
     {
-        _out?.Pause(); 
+        if (_out is not null)
+            _out?.Pause(); 
     }
     public void Stop()
     {
-        _out?.Stop(); 
+        if (_out is not null)
+        {
+            _isManualStop = true;
+            _out.Stop();
+        }
     }
 
     /// <summary>

@@ -60,7 +60,6 @@ public partial class LayoutWindow : Window
     private SearchPage SearchPage { get; }
     private ResonancePage ResonancePage { get; }
     private LibraryPage LibraryPage { get; }
-    private ProfilePage ProfilePage { get; }
     private AlbumPage AlbumPage { get; }
     private PlaylistPage PlaylistPage { get; }
     
@@ -76,7 +75,6 @@ public partial class LayoutWindow : Window
         SearchPage = new SearchPage();
         ResonancePage = new ResonancePage();
         LibraryPage = new LibraryPage();
-        ProfilePage = new ProfilePage();
         AlbumPage = new AlbumPage();
         PlaylistPage = new PlaylistPage();
 
@@ -107,7 +105,7 @@ public partial class LayoutWindow : Window
         WeakReferenceMessenger.Default.Register<NavigateToLibraryMessage>(this, (r, m) 
             => ContentFrame.Navigate(LibraryPage));
         WeakReferenceMessenger.Default.Register<NavigateToProfileMessage>(this, (r, m) 
-            => ContentFrame.Navigate(ProfilePage));
+            => ContentFrame.Navigate(new ProfilePage(m.userId, m.isOwnProfile)));
         WeakReferenceMessenger.Default.Register<NavigateToAlbumMessage>(this, (r, m) 
             => ContentFrame.Navigate(AlbumPage));
         WeakReferenceMessenger.Default.Register<NavigateToPlaylistMessage>(this, (r, m) 
@@ -178,13 +176,12 @@ public partial class LayoutWindow : Window
         }
     }
     
-    private async void OnPlaybackEnded()
+    private void OnPlaybackEnded()
     {
-        await Application.Current.Dispatcher.InvokeAsync(async () =>
+        Application.Current.Dispatcher.Invoke(() =>
         {
             // Предотвращаем рекурсивный вызов, если очередь пуста
             if (PlaybackService.Queue.Count == 0) return;
-        
             PlaybackService.NextTrack();
         });
     }
@@ -205,6 +202,7 @@ public partial class LayoutWindow : Window
         {
             TimeSlider.Value = current;
             CurrentTrackTimeTextBlock.Text = TimeSpan.FromSeconds(current).ToString(@"mm\:ss");
+            TotalTrackTimeTextBlock.Text = TimeSpan.FromSeconds(_audioService.Duration).ToString(@"mm\:ss");
         }
     }
 
@@ -256,6 +254,7 @@ public partial class LayoutWindow : Window
 
             // 3. Запускаем воспроизведение (AudioService сам скачает, декодирует и сыграет)
             await _audioService.StartAsync(response);
+            _audioService.SetVolume((float)(VolumeSlider.Value));
             _progressTimer.Start();
         }
         catch (Exception ex)

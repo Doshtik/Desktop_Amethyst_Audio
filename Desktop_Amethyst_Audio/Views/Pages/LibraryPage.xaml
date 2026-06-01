@@ -7,7 +7,7 @@
       xmlns:local="clr-namespace:Desktop_Amethyst_Audio.Views.Pages"
       xmlns:tracks="clr-namespace:Desktop_Amethyst_Audio.Models.DTO.Tracks"
       xmlns:userControls="clr-namespace:Desktop_Amethyst_Audio.Views.UserControls"
-      mc:Ignorable="d" Loaded="LibraryPage_OnLoaded"
+      mc:Ignorable="d"
       Title="LibraryPage" d:Background="{DynamicResource SurfaceBaseBrush}" d:DesignHeight="600" d:DesignWidth="800"
       SizeChanged="LibraryPage_OnSizeChanged">
     <Grid>
@@ -53,7 +53,7 @@
                 </ComboBox>
             </Grid>
         </StackPanel>
-        <ListBox x:Name="TrackListBox" ItemsSource="{Binding Controls}" Grid.Row="2" Margin="5" 
+        <ListBox x:Name="TrackListBox" Grid.Row="2" Margin="5" 
                  Background="Transparent" BorderThickness="0"
                  SelectionChanged="TrackListBox_OnSelectionChanged"/>
     </Grid>

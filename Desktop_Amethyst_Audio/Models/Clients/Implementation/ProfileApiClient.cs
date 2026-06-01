@@ -1,6 +1,7 @@
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Windows.Media.Imaging;
@@ -60,6 +61,20 @@ public class ProfileApiClient : IProfileApiClient
     
         var json = await response.Content.ReadAsStringAsync();
         return JsonSerializer.Deserialize<List<UserInfoDto>>(json, JsonOptions);
+    }
+
+    public async Task<int> GetAmountOfSubsAsync(long id)
+    {
+        var baseUrl = BaseUrl.TrimEnd('/');
+        var path = PROFILE_API_PATH.TrimStart('/');
+        var fullUrl = $"{baseUrl}/{path}/sub-count/{id}";
+    
+        using var request = new HttpRequestMessage(HttpMethod.Get, fullUrl);
+    
+        using var response = await _httpClient.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+    
+        return await response.Content.ReadFromJsonAsync<int>();
     }
 
     public async Task<UserInfoDto> UpdateUserAsync(ChangeUserInfoDto dto)

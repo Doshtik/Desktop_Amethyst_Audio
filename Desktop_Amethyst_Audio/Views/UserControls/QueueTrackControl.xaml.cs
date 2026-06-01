@@ -52,6 +52,6 @@ public partial class QueueTrackControl : UserControl
 
     private void QueueTrackControl_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
-        throw new NotImplementedException();
+        
     }
 }

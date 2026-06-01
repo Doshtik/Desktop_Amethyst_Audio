@@ -7,7 +7,7 @@ public interface IPlaylistApiClient
 {
     Task<PlaylistInfoDto> GetPlaylistByIdAsync(long id);
     Task<List<PlaylistInfoDto>> GetPlaylistAllAsync();
-    Task<PlaylistInfoDto> GetListPlaylistByUserIdAsync(long userId);
+    Task<List<PlaylistInfoDto>> GetListByUserIdAsync(long userId);
     Task<BitmapImage> GetPlaylistCoverAsync(string coverUrl);
     
     Task<PlaylistInfoDto> CreatePlaylistAsync(CreatePlaylistDto dto);

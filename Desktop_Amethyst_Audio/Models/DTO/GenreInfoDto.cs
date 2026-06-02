@@ -4,5 +4,7 @@ namespace Backend_Amethyst_Audio.DTO;
 
 public class GenreInfoDto
 {
-     public List<string> GenreName { get; set; }
+     public short Id { get; set; }
+
+     public string GenreName { get; set; } = null!;
 }

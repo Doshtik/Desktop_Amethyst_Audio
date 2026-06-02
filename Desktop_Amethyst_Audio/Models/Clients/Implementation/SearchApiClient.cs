@@ -24,7 +24,7 @@ public class SearchApiClient : ISearchApiClient
         PropertyNameCaseInsensitive = true 
     };
     
-    public async Task<GenreInfoDto> GetGenresAsync()
+    public async Task<List<GenreInfoDto>> GetGenresAsync()
     {
         var baseUrl = BaseUrl.TrimEnd('/');
         var path = RECOMMENDATION_API_PATH.TrimStart('/');
@@ -38,7 +38,7 @@ public class SearchApiClient : ISearchApiClient
         response.EnsureSuccessStatusCode();
     
         var json = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<GenreInfoDto>(json, JsonOptions);
+        return JsonSerializer.Deserialize<List<GenreInfoDto>>(json, JsonOptions);
     }
 
     public async Task<List<TrackInfoDto>> GetListByGenreAsync(string genreName)

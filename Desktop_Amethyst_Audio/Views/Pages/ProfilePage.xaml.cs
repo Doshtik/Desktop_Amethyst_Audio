@@ -7,6 +7,7 @@ using Desktop_Amethyst_Audio.Models.DTO.Albums;
 using Desktop_Amethyst_Audio.Models.DTO.Playlists;
 using Desktop_Amethyst_Audio.Models.DTO.Tracks;
 using Desktop_Amethyst_Audio.Models.DTO.Users;
+using Desktop_Amethyst_Audio.Views.ModalWindows;
 using Desktop_Amethyst_Audio.Views.UserControls;
 
 namespace Desktop_Amethyst_Audio.Views.Pages;
@@ -52,13 +53,8 @@ public partial class ProfilePage : Page
         try
         {
             _user = await _profileApiClient.GetUserByIdAsync(_userId);
-            BitmapImage avatar = await _profileApiClient.GetUserAvatarAsync(_user.AvatarUrl);
-            BitmapImage header = await _profileApiClient.GetUserHeaderAsync(_user.HeaderUrl);
-            int amountOfSubs = await _profileApiClient.GetAmountOfSubsAsync(_userId);
-            
-            UserAvatarImage.Source = avatar;
-            UserHeaderImage.Source = header;
             UserNicknameTextBlock.Text = _user.Nickname;
+            int amountOfSubs = await _profileApiClient.GetAmountOfSubsAsync(_userId);
             UserAmountOfSubsTextBlock.Text = amountOfSubs.ToString();
         }
         catch (Exception ex)
@@ -69,16 +65,52 @@ public partial class ProfilePage : Page
 
         try
         {
+            BitmapImage avatar = await _profileApiClient.GetUserAvatarAsync(_user.AvatarUrl);
+            UserAvatarImage.Source = avatar;
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Не удалось загрузить треки пользователя");
+            Debug.WriteLine(ex.InnerException);
+        }
+        try
+        {
+            BitmapImage header = await _profileApiClient.GetUserHeaderAsync(_user.HeaderUrl);
+            UserHeaderImage.Source = header;
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Не удалось загрузить треки пользователя");
+            Debug.WriteLine(ex.InnerException);
+        }
+        try
+        {
             _trackList = await _trackApiClient.GetListByUserIdAsync(_userId);
             LoadTrackListBox();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Не удалось загрузить треки пользователя");
+            Debug.WriteLine(ex.InnerException);
+        }
+        try
+        {
             _albumList = await _albumApiClient.GetListByUserIdAsync(_userId);
             LoadAlbumListBox();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Не удалось загрузить альбомы пользователя");
+            Debug.WriteLine(ex.InnerException);
+        }
+        try
+        {
             _playlistList = await _playlistApiClient.GetListByUserIdAsync(_userId);
             LoadPlaylistListBox();
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Не удалось загрузить контент пользователя");
+            MessageBox.Show("Не удалось загрузить плейлисты пользователя");
             Debug.WriteLine(ex.InnerException);
         }
     }
@@ -186,7 +218,8 @@ public partial class ProfilePage : Page
 
     private void CreateTrack_Selected(object sender, RoutedEventArgs e)
     {
-        
+        TrackFormModalWindow window = new TrackFormModalWindow();
+        window.ShowDialog();
     }
 
     private void CreateAlbum_Selected(object sender, RoutedEventArgs e)

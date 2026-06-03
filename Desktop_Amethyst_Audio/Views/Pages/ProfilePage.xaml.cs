@@ -38,13 +38,13 @@ public partial class ProfilePage : Page
         _userId = userId;
         if (isOwnProfile)
         {
-            UserActionsComboBox.Visibility = Visibility.Visible;
+            ActionStackPanel.Visibility = Visibility.Visible;
             UserProfileActionsStackPanel.Visibility = Visibility.Collapsed;
         }
         else
         {
             UserProfileActionsStackPanel.Visibility = Visibility.Visible;
-            UserActionsComboBox.Visibility = Visibility.Collapsed;
+            ActionStackPanel.Visibility = Visibility.Collapsed;
         }
     }
     
@@ -206,24 +206,9 @@ public partial class ProfilePage : Page
         }
     }
 
-    private void NavigateToSettings_Selected(object sender, RoutedEventArgs e)
-    {
-        
-    }
-
-    private void NavigateToAnalytics_Selected(object sender, RoutedEventArgs e)
-    {
-        
-    }
-
-    private void CreateTrack_Selected(object sender, RoutedEventArgs e)
+    private void ReleaseTrackButton_OnClick(object sender, RoutedEventArgs e)
     {
         TrackFormModalWindow window = new TrackFormModalWindow();
         window.ShowDialog();
-    }
-
-    private void CreateAlbum_Selected(object sender, RoutedEventArgs e)
-    {
-        
     }
 }

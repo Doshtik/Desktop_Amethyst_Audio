@@ -31,9 +31,9 @@
                 <TextBlock x:Name="DurationTextBlock" Text="00:00" 
                            VerticalAlignment="Center" Margin="0 0 10 0" 
                            FontSize="18" Foreground="{DynamicResource ContentPrimaryBrush}"/>
-                <ToggleButton x:Name="ActionButton">
+                <ToggleButton x:Name="ActionButton" BorderThickness="0" Background="Transparent">
                     <ToggleButton.Content>
-                        <Image Source="/Assets/test.jpg" Width="25"/>
+                        <Image Source="/Assets/dots_white.png" Width="25"/>
                     </ToggleButton.Content>
                 </ToggleButton>
                 <Popup IsOpen="{Binding IsChecked, ElementName=ActionButton}" 

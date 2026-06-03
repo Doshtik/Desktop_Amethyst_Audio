@@ -82,17 +82,39 @@
       <None Remove="Assets\angle-small-down.png" />
       <Resource Include="Assets\angle-small-down.png" />
       <None Remove="Assets\back.png" />
-      <Resource Include="Assets\back.png" />
       <None Remove="Assets\dots.png" />
       <Resource Include="Assets\dots.png" />
       <None Remove="Assets\heart.png" />
       <Resource Include="Assets\heart.png" />
       <None Remove="Assets\next.png" />
-      <Resource Include="Assets\next.png" />
       <None Remove="Assets\repeat.png" />
       <Resource Include="Assets\repeat.png" />
       <None Remove="Assets\shuffle.png" />
       <Resource Include="Assets\shuffle.png" />
+      <None Remove="Assets\pause.png" />
+      <Resource Include="Assets\pause.png" />
+      <None Remove="Assets\play-fill.png" />
+      <Resource Include="Assets\play-fill.png" />
+      <None Remove="Assets\search.png" />
+      <Resource Include="Assets\search.png" />
+      <None Remove="Assets\skip_next_filled.png" />
+      <Resource Include="Assets\skip_next_filled.png" />
+      <None Remove="Assets\skip_previous_filled.png" />
+      <Resource Include="Assets\skip_previous_filled.png" />
+      <None Remove="Assets\sound.png" />
+      <Resource Include="Assets\sound.png" />
+      <None Remove="Assets\soundwave.png" />
+      <Resource Include="Assets\soundwave.png" />
+      <None Remove="Assets\list.png" />
+      <Resource Include="Assets\list.png" />
+      <None Remove="Assets\dots_white.png" />
+      <Resource Include="Assets\dots_white.png" />
+      <None Remove="Assets\collection-play.png" />
+      <Resource Include="Assets\collection-play.png" />
+      <None Remove="Assets\Bell-Fill.png" />
+      <Resource Include="Assets\Bell-Fill.png" />
+      <None Remove="Assets\Bell.png" />
+      <Resource Include="Assets\Bell.png" />
     </ItemGroup>
 
     <ItemGroup>

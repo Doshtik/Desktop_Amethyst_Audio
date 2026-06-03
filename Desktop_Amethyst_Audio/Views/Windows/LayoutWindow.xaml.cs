@@ -73,7 +73,7 @@ public partial class LayoutWindow : Window
         _audioService = new AudioService();
         
         SearchPage = new SearchPage();
-        ResonancePage = new ResonancePage();
+        ResonancePage = new ResonancePage(_audioService);
         LibraryPage = new LibraryPage();
         AlbumPage = new AlbumPage();
         PlaylistPage = new PlaylistPage();
@@ -273,12 +273,12 @@ public partial class LayoutWindow : Window
         if (_isRepeat is true)
         {
             _isRepeat = false;
-            RepeatButton.Background = _defaultButtonBackground;
+            RepeatToggleButton.Background = _defaultButtonBackground;
         }
         else
         {
             _isRepeat = true;
-            RepeatButton.Background = _activeButtonBackground;
+            RepeatToggleButton.Background = _activeButtonBackground;
         }
     }
 
@@ -287,9 +287,9 @@ public partial class LayoutWindow : Window
         PlaybackService.ToggleShuffle();
         
         if (PlaybackService.IsShuffled) 
-            ShuffleButton.Background = _defaultButtonBackground;
+            ShuffleToggleButton.Background = _defaultButtonBackground;
         else 
-            ShuffleButton.Background = _activeButtonBackground;
+            ShuffleToggleButton.Background = _activeButtonBackground;
     }
 
     private void PlayPauseButton_Click(object sender, RoutedEventArgs e)

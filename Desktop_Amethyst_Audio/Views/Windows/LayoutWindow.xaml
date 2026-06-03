@@ -29,43 +29,46 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
     
-                <Image x:Name="UserAvatarImage" Grid.Column="0" Width="75" Height="75"/>
+                <Image x:Name="UserAvatarImage" Source="../../Assets/test.jpg" Grid.Column="0" Width="75" Height="75"/>
     
-                <Grid Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <TextBlock x:Name="UserNicknameTextBlock" Grid.Row="0" Text="Никнейм пользователя" 
-                               Foreground="White" FontSize="14"/>
-                    <ToggleButton x:Name="ProfileActionsButton" Grid.Row="1" Content="Я не знаю, что писать"/>
-                    <Popup IsOpen="{Binding IsChecked, ElementName=ProfileActionsButton}" 
-                           PlacementTarget="{Binding ElementName=ProfileActionsButton}"
-                           Placement="Bottom" 
-                           StaysOpen="False"
-                           AllowsTransparency="True"
-                           PopupAnimation="Fade">
-                        <StackPanel Orientation="Vertical">
-                            <Button x:Name="NavigateToProfile" Content="В профиль" Click="NavigateToProfile_Selected"/>
-                            <Button x:Name="NavigateToNotification" Content="Уведомления" Click="NavigateToNotification_Selected"/>
-                            <Button x:Name="NavigateToSettings" Content="Настройки" Click="NavigateToSettings_Selected"/>
-                            <Button x:Name="NavigateToAuth" Content="Выйти" Click="NavigateToAuth_Selected"/>
-                        </StackPanel>
-                    </Popup>
-                </Grid>
+                <TextBlock x:Name="UserNicknameTextBlock" Grid.Column="1"
+                           Margin="5 0 0 0"
+                           VerticalAlignment="Center" Text="Никнейм пользователя" 
+                           Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="14"/>
             </Grid>
             
-            <Button x:Name="SearchButton" Content="Поиск" Style="{DynamicResource ButtonPrimary}"
-                FontSize="22" FontFamily="Inter" Margin="0 10 0 5" 
-                Click="NavigateToSearch"/>
+            <Button x:Name="SearchButton" Style="{DynamicResource ButtonPrimary}"
+                 Margin="0 10 0 5" 
+                Click="NavigateToSearch">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="../../Assets/search.png" Width="20" Margin="0 0 5 0"/>
+                        <TextBlock Text="Поиск" FontSize="22" FontFamily="Inter" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
             
-            <Button x:Name="ResonanceButton" Content="Резонанс" Style="{DynamicResource ButtonPrimary}"
+            <Button x:Name="ResonanceButton" Style="{DynamicResource ButtonPrimary}"
                     FontSize="22" FontFamily="Inter" Margin=" 0 5 0 5"
-                    Click="NavigateToResonance"/>
+                    Click="NavigateToResonance">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="../../Assets/soundwave.png" Width="35" Margin="0 0 5 0"/>
+                        <TextBlock Text="Резонанс" FontSize="22" FontFamily="Inter" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
             
-            <Button x:Name="LibraryButton" Content="Библиотека" Style="{DynamicResource ButtonPrimary}"
+            <Button x:Name="LibraryButton" Style="{DynamicResource ButtonPrimary}"
                     FontSize="22" FontFamily="Inter" Margin="0 5 0 0"
-                    Click="NavigateToLibrary"/>
+                    Click="NavigateToLibrary">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="../../Assets/collection-play.png" Width="20" Margin="0 0 5 0"/>
+                        <TextBlock Text="Библиотека" FontSize="22" FontFamily="Inter" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
             
             <Border Margin="0 10 0 10" Background="{DynamicResource ContentPrimaryBrush}" Padding="2" CornerRadius="2"/>
             
@@ -133,12 +136,12 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="RepeatButton" Grid.Column="0" Background="Transparent" Padding="10" 
+                    <ToggleButton x:Name="RepeatToggleButton" Grid.Column="0" Background="Transparent" Padding="10" 
                             BorderThickness="0" VerticalAlignment="Center" Click="RepeatButton_Click">
-                        <Button.Content>
+                        <ToggleButton.Content>
                             <Image Source="../../Assets/repeat.png" Width="25"/>
-                        </Button.Content>
-                    </Button>
+                        </ToggleButton.Content>
+                    </ToggleButton>
                     <Grid Grid.Column="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
@@ -148,12 +151,13 @@
                         <Button x:Name="BackButton" Grid.Column="0" Background="Transparent" Padding="10"  
                                 BorderThickness="0" VerticalAlignment="Center" Click="BackButton_Click">
                             <Button.Content>
-                                <Image Source="../../Assets/back.png" Width="25"/>
+                                <Image Source="../../Assets/skip_previous_filled.png" Width="25"/>
                             </Button.Content>
                         </Button>
-                        <Button x:Name="PlayPauseButton" Grid.Column="1" 
-                                Background="{DynamicResource OutlineSubtleBrush}" Padding="10"  
-                                BorderThickness="0" VerticalAlignment="Center" Click="PlayPauseButton_Click">
+                        <Button x:Name="PlayPauseToggleButton" Grid.Column="1" 
+                                      Background="{DynamicResource OutlineSubtleBrush}" Padding="10"  
+                                      BorderThickness="0" VerticalAlignment="Center"
+                                      Click="PlayPauseButton_Click">
                             <Button.Content>
                                 <Image Source="../../Assets/test.jpg" Width="25"/>
                             </Button.Content>
@@ -161,16 +165,16 @@
                         <Button x:Name="NextButton" Grid.Column="2" Background="Transparent" Padding="10"  
                                 BorderThickness="0" VerticalAlignment="Center" Click="NextButton_Click">
                             <Button.Content>
-                                <Image Source="../../Assets/next.png" Width="25"/>
+                                <Image Source="../../Assets/skip_next_filled.png" Width="25"/>
                             </Button.Content>
                         </Button>
                     </Grid>
-                    <Button x:Name="ShuffleButton" Grid.Column="2" Background="Transparent" Padding="10"  
-                            BorderThickness="0" VerticalAlignment="Center" Click="ShuffleButton_Click">
-                        <Button.Content>
+                    <ToggleButton x:Name="ShuffleToggleButton" Grid.Column="2" Background="Transparent" Padding="10"  
+                                  BorderThickness="0" VerticalAlignment="Center" Click="ShuffleButton_Click">
+                        <ToggleButton.Content>
                             <Image Source="../../Assets/shuffle.png" Width="25"/>
-                        </Button.Content>
-                    </Button>
+                        </ToggleButton.Content>
+                    </ToggleButton>
                 </Grid>
                 <Grid Grid.Column="1" Margin="10 0">
                     <Grid.ColumnDefinitions>
@@ -197,13 +201,13 @@
                         Background="Transparent" BorderThickness="0"/>
                 <Button x:Name="QueueButton" Background="Transparent" BorderThickness="0" Padding="5 10 5 10"
                         Click="QueueButton_Click">
-                    <Image Source="/Assets/test.jpg" Width="25"/>
+                    <Image Source="/Assets/list.png" Width="25"/>
                 </Button>
                 <ToggleButton x:Name="VolumeToggleButton" Background="Transparent" BorderThickness="0" Padding="5 10 5 10">
-                    <Image Source="/Assets/test.jpg" Width="25"/>
+                    <Image Source="/Assets/sound.png" Width="25"/>
                 </ToggleButton>
                 <ToggleButton x:Name="TrackActionsToggleButton" Background="Transparent" BorderThickness="0" Padding="5 10 10 10">
-                    <Image Source="/Assets/test.jpg" Width="25"/>
+                    <Image Source="/Assets/dots_white.png" Width="25"/>
                 </ToggleButton>
             </StackPanel>
             <Popup x:Name="VolumePopup"

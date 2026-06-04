@@ -245,7 +245,7 @@ public class AudioService : IAudioService, IDisposable
         private readonly float[] _bands = new float[FftLen / 2];
         private readonly object _lock = new();
 
-        private float _peakDb = -80f;
+        private float _runMax = 1e-4f;
         private volatile bool _fftReady;
 
         public WaveFormat WaveFormat => _src.WaveFormat;
@@ -311,18 +311,16 @@ public class AudioService : IAudioService, IDisposable
                 double logLo = Math.Log10(30);
                 double logHi = Math.Log10(Math.Min(18000, nyq));
 
+                // Адаптивная нормализация по реальному скользящему пику.
+                // FFT-бины очень малы, абсолютные dB-пороги тут не работают
+                // (давали нулевой спектр). Быстрый подъём, медленный спад держат
+                // уровень видимым при любом сигнале.
                 float maxMag = 0;
                 for (int i = 1; i < FftLen / 2; i++)
                     if (_bands[i] > maxMag) maxMag = _bands[i];
-
-                float curDb = maxMag > 0 ? 20f * MathF.Log10(maxMag) : -100f;
-                if (curDb > _peakDb)
-                    _peakDb += (curDb - _peakDb) * 0.3f;
-                else
-                    _peakDb += (curDb - _peakDb) * 0.002f;
-
-                float refDb = MathF.Max(_peakDb, -10f);
-                float floor = refDb - 60f;
+                if (maxMag > _runMax) _runMax += (maxMag - _runMax) * 0.30f;
+                else _runMax += (maxMag - _runMax) * 0.02f;
+                float gain = _runMax > 1e-7f ? 1f / _runMax : 0f;
 
                 for (int i = 0; i < bars; i++)
                 {
@@ -342,13 +340,9 @@ public class AudioService : IAudioService, IDisposable
                         cnt++;
                     }
                     float rms = cnt > 0 ? MathF.Sqrt(sum / cnt) : 0;
-                    float val = rms * 0.6f + mx * 0.4f;
+                    float val = (rms * 0.6f + mx * 0.4f) * gain;
 
-                    float db = val > 1e-10f ? 20f * MathF.Log10(val) : -100f;
-                    float norm01 = (db - floor) / (refDb - floor);
-                    norm01 = MathF.Max(norm01, 0f);
-
-                    dest[i] = MathF.Pow(norm01, 0.4f);
+                    dest[i] = MathF.Pow(Math.Clamp(val, 0f, 1f), 0.55f);
                 }
             }
             return true;

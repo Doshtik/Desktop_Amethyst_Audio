@@ -1,12 +1,107 @@
-﻿<Window x:Class="Desktop_Amethyst_Audio.Views.ModalWindows.ResonanceSettingsModalWindow"
+<Window x:Class="Desktop_Amethyst_Audio.Views.ModalWindows.ResonanceSettingsModalWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Desktop_Amethyst_Audio.Views.ModalWindows"
         mc:Ignorable="d"
-        Title="ResonanceSettingsModalWindow" Height="450" Width="800">
-    <Grid>
-        
+        Title="Настройки Резонанса" Height="640" Width="440"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
+        Background="{DynamicResource SurfaceBaseBrush}">
+    <Grid Margin="24 20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Настройки Резонанса" FontSize="22" FontWeight="SemiBold"
+                   Foreground="{DynamicResource ContentPrimaryBrush}" Margin="0 0 0 16"/>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0 0 -12 0" Padding="0 0 12 0">
+            <StackPanel>
+                <TextBlock Text="Стиль визуализации" Foreground="{DynamicResource ContentMutedBrush}"
+                           FontSize="13" Margin="0 0 0 6"/>
+                <ComboBox x:Name="StyleBox" SelectedIndex="0" Margin="0 0 0 16"
+                          SelectionChanged="StyleBox_Changed">
+                    <ComboBoxItem Content="Кольцо-эквалайзер"/>
+                    <ComboBoxItem Content="Сфера"/>
+                    <ComboBoxItem Content="Линейные бары"/>
+                </ComboBox>
+
+                <TextBlock Text="Цветовая схема" Foreground="{DynamicResource ContentMutedBrush}"
+                           FontSize="13" Margin="0 0 0 6"/>
+                <ComboBox x:Name="ColorBox" SelectedIndex="0" Margin="0 0 0 16"
+                          SelectionChanged="ColorBox_Changed">
+                    <ComboBoxItem Content="Аметист"/>
+                    <ComboBoxItem Content="Океан"/>
+                    <ComboBoxItem Content="Закат"/>
+                    <ComboBoxItem Content="Радуга"/>
+                </ComboBox>
+
+                <Grid Margin="0 0 0 6">
+                    <TextBlock Text="Чувствительность" Foreground="{DynamicResource ContentMutedBrush}" FontSize="13"/>
+                    <TextBlock x:Name="SensValue" Text="1.3" Foreground="{DynamicResource ContentPrimaryBrush}"
+                               FontSize="13" HorizontalAlignment="Right"/>
+                </Grid>
+                <Slider x:Name="SensSlider" Minimum="0.5" Maximum="2.5" Value="1.3"
+                        Style="{DynamicResource VolumeSliderStyle}" Margin="0 0 0 16"
+                        ValueChanged="SensSlider_Changed"/>
+
+                <Grid Margin="0 0 0 6">
+                    <TextBlock Text="Реакция на бас" Foreground="{DynamicResource ContentMutedBrush}" FontSize="13"/>
+                    <TextBlock x:Name="BassValue" Text="1.2" Foreground="{DynamicResource ContentPrimaryBrush}"
+                               FontSize="13" HorizontalAlignment="Right"/>
+                </Grid>
+                <Slider x:Name="BassSlider" Minimum="0" Maximum="2" Value="1.2"
+                        Style="{DynamicResource VolumeSliderStyle}" Margin="0 0 0 16"
+                        ValueChanged="BassSlider_Changed"/>
+
+                <Grid Margin="0 0 0 6">
+                    <TextBlock Text="Скорость анимации" Foreground="{DynamicResource ContentMutedBrush}" FontSize="13"/>
+                    <TextBlock x:Name="SpeedValue" Text="1.0" Foreground="{DynamicResource ContentPrimaryBrush}"
+                               FontSize="13" HorizontalAlignment="Right"/>
+                </Grid>
+                <Slider x:Name="SpeedSlider" Minimum="0.3" Maximum="2" Value="1.0"
+                        Style="{DynamicResource VolumeSliderStyle}" Margin="0 0 0 16"
+                        ValueChanged="SpeedSlider_Changed"/>
+
+                <Grid Margin="0 0 0 6">
+                    <TextBlock Text="Яркость свечения" Foreground="{DynamicResource ContentMutedBrush}" FontSize="13"/>
+                    <TextBlock x:Name="GlowValue" Text="1.0" Foreground="{DynamicResource ContentPrimaryBrush}"
+                               FontSize="13" HorizontalAlignment="Right"/>
+                </Grid>
+                <Slider x:Name="GlowSlider" Minimum="0.3" Maximum="2" Value="1.0"
+                        Style="{DynamicResource VolumeSliderStyle}" Margin="0 0 0 16"
+                        ValueChanged="GlowSlider_Changed"/>
+
+                <Grid Margin="0 0 0 6">
+                    <TextBlock Text="Размер сферы" Foreground="{DynamicResource ContentMutedBrush}" FontSize="13"/>
+                    <TextBlock x:Name="SizeValue" Text="1.0" Foreground="{DynamicResource ContentPrimaryBrush}"
+                               FontSize="13" HorizontalAlignment="Right"/>
+                </Grid>
+                <Slider x:Name="SizeSlider" Minimum="0.6" Maximum="1.5" Value="1.0"
+                        Style="{DynamicResource VolumeSliderStyle}" Margin="0 0 0 18"
+                        ValueChanged="SizeSlider_Changed"/>
+
+                <TextBlock Text="Элементы" Foreground="{DynamicResource ContentMutedBrush}"
+                           FontSize="13" Margin="0 0 0 8"/>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox x:Name="RaysCheck" Content="Лучи" IsChecked="True" Margin="0 0 18 0"
+                              Style="{DynamicResource DarkCheckBox}" Checked="Element_Changed" Unchecked="Element_Changed"/>
+                    <CheckBox x:Name="ParticlesCheck" Content="Частицы" IsChecked="True" Margin="0 0 18 0"
+                              Style="{DynamicResource DarkCheckBox}" Checked="Element_Changed" Unchecked="Element_Changed"/>
+                    <CheckBox x:Name="OrbitsCheck" Content="Орбиты" IsChecked="True"
+                              Style="{DynamicResource DarkCheckBox}" Checked="Element_Changed" Unchecked="Element_Changed"/>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Grid Grid.Row="2" Margin="0 16 0 0">
+            <Button Content="Сбросить" Style="{DynamicResource ButtonPrimary}"
+                    HorizontalAlignment="Left" Padding="18 8" Click="Reset_Click"/>
+            <Button Content="Готово" Style="{DynamicResource ButtonPrimary}"
+                    HorizontalAlignment="Right" Padding="24 8" Click="Done_Click"/>
+        </Grid>
     </Grid>
 </Window>

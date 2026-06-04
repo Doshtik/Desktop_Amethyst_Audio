@@ -13,11 +13,12 @@ public partial class ResonancePage : Page
         InitializeComponent();
         Sphere.Audio = audioService;
         Sphere.Mode = VisMode.Equalizer;
+        Sphere.Style = VisStyle.Ring;
     }
 
     private void ResonanceSettingsButton_OnClick(object sender, RoutedEventArgs e)
     {
-        var window = new ResonanceSettingsModalWindow() { Owner = Window.GetWindow(this) };
+        var window = new ResonanceSettingsModalWindow(Sphere) { Owner = Window.GetWindow(this) };
         window.ShowDialog();
     }
 }

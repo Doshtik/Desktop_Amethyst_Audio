@@ -2,11 +2,16 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using CommunityToolkit.Mvvm.Messaging;
+using Desktop_Amethyst_Audio.Messages.Navigation;
+using Desktop_Amethyst_Audio.Messages.Navigation.System;
+using Desktop_Amethyst_Audio.Models;
 using Desktop_Amethyst_Audio.Models.Clients.Implementation;
 using Desktop_Amethyst_Audio.Models.DTO.Albums;
 using Desktop_Amethyst_Audio.Models.DTO.Playlists;
 using Desktop_Amethyst_Audio.Models.DTO.Tracks;
 using Desktop_Amethyst_Audio.Models.DTO.Users;
+using Desktop_Amethyst_Audio.Models.Services.Implementation;
 using Desktop_Amethyst_Audio.Views.ModalWindows;
 using Desktop_Amethyst_Audio.Views.UserControls;
 
@@ -18,8 +23,11 @@ public partial class ProfilePage : Page
     private AlbumApiClient _albumApiClient;
     private PlaylistApiClient _playlistApiClient;
     private ProfileApiClient _profileApiClient;
+
+    private SettingsService _settingsService;
     
     private long _userId;
+    private bool _isOwnProfile;
     private UserInfoDto _user;
     
     private List<TrackInfoDto> _trackList;
@@ -36,16 +44,7 @@ public partial class ProfilePage : Page
         _playlistApiClient = new PlaylistApiClient();
         
         _userId = userId;
-        if (isOwnProfile)
-        {
-            ActionStackPanel.Visibility = Visibility.Visible;
-            UserProfileActionsStackPanel.Visibility = Visibility.Collapsed;
-        }
-        else
-        {
-            UserProfileActionsStackPanel.Visibility = Visibility.Visible;
-            ActionStackPanel.Visibility = Visibility.Collapsed;
-        }
+        _isOwnProfile = isOwnProfile;
     }
     
     private async void ProfilePage_OnLoaded(object sender, RoutedEventArgs e)
@@ -113,6 +112,60 @@ public partial class ProfilePage : Page
             MessageBox.Show("Не удалось загрузить плейлисты пользователя");
             Debug.WriteLine(ex.InnerException);
         }
+        
+        if (_isOwnProfile)
+        {
+            ActionStackPanel.Visibility = Visibility.Visible;
+            UserProfileActionsStackPanel.Visibility = Visibility.Collapsed;
+            LoadUserPopup();
+        }
+        else
+        {
+            UserProfileActionsStackPanel.Visibility = Visibility.Visible;
+            ActionStackPanel.Visibility = Visibility.Collapsed;
+            LoadArtistPopup();
+        }
+    }
+
+    private void LoadUserPopup()
+    {
+        //Тут должны быть возможность открыть страницу уведомлений, настроек и выйти из аккаунта
+        Button notificationButton = new Button();
+        notificationButton.Content = "Уведомления";
+        notificationButton.Click += (sender, args) =>
+        {
+            WeakReferenceMessenger.Default.Send(new NavigateToNotificationMessage());
+        };
+        PopupContentPanel.Children.Add(notificationButton);
+        
+        Button settingsButton = new Button();
+        settingsButton.Content = "Настройки";
+        settingsButton.Click += (sender, args) =>
+        {
+            WeakReferenceMessenger.Default.Send(new NavigateToSettingsMessage());
+        };
+        PopupContentPanel.Children.Add(settingsButton);
+        
+        Button quitButton = new Button();
+        quitButton.Content = "Выйти";
+        quitButton.Click += (sender, args) =>
+        {
+            MessageBoxResult result = MessageBox.Show("Выйти?", "Подтверждение", 
+                MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result is not MessageBoxResult.Yes)
+                return;
+
+            AppSettings settings = _settingsService.Load();
+            settings.User = null;
+            _settingsService.Save(settings);
+            WeakReferenceMessenger.Default.Send(new NavigateToAuthMessage());
+        };
+        PopupContentPanel.Children.Add(quitButton);
+    }
+
+    private void LoadArtistPopup()
+    {
+        //Тут должна быть возможность открыть окно жалобы на пользователя
     }
 
     private void UserTrackListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

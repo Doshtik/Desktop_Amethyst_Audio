@@ -4,6 +4,7 @@ using System.Windows;
 using CommunityToolkit.Mvvm.Messaging;
 using Desktop_Amethyst_Audio.Messages.Action;
 using Desktop_Amethyst_Audio.Models.DTO.Tracks;
+using Desktop_Amethyst_Audio.Models.Enums;
 
 namespace Desktop_Amethyst_Audio.Models.Services.Implementation;
 
@@ -11,6 +12,7 @@ public class PlaybackService
 {
     
     public static ObservableCollection<TrackInfoDto> Queue { get; } = new();
+    public static RepeatMode CurrentRepeatMode { get; set; } = RepeatMode.None;
     
     private static TrackInfoDto? _currentTrack;
     public static TrackInfoDto? CurrentTrack 
@@ -147,13 +149,21 @@ public class PlaybackService
         }
     }
 
-    public static void NextTrack()
+    public static bool NextTrack()
     {
-        if (_playbackOrder.Count == 0) return;
-        if (Queue.Count == 0) return;
+        if (_playbackOrder.Count == 0) return false;
+        if (Queue.Count == 0) return false;
+        
+        // Если повтор выключен и мы на последнем треке, не переходим в начало
+        if (CurrentRepeatMode is RepeatMode.None && _playbackIndex == _playbackOrder.Count - 1)
+        {
+            return false; 
+        }
+        
         _playbackIndex = (_playbackIndex + 1) % _playbackOrder.Count;
         ApplyCurrentTrackFromIndex();
         WeakReferenceMessenger.Default.Send(new TrackChangedMessage(CurrentTrack));
+        return true;
     }
 
     public static void PreviousTrack()

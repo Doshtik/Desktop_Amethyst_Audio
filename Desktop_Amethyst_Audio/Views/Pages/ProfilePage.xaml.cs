@@ -34,6 +34,8 @@ public partial class ProfilePage : Page
     private List<AlbumInfoDto> _albumList;
     private List<PlaylistInfoDto> _playlistList;
     
+    private readonly BitmapImage _avatarHeader = new BitmapImage(new Uri("pack://application:,,,/Assets/default-header.jpg"));
+    
     
     public ProfilePage(long userId, bool isOwnProfile)
     {
@@ -49,6 +51,19 @@ public partial class ProfilePage : Page
     
     private async void ProfilePage_OnLoaded(object sender, RoutedEventArgs e)
     {
+        if (_isOwnProfile)
+        {
+            ActionStackPanel.Visibility = Visibility.Visible;
+            UserProfileActionsStackPanel.Visibility = Visibility.Collapsed;
+            LoadUserPopup();
+        }
+        else
+        {
+            UserProfileActionsStackPanel.Visibility = Visibility.Visible;
+            ActionStackPanel.Visibility = Visibility.Collapsed;
+            LoadArtistPopup();
+        }
+        
         try
         {
             _user = await _profileApiClient.GetUserByIdAsync(_userId);
@@ -69,9 +84,10 @@ public partial class ProfilePage : Page
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Не удалось загрузить треки пользователя");
+            MessageBox.Show("Не удалось загрузить аватарку пользователя");
             Debug.WriteLine(ex.InnerException);
         }
+        
         try
         {
             BitmapImage header = await _profileApiClient.GetUserHeaderAsync(_user.HeaderUrl);
@@ -79,9 +95,11 @@ public partial class ProfilePage : Page
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Не удалось загрузить треки пользователя");
+            MessageBox.Show("Не удалось загрузить обложку пользователя");
             Debug.WriteLine(ex.InnerException);
+            UserHeaderImage.Source = _avatarHeader;
         }
+        
         try
         {
             _trackList = await _trackApiClient.GetListByUserIdAsync(_userId);
@@ -102,6 +120,7 @@ public partial class ProfilePage : Page
             MessageBox.Show("Не удалось загрузить альбомы пользователя");
             Debug.WriteLine(ex.InnerException);
         }
+        
         try
         {
             _playlistList = await _playlistApiClient.GetListByUserIdAsync(_userId);
@@ -112,23 +131,12 @@ public partial class ProfilePage : Page
             MessageBox.Show("Не удалось загрузить плейлисты пользователя");
             Debug.WriteLine(ex.InnerException);
         }
-        
-        if (_isOwnProfile)
-        {
-            ActionStackPanel.Visibility = Visibility.Visible;
-            UserProfileActionsStackPanel.Visibility = Visibility.Collapsed;
-            LoadUserPopup();
-        }
-        else
-        {
-            UserProfileActionsStackPanel.Visibility = Visibility.Visible;
-            ActionStackPanel.Visibility = Visibility.Collapsed;
-            LoadArtistPopup();
-        }
     }
 
     private void LoadUserPopup()
     {
+        PopupContentPanel.Children.Clear();
+        
         //Тут должны быть возможность открыть страницу уведомлений, настроек и выйти из аккаунта
         Button notificationButton = new Button();
         notificationButton.Content = "Уведомления";
@@ -263,5 +271,31 @@ public partial class ProfilePage : Page
     {
         TrackFormModalWindow window = new TrackFormModalWindow();
         window.ShowDialog();
+    }
+
+    private void OpenReportModalWindow_OnClick(object sender, RoutedEventArgs e)
+    {
+        //TODO: Тут должно открываться окно жалобы на исполнителя
+    }
+    
+    private void NavigateToNotification_Selected(object sender, RoutedEventArgs e)
+        => WeakReferenceMessenger.Default.Send(new NavigateToNotificationMessage());
+
+    private void NavigateToSettings_Selected(object sender, RoutedEventArgs e)
+        => WeakReferenceMessenger.Default.Send(new NavigateToSettingsMessage());
+
+    private void NavigateToAuth_Selected(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            AppSettings settings = _settingsService.Load();
+            settings.User = null;
+            _settingsService.Save(settings); 
+            WeakReferenceMessenger.Default.Send(new NavigateToAuthMessage());
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Возникла неожиданная ошибка");
+        }
     }
 }

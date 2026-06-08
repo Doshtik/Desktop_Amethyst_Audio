@@ -242,7 +242,7 @@ public class ProfileApiClient : IProfileApiClient
         var path = PROFILE_API_PATH.TrimStart('/');
         var fullUrl = $"{baseUrl}/{path}/library/playlists/{id}";
     
-        var request = new HttpRequestMessage(HttpMethod.Put, fullUrl);
+        var request = new HttpRequestMessage(HttpMethod.Get, fullUrl);
         
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settingsService.Load().User.Token);
     
@@ -259,7 +259,7 @@ public class ProfileApiClient : IProfileApiClient
         var path = PROFILE_API_PATH.TrimStart('/');
         var fullUrl = $"{baseUrl}/{path}/library/albums/{id}";
     
-        var request = new HttpRequestMessage(HttpMethod.Put, fullUrl);
+        var request = new HttpRequestMessage(HttpMethod.Get, fullUrl);
         
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settingsService.Load().User.Token);
     

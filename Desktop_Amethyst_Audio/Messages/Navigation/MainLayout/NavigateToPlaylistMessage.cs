@@ -1,6 +1,5 @@
+using Desktop_Amethyst_Audio.Models.DTO.Playlists;
+
 namespace Desktop_Amethyst_Audio.Messages.Navigation.MainLayout;
 
-public class NavigateToPlaylistMessage
-{
-    
-}
+public record NavigateToPlaylistMessage(PlaylistInfoDto playlist);

@@ -4,16 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Desktop_Amethyst_Audio.Views.UserControls"
-             mc:Ignorable="d"
-             Height="100" Width="300">
+             mc:Ignorable="d" Loaded="PlaylistControl_OnLoaded"
+             Height="100" d:DesignWidth="300">
     <Border Background="{DynamicResource SurfaceContainerBrush}" CornerRadius="10">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Image Grid.Column="0" Source="../../Assets/test.jpg" Margin="10"/>
-            <TextBlock Grid.Column="1" x:Name="PlaylistNameTextBlock" Text="Название плейлиста" Foreground="{DynamicResource ContentPrimaryBrush}"
+            <Image x:Name="PlaylistCoverImage" Grid.Column="0" Source="../../Assets/test.jpg" Margin="10"/>
+            <TextBlock x:Name="PlaylistNameTextBlock"  Grid.Column="1" Text="Название плейлиста" Foreground="{DynamicResource ContentPrimaryBrush}"
                        FontSize="18" VerticalAlignment="Center"/>
         </Grid>
     </Border>

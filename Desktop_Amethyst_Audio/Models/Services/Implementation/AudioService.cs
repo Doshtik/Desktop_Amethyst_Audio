@@ -40,11 +40,15 @@ public class AudioService : IAudioService, IDisposable
     /// </summary>
     public void Initialize(WaveFormat format)
     {
-        if (_buffer != null)
+        if (_buffer is not null)
         {
             _cts?.Cancel();
-            _out?.Stop();
-            _out?.Dispose();
+            if (_out is not null)
+            {
+                _out.PlaybackStopped -= OnPlaybackStopped;
+                _out.Stop();
+                _out.Dispose();
+            }
             _out = null;
             _cts?.Dispose();
             _cts = null;
@@ -73,9 +77,19 @@ public class AudioService : IAudioService, IDisposable
 
     private void OnPlaybackStopped(object? sender, StoppedEventArgs e)
     {
+        string exceptionMsg = e.Exception is not null ? e.Exception.Message : "No";
+        Debug.WriteLine($"[AudioService] PlaybackStopped. Exception: {exceptionMsg}, Manual stop: {_isManualStop}");
+        
         // Проверяем, что это действительно конец трека, а не ошибка
-        if (e.Exception == null && !_isManualStop)
+        if (e.Exception is null && !_isManualStop)
+        {
+            Debug.WriteLine("[AudioService] Invoking PlaybackEnded");
             PlaybackEnded?.Invoke();
+        }
+        else if (e.Exception != null)
+        {
+            Debug.WriteLine($"[AudioService] Ошибка воспроизведения: {e.Exception}");
+        }
             
         _isManualStop = false;
     }
@@ -140,15 +154,26 @@ public class AudioService : IAudioService, IDisposable
         catch (ObjectDisposedException) { }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"[AudioService] Ошибка чтения: {ex.Message}");
-            // ⚠️ ВНИМАНИЕ: MessageBox из фонового потока вызовет Cross-Thread Exception.
-            // Используйте Dispatcher или просто логируйте ошибку.
-            // Application.Current?.Dispatcher.Invoke(() => MessageBox.Show(ex.Message));
+            Debug.WriteLine($"[AudioService] Ошибка чтения: {ex.Message}");
         }
         finally
         {
             stream.Dispose();
         }
+        
+        if (ct.IsCancellationRequested)
+            return;
+        
+        // 1. Дожидаемся, пока буфер полностью опустеет
+        while (_buffer.BufferedBytes > 0 && !ct.IsCancellationRequested)
+        {
+            await Task.Delay(50, ct);
+        }
+
+        // 2. Останавливаем воспроизведение. 
+        // Так как мы не вызываем публичный метод AudioService.Stop(), 
+        // флаг _isManualStop останется false, и событие PlaybackEnded сработает.
+        _out?.Stop();
     }
 
     public void Play()
@@ -166,6 +191,7 @@ public class AudioService : IAudioService, IDisposable
         if (_out is not null)
         {
             _isManualStop = true;
+            _cts?.Cancel();
             _out.Stop();
         }
     }

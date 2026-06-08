@@ -11,9 +11,25 @@
     <Grid>
         <waveVizualizer:WaveRenderer x:Name="Sphere"/>
         
-        <Button x:Name="ResonanceSettingsButton" Content="Настройки" FontSize="18" 
-                VerticalAlignment="Center"
-                HorizontalAlignment="Center"
-                Style="{DynamicResource ButtonPrimary}" Margin="0 10 0 0" Click="ResonanceSettingsButton_OnClick"/>
+        <Button x:Name="ResonanceSettingsButton"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Right" Width="50" Height="50"
+                Style="{DynamicResource ButtonPrimary}" Margin="5" Click="ResonanceSettingsButton_OnClick">
+            <Button.Content>
+                <Image Source="../../Assets/gear.png" Width="25"/>
+            </Button.Content>
+        </Button>
+        
+        <Border Background="{DynamicResource SurfaceContainerBrush}" 
+                CornerRadius="10"
+                BorderThickness="2" BorderBrush="{DynamicResource OutlineSubtleBrush}"
+                VerticalAlignment="Center" HorizontalAlignment="Center">
+            <StackPanel Margin="10">
+                <TextBlock Text="Настроить резонанс" 
+                           Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="18"/>
+                <Button x:Name="ResonanceConfigButton" Content="Настроить" Margin="0 10 0 0" FontSize="14" 
+                        Click="ResonanceConfigButton_OnClick"/>
+            </StackPanel>
+        </Border>
     </Grid>
 </Page>

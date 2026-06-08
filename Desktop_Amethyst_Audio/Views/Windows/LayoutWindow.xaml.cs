@@ -45,9 +45,9 @@ public partial class LayoutWindow : Window
     private readonly ISettingsService _settingsService;
     private readonly IProfileApiClient _profileApiClient;
     private readonly ITrackApiClient _trackApiClient;
-
-    private List<AlbumInfoDto> AlbumCollection { get; set; }
-    private List<PlaylistInfoDto> PlaylistCollection { get; set; }
+    
+    public ObservableCollection<AlbumControl> Albums { get; } = new ();
+    public ObservableCollection<PlaylistControl> Playlists { get; } = new ();
     
     private DispatcherTimer _progressTimer;
     
@@ -61,12 +61,11 @@ public partial class LayoutWindow : Window
     private SearchPage SearchPage { get; }
     private ResonancePage ResonancePage { get; }
     private LibraryPage LibraryPage { get; }
-    private AlbumPage AlbumPage { get; }
-    private PlaylistPage PlaylistPage { get; }
     
     public LayoutWindow()
     {
         InitializeComponent();
+        Loaded += Window_Loaded;
 
         _profileApiClient = new ProfileApiClient();
         _trackApiClient = new TrackApiClient();
@@ -76,18 +75,16 @@ public partial class LayoutWindow : Window
         SearchPage = new SearchPage();
         ResonancePage = new ResonancePage(_audioService);
         LibraryPage = new LibraryPage();
-        AlbumPage = new AlbumPage();
-        PlaylistPage = new PlaylistPage();
 
         TrackPanel.Visibility = Visibility.Collapsed;
 
         _isRepeat = false;
-        //BrushConverter cc = new BrushConverter();
-        //_defaultButtonBackground = (Brush)cc.ConvertFrom("");
-        //_activeButtonBackground = (Brush)cc.ConvertFrom("");
+        BrushConverter cc = new BrushConverter();
+        _defaultButtonBackground = (Brush)cc.ConvertFrom("#00000000");
+        _activeButtonBackground = (Brush)cc.ConvertFrom("#5A5959");
 
         TimeSlider.Minimum = 0;
-        TimeSlider.Maximum = 0; //audioFile.TotalTime.TotalSeconds;
+        TimeSlider.Maximum = 0;
         TimeSlider.Value = 0;
         TimeSlider.PreviewMouseLeftButtonDown += TimeSlider_MouseDown;
         TimeSlider.PreviewMouseLeftButtonUp += TimeSlider_MouseUp;
@@ -108,11 +105,17 @@ public partial class LayoutWindow : Window
         WeakReferenceMessenger.Default.Register<NavigateToProfileMessage>(this, (r, m) 
             => ContentFrame.Navigate(new ProfilePage(m.userId, m.isOwnProfile)));
         WeakReferenceMessenger.Default.Register<NavigateToAlbumMessage>(this, (r, m) 
-            => ContentFrame.Navigate(AlbumPage));
+            => ContentFrame.Navigate(new AlbumPage(m.album)));
         WeakReferenceMessenger.Default.Register<NavigateToPlaylistMessage>(this, (r, m) 
-            => ContentFrame.Navigate(PlaylistPage));
+            => ContentFrame.Navigate(new PlaylistPage(m.playlist)));
         WeakReferenceMessenger.Default.Register<NavigateToQueueMessage>(this, (r, m) 
             => ContentFrame.Navigate(new QueuePage()));
+        WeakReferenceMessenger.Default.Register<NavigateToAuthMessage>(this, (r, m) =>
+        {
+            AuthWindow window = new AuthWindow();
+            window.Show();
+            Close();
+        });
         
         ContentFrame.Navigate(LibraryPage);
         
@@ -126,14 +129,15 @@ public partial class LayoutWindow : Window
 
         if (settings.User is null)
         {
-            MessageBox.Show("Сессия не найдена. Выполняется возврат к авторизации...", "Вход", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show("Сессия не найдена. Выполняется возврат к авторизации...", "Вход", 
+                MessageBoxButton.OK, MessageBoxImage.Warning);
             WeakReferenceMessenger.Default.Send(new NavigateToAuthMessage());
             return;
         }
 
+        UserInfoDto user = settings.User;
         try
         {
-            UserInfoDto user = settings.User;
             UserNicknameTextBlock.Text = user.Nickname;
             BitmapImage image = await _profileApiClient.GetUserAvatarAsync(user.AvatarUrl);
             UserAvatarImage.Source = image;
@@ -146,46 +150,54 @@ public partial class LayoutWindow : Window
 
         try
         {
-            UserInfoDto user = settings.User;
-            AlbumCollection = await _profileApiClient.GetUserSavedAlbumsAsync(user.Id) ?? new List<AlbumInfoDto>();
-            foreach (AlbumInfoDto albumDto in AlbumCollection)
+            var albums = await _profileApiClient.GetUserSavedAlbumsAsync(user.Id) ?? new List<AlbumInfoDto>();
+    
+            Albums.Clear();
+            foreach (var albumDto in albums)
             {
                 AlbumControl control = new AlbumControl();
                 control.Album = albumDto;
-                SavedAlbumsListBox.Items.Add(control);
+                Albums.Add(control);
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Не удалось загрузить альбомы");
+            Debug.WriteLine($"[LayoutWindow] Ошибка загрузки альбомов: {ex.Message}\n{ex.StackTrace}");
+            MessageBox.Show($"КРИТИЧЕСКАЯ ОШИБКА загрузки альбомов:\n\n{ex.Message}\n\n{ex.StackTrace}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+        SavedAlbumsListBox.ItemsSource = Albums;
         
         try
         {
-            UserInfoDto user = settings.User;
-            PlaylistCollection = await _profileApiClient.GetUserSavedPlaylistsAsync(user.Id) ?? new List<PlaylistInfoDto>();
-            foreach (PlaylistInfoDto playlistDto in PlaylistCollection)
+            var playlists = await _profileApiClient.GetUserSavedPlaylistsAsync(user.Id) ?? new List<PlaylistInfoDto>();
+            
+            Playlists.Clear();
+            foreach (PlaylistInfoDto playlistDto in playlists)
             {
                 PlaylistControl control = new PlaylistControl();
                 control.Playlist = playlistDto;
-                SavedPlaylistsListBox.Items.Add(control);
+                control.Width = 280;
+                Playlists.Add(control);
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Не удалось загрузить плейлисты");
+            Debug.WriteLine($"[LayoutWindow] Ошибка загрузки плейлистов: {ex.Message}\n{ex.StackTrace}");
         }
+        SavedPlaylistsListBox.ItemsSource = Playlists;
     }
     
     private void OnPlaybackEnded()
     {
-        Debug.WriteLine("OnPlaybackEnded check");
+        Debug.WriteLine("[LayoutWindow] OnPlaybackEnded получен!");
         Application.Current.Dispatcher.Invoke(() =>
         {
+            Debug.WriteLine($"[LayoutWindow] Tracks in queue: {PlaybackService.Queue.Count}");
+            
             // Предотвращаем рекурсивный вызов, если очередь пуста
             if (PlaybackService.Queue.Count == 0) 
             {
-                System.Diagnostics.Debug.WriteLine("[LayoutWindow] Queue is empty, playback is stopped.");
+                Debug.WriteLine("[LayoutWindow] Queue is empty, playback is stopped.");
                 return; 
             }
             
@@ -362,8 +374,9 @@ public partial class LayoutWindow : Window
                 break;
         }
     }
+    
 
-    private void NavigateToProfile_Selected(object sender, RoutedEventArgs e)
+    private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
     {
         try
         {
@@ -373,27 +386,6 @@ public partial class LayoutWindow : Window
         catch (Exception ex)
         {
             MessageBox.Show("Не удалось перейти в профиль");
-        }
-    }
-
-    private void NavigateToNotification_Selected(object sender, RoutedEventArgs e)
-        => WeakReferenceMessenger.Default.Send(new NavigateToNotificationMessage());
-
-    private void NavigateToSettings_Selected(object sender, RoutedEventArgs e)
-        => WeakReferenceMessenger.Default.Send(new NavigateToSettingsMessage());
-
-    private void NavigateToAuth_Selected(object sender, RoutedEventArgs e)
-    {
-        try
-        {
-            AppSettings settings = _settingsService.Load();
-            settings.User = null;
-            _settingsService.Save(settings); 
-            WeakReferenceMessenger.Default.Send(new NavigateToAuthMessage());
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show("Возникла неожиданная ошибка");
         }
     }
 
@@ -427,54 +419,31 @@ public partial class LayoutWindow : Window
 
     private async void ChangeCollectionToPlaylistButton_OnChecked(object sender, RoutedEventArgs e)
     {
-        if (SavedAlbumsListBox is null)
-            return;
-        
+        if (SavedAlbumsListBox is null) return;
         SavedAlbumsListBox.Visibility = Visibility.Collapsed;
-        try
-        {
-            UserInfoDto userDto = _settingsService.Load()?.User;
-            PlaylistCollection = await _profileApiClient.GetUserSavedPlaylistsAsync(userDto.Id);
-            
-            SavedPlaylistsListBox.Items.Clear();
-            foreach (PlaylistInfoDto playlistDto in PlaylistCollection)
-            {
-                PlaylistControl control = new PlaylistControl();
-                control.Playlist = playlistDto;
-                SavedPlaylistsListBox.Items.Add(control);
-            }
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show("Не удалось, увы");
-        }
         SavedPlaylistsListBox.Visibility = Visibility.Visible;
     }
 
     private async void ChangeCollectionToAlbumButton_OnChecked(object sender, RoutedEventArgs e)
     {
-        if (SavedPlaylistsListBox is null)
-            return;
+        if (SavedPlaylistsListBox is null) return;
         
         SavedPlaylistsListBox.Visibility = Visibility.Collapsed;
-        try
-        {
-            UserInfoDto userDto = _settingsService.Load()?.User;
-            AlbumCollection = await _profileApiClient.GetUserSavedAlbumsAsync(userDto.Id);
-        
-            SavedAlbumsListBox.Items.Clear();
-            foreach (AlbumInfoDto albumDto in AlbumCollection)
-            {
-                AlbumControl control = new AlbumControl();
-                control.Album = albumDto;
-                SavedAlbumsListBox.Items.Add(control);
-            }
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show("Не удалось, увы");
-        }
         SavedAlbumsListBox.Visibility = Visibility.Visible;
+    }
+
+    private void SavedPlaylistsListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        PlaylistControl? control = SavedPlaylistsListBox.SelectedItem as PlaylistControl;
+        if (control is not null)
+            WeakReferenceMessenger.Default.Send(new NavigateToPlaylistMessage(control.Playlist));
+    }
+
+    private void SavedAlbumsListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        AlbumControl? control = SavedAlbumsListBox.SelectedItem as AlbumControl;
+        if (control is not null)
+            WeakReferenceMessenger.Default.Send(new NavigateToAlbumMessage(control.Album));
     }
 
     private void QueueButton_Click(object sender, RoutedEventArgs e)

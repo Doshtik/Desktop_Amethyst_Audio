@@ -63,7 +63,7 @@ public partial class LibraryPage : Page
         {
             TrackControl control = new TrackControl();
             control.Track = track;
-            control.Width = ActualWidth - 20;
+            control.Width = ActualWidth - 40;
             TrackListBox.Items.Add(control);
         }
     }

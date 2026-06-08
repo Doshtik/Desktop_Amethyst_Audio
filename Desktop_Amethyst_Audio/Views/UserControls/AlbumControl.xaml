@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Desktop_Amethyst_Audio.Views.UserControls"
-             mc:Ignorable="d" Width="150" Height="175">
+             Loaded="AlbumControl_OnLoaded"
+             mc:Ignorable="d" Width="140" Height="170">
     <Border Background="{DynamicResource SurfaceContainerBrush}" CornerRadius="10">
         <Grid>
             <Grid.RowDefinitions>

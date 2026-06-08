@@ -7,9 +7,8 @@
         mc:Ignorable="d" Title="Amethyst Audio" Icon="../../Assets/icon_128x128.ico"
         Background="{DynamicResource SurfaceBaseBrush}"
         WindowStartupLocation="CenterScreen"
-        WindowState="Maximized" Loaded="Window_Loaded"
-        Height="1080" Width="1920" 
-        MinHeight="600" MinWidth="800">
+        WindowState="Maximized"
+        MinHeight="700" MinWidth="1280">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="300"/>
@@ -22,6 +21,7 @@
         </Grid.RowDefinitions>
 
         <StackPanel x:Name="SideBar" Orientation="Vertical"
+                    VerticalAlignment="Stretch"
                     Grid.Row="0" Grid.Column="0" Margin="10">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -29,7 +29,13 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
     
-                <Image x:Name="UserAvatarImage" Source="../../Assets/test.jpg" Grid.Column="0" Width="75" Height="75"/>
+                <Button Grid.Column="0" Width="75" Height="75"
+                        Background="Transparent" BorderThickness="0"
+                        Click="ButtonBase_OnClick">
+                    <Button.Content>
+                        <Image x:Name="UserAvatarImage" Source="../../Assets/test.jpg"/>
+                    </Button.Content>
+                </Button>
     
                 <TextBlock x:Name="UserNicknameTextBlock" Grid.Column="1"
                            Margin="5 0 0 0"
@@ -82,10 +88,10 @@
                 <RadioButton GroupName="CollectionMode" x:Name="ChangeCollectionAlbumButton" Content="Album" 
                              Checked="ChangeCollectionToAlbumButton_OnChecked"/>
             </UniformGrid>
-            <ListBox x:Name="SavedPlaylistsListBox" Visibility="Collapsed" BorderThickness="0" 
-                     Background="Transparent"/>
-            <ListBox x:Name="SavedAlbumsListBox" Visibility="Collapsed" BorderThickness="0" 
-                     Background="Transparent">
+            <ListBox x:Name="SavedPlaylistsListBox" Visibility="Collapsed" BorderThickness="0" VerticalAlignment="Stretch"
+                     Background="Transparent" SelectionChanged="SavedPlaylistsListBox_OnSelectionChanged"/>
+            <ListBox x:Name="SavedAlbumsListBox" Visibility="Collapsed" BorderThickness="0" VerticalAlignment="Stretch"
+                     Background="Transparent" SelectionChanged="SavedAlbumsListBox_OnSelectionChanged">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Columns="2" />
@@ -203,10 +209,12 @@
                         Click="QueueButton_Click">
                     <Image Source="/Assets/list.png" Width="25"/>
                 </Button>
-                <ToggleButton x:Name="VolumeToggleButton" Background="Transparent" BorderThickness="0" Padding="5 10 5 10">
+                <ToggleButton x:Name="VolumeToggleButton" 
+                              Background="Transparent" BorderThickness="0" Padding="5 10 5 10">
                     <Image Source="/Assets/sound.png" Width="25"/>
                 </ToggleButton>
-                <ToggleButton x:Name="TrackActionsToggleButton" Background="Transparent" BorderThickness="0" Padding="5 10 10 10">
+                <ToggleButton x:Name="TrackActionsToggleButton" 
+                              Background="Transparent" BorderThickness="0" Padding="5 10 10 10">
                     <Image Source="/Assets/dots_white.png" Width="25"/>
                 </ToggleButton>
             </StackPanel>

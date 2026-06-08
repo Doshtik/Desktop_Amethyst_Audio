@@ -14,14 +14,20 @@
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Margin="5">
             <Image x:Name="UserHeaderImage" Source="/Assets/default-header.jpg" Stretch="Fill"/>
-            <Button x:Name="ProfileActionsButton" Width="25" Margin="5"
+            <ToggleButton x:Name="ProfileActionsToggleButton" Width="25" Margin="5"
                 VerticalAlignment="Top" HorizontalAlignment="Right" 
                 Background="Transparent" BorderThickness="0">
-                <Button.Content>
+                <ToggleButton.Content>
                     <Image Source="../../Assets/dots_white.png"/>
-                </Button.Content>
-            </Button>
-            <Popup x:Name="ProfileActionsPopup">
+                </ToggleButton.Content>
+            </ToggleButton>
+            <Popup x:Name="ProfileActionsPopup"
+                   IsOpen="{Binding IsChecked, ElementName=ProfileActionsToggleButton}"
+                   PlacementTarget="{Binding ElementName=ProfileActionsToggleButton}"
+                   Placement="Bottom"
+                   StaysOpen="False"
+                   AllowsTransparency="True"
+                   PopupAnimation="Fade">
                 <Border Background="{DynamicResource SurfaceContainerBrush}" 
                         CornerRadius="5" BorderThickness="2" BorderBrush="{DynamicResource OutlineSubtleBrush}">
                     <StackPanel x:Name="PopupContentPanel" Orientation="Vertical"/>
@@ -44,8 +50,9 @@
                             <RowDefinition/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <TextBlock x:Name="UserNicknameTextBlock" Grid.Row="0" Text="Наименование пользователя" VerticalAlignment="Bottom" 
-                                   FontSize="18" FontWeight="Medium" Foreground="{DynamicResource ContentPrimaryBrush}"/>
+                        <TextBlock x:Name="UserNicknameTextBlock" Grid.Row="0" Text="Наименование пользователя" 
+                                   VerticalAlignment="Bottom"  FontSize="18" FontWeight="Medium" 
+                                    Foreground="{DynamicResource ContentPrimaryBrush}"/>
                         <StackPanel Grid.Row="1" VerticalAlignment="Top" Orientation="Horizontal">
                             <TextBlock Text="Количество подписчиков:" FontSize="14" 
                                        Foreground="{DynamicResource ContentPrimaryBrush}"/>

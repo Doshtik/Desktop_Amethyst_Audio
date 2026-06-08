@@ -21,4 +21,11 @@ public partial class ResonancePage : Page
         var window = new ResonanceSettingsModalWindow(Sphere) { Owner = Window.GetWindow(this) };
         window.ShowDialog();
     }
+
+    private void ResonanceConfigButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        ResonanceConfigModalWindow window = new ResonanceConfigModalWindow();
+        window.Owner = Window.GetWindow(this);
+        window.ShowDialog();
+    }
 }

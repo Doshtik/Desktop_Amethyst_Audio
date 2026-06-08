@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:Desktop_Amethyst_Audio.Views.Pages"
       mc:Ignorable="d" Loaded="AlbumPage_OnLoaded"
       d:Background="{DynamicResource SurfaceBaseBrush}"
-      Title="AlbumPage" Height="600" Width="800">
+      Title="AlbumPage" d:DesignHeight="600" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -26,27 +26,35 @@
                 <Image x:Name="AlbumImage" Source="/Assets/test.jpg" Margin="10" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"/>
                 <StackPanel Orientation="Vertical" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="0">
                     <TextBlock Text="АЛЬБОМ" FontSize="10" Foreground="{DynamicResource ContentPrimaryBrush}"/>
-                    <TextBlock x:Name="AlbumName" Text="Название альбома" FontWeight="Medium"
+                    <TextBlock x:Name="AlbumNameTextBlock" Text="Название альбома" FontWeight="Medium"
                                Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="18" />
-                    <StackPanel Orientation="Horizontal">
-                        <StackPanel x:Name="AuthorListPanel" Orientation="Horizontal">
-                            
-                        </StackPanel>
-                        <TextBlock x:Name="TrackAmountTextBlock" FontWeight="Light" Text="Количество треков: 150" 
+                    <Grid HorizontalAlignment="Left">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock FontWeight="Light" Text="Количество треков:" 
+                                   Grid.Column="0"
                                    Foreground="{DynamicResource ContentPrimaryBrush}"/>
-                    </StackPanel>
+                        <TextBlock x:Name="TrackAmountTextBlock" FontWeight="Light" Text="10" 
+                                   Grid.Column="1" Margin="5 0"
+                                   Foreground="{DynamicResource ContentPrimaryBrush}"/>
+                    </Grid>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Column="1" Margin="0 10" Grid.Row="1" VerticalAlignment="Bottom">
                     <Button x:Name="PlayAlbumButton" Content="Слушать" Style="{StaticResource ButtonPrimary}"
                             Click="PlayAlbumButton_OnClick"/>
-                    <Button x:Name="NavigateToPrevious" Content="Назад" Style="{StaticResource ButtonPrimary}" Margin="5 0"
-                            Click="NavigateToPrevious_OnClick"/>
-                    <ComboBox x:Name="AlbumActionsComboBox" Background="Transparent" BorderThickness="0">
-                        <ComboBoxItem x:Name="AddToSaved" Content="Сохранить альбом" 
-                                      Selected="AddToSaved_OnSelected"/>
-                        <ComboBoxItem x:Name="EditAlbum" Content="Настройки альбома" Visibility="Collapsed" 
-                                      Selected="EditAlbum_Selected"/>
-                    </ComboBox>
+                    <Button x:Name="SavePlaylistButton" Content="Сохранить" Style="{StaticResource ButtonPrimary}" Margin="5 0"/>
+                    <ToggleButton x:Name="ActionsToggleButton" Background="Transparent" BorderThickness="0">
+                        <ToggleButton.Content>
+                            <Image Source="../../Assets/dots_white.png" Height="25"/>
+                        </ToggleButton.Content>
+                    </ToggleButton>
+                    <Popup>
+                        <StackPanel Orientation="Vertical">
+                            <Button x:Name="ReportAlbumButton"/>
+                        </StackPanel>
+                    </Popup>
                 </StackPanel>
             </Grid>
         </Border>

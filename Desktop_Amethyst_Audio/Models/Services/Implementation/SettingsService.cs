@@ -51,7 +51,7 @@ public class SettingsService : ISettingsService
         }
         catch (JsonException ex)
         {
-            System.Diagnostics.Debug.WriteLine($"[SettingsService] Ошибка парсинга: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine($"[SettingsService] Parse exception: {ex.Message}");
         
             var backupPath = _filePath + $".broken.{DateTime.Now:yyyyMMddHHmmss}.bak";
             File.Copy(_filePath, backupPath, overwrite: true);

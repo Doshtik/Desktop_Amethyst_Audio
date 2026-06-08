@@ -115,6 +115,11 @@
       <Resource Include="Assets\Bell-Fill.png" />
       <None Remove="Assets\Bell.png" />
       <Resource Include="Assets\Bell.png" />
+      <None Remove="Assets\default-header.jpg" />
+      <Resource Include="Assets\default-header.jpg" />
+      <None Remove="Assets\arrow_left.svg" />
+      <None Remove="Assets\gear.png" />
+      <Resource Include="Assets\gear.png" />
     </ItemGroup>
 
     <ItemGroup>

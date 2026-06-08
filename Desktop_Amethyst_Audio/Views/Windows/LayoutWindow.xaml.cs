@@ -203,8 +203,7 @@ public partial class LayoutWindow : Window
             
             if (PlaybackService.CurrentRepeatMode is RepeatMode.One)
             {
-                _audioService.Seek(0);
-                _audioService.Play();
+                ChangeTrack(PlaybackService.CurrentTrack);
                 return;
             }
             
@@ -213,6 +212,7 @@ public partial class LayoutWindow : Window
             if (!hasMoreTracks && PlaybackService.CurrentRepeatMode is RepeatMode.None)
             {
                 _audioService.Stop();
+                _progressTimer.Stop();
             }
         });
     }
@@ -299,17 +299,43 @@ public partial class LayoutWindow : Window
         }
     }
 
-    private void RepeatButton_Click(object sender, RoutedEventArgs e)
+    private void RepeatToggleButton_OnUnchecked(object sender, RoutedEventArgs e)
     {
-        PlaybackService.CurrentRepeatMode = PlaybackService.CurrentRepeatMode switch
+        PlaybackService.CurrentRepeatMode = RepeatMode.None;
+        UpdateRepeatButtonUI();
+    }
+
+    private void RepeatToggleButton_OnChecked(object sender, RoutedEventArgs e)
+    {
+        PlaybackService.CurrentRepeatMode = RepeatMode.All;
+        UpdateRepeatButtonUI();
+    }
+
+    private void RepeatToggleButton_OnIndeterminate(object sender, RoutedEventArgs e)
+    {
+        PlaybackService.CurrentRepeatMode = RepeatMode.One;
+        UpdateRepeatButtonUI();
+    }
+
+    private void UpdateRepeatButtonUI()
+    {
+        switch (PlaybackService.CurrentRepeatMode)
         {
-            RepeatMode.None => RepeatMode.All,
-            RepeatMode.All => RepeatMode.One,
-            RepeatMode.One => RepeatMode.None,
-            _ => RepeatMode.None
-        };
-        
-        //UpdateRepeatButtonUI();
+            case RepeatMode.None:
+                RepeatToggleButton.Background = _defaultButtonBackground;
+                RepeatToggleButton.ToolTip = "Повтор выключен";
+                break;
+            
+            case RepeatMode.All:
+                RepeatToggleButton.Background = _activeButtonBackground;
+                RepeatToggleButton.ToolTip = "Повторять все треки";
+                break;
+            
+            case RepeatMode.One:
+                RepeatToggleButton.Background = _activeButtonBackground;
+                RepeatToggleButton.ToolTip = "Повторять один трек";
+                break;
+        }
     }
 
     private void ShuffleButton_Click(object sender, RoutedEventArgs e)
@@ -348,31 +374,6 @@ public partial class LayoutWindow : Window
             return;
         
         PlaybackService.NextTrack();
-    }
-
-    private void UpdateRepeatButtonUI()
-    {
-        // Здесь нужно обновить внешний вид кнопки в зависимости от режима.
-        // Поскольку я не вижу ваш XAML, я использую ваши переменные _defaultButtonBackground и _activeButtonBackground.
-        // Рекомендую также менять ToolTip или иконку, если она у вас есть.
-    
-        switch (PlaybackService.CurrentRepeatMode)
-        {
-            case RepeatMode.None:
-                RepeatToggleButton.Background = _defaultButtonBackground;
-                RepeatToggleButton.ToolTip = "Повтор выключен";
-                break;
-            
-            case RepeatMode.All:
-                RepeatToggleButton.Background = _activeButtonBackground;
-                RepeatToggleButton.ToolTip = "Повторять все треки";
-                break;
-            
-            case RepeatMode.One:
-                RepeatToggleButton.Background = _activeButtonBackground; // Можно сделать третий, уникальный цвет
-                RepeatToggleButton.ToolTip = "Повторять один трек";
-                break;
-        }
     }
     
 

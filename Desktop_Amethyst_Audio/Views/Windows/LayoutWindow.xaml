@@ -16,8 +16,8 @@
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="12*"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <StackPanel x:Name="SideBar" Orientation="Vertical"
@@ -117,7 +117,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
     
-                <Image Grid.Column="0" x:Name="TrackImage" Source="../../Assets/test.jpg" Width="75"/>
+                <Image Grid.Column="0" x:Name="TrackImage" Source="../../Assets/test.jpg" Width="55"/>
     
                 <Grid Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
                     <Grid.RowDefinitions>
@@ -126,9 +126,7 @@
                     </Grid.RowDefinitions>
                     <TextBlock x:Name="TrackNameTextBlock" Grid.Row="0" Text="Название трека" FontSize="16" 
                                Foreground="{StaticResource ContentPrimaryBrush}"/>
-                    <StackPanel x:Name="TrackAuthorsPanel" Grid.Row="1">
-                        
-                    </StackPanel>
+                    <StackPanel x:Name="TrackAuthorsPanel" Grid.Row="1"/>
                 </Grid>
             </Grid>
             <Grid x:Name="TrackNavigationGrid" Grid.Column="1">
@@ -142,10 +140,16 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <ToggleButton x:Name="RepeatToggleButton" Grid.Column="0" Background="Transparent" Padding="10" 
-                            BorderThickness="0" VerticalAlignment="Center" Click="RepeatButton_Click">
+                    <ToggleButton x:Name="RepeatToggleButton" Grid.Column="0" 
+                                  Background="Transparent" Padding="10" 
+                                  BorderThickness="0" 
+                                  IsThreeState="True"
+                                  VerticalAlignment="Center"
+                                  Checked="RepeatToggleButton_OnChecked"
+                                  Unchecked="RepeatToggleButton_OnUnchecked"
+                                  Indeterminate="RepeatToggleButton_OnIndeterminate">
                         <ToggleButton.Content>
-                            <Image Source="../../Assets/repeat.png" Width="25"/>
+                            <Image x:Name="RepeatImage" Source="../../Assets/repeat.png" Width="25"/>
                         </ToggleButton.Content>
                     </ToggleButton>
                     <Grid Grid.Column="1">

@@ -14,6 +14,7 @@ public interface IPlaylistApiClient
     Task<PlaylistInfoDto> UpdatePlaylistAsync(ChangePlaylistInfoDto dto);
     Task DeletePlaylistAsync(long id);
     
+    Task<bool> IsPlaylistSavedAsync(long id);
     Task SavePlaylistAsync(long id);
     Task UnsavePlaylistAsync(long id);
 }

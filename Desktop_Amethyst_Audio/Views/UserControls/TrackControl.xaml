@@ -38,8 +38,8 @@
                        StaysOpen="False"
                        AllowsTransparency="True"
                        PopupAnimation="Fade">
-                    <StackPanel Orientation="Vertical">
-                        <Button x:Name="AddTrackInLibrary" Content="Добавить в библиотеку" Click="AddTrackInLibrary_Click" Visibility="Collapsed"/>
+                    <StackPanel x:Name="TrackActionStackPanel" Orientation="Vertical">
+                        <Button x:Name="AddTrackInLibrary" Content="Добавить в библиотеку" Click="AddTrackInLibrary_Click"/>
                         <Button x:Name="AddTrackInPlaylist" Content="Добавить в плейлист" Click="AddTrackInPlaylist_Click"/>
                     </StackPanel>
                 </Popup>

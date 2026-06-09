@@ -22,13 +22,13 @@
         <Button x:Name="BackToLoginButton" Style="{StaticResource ButtonPrimary}"
                 HorizontalAlignment="Left" VerticalAlignment="Top" Click="NavigateToAuth"
                 Margin="10" Width="50" Height="50" Grid.Row="0" Grid.Column="0">
-            <Image Source="../../Assets/arrow-left.png" Width="24" />
+            <Image Source="../../../Assets/arrow-left.png" Width="24" />
         </Button>
         <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
             <Button x:Name="ChangeThemeButton" Style="{StaticResource ButtonPrimary}" 
                     Margin="0 10 5 0" Width="50" Height="50"
                     Click="ChangeThemeButton_OnClick">
-                <Image Source="../../Assets/sun_icon.png" Width="24" />
+                <Image Source="../../../Assets/sun_icon.png" Width="24" />
             </Button>
             <Button x:Name="ChangeLanguageButton" Style="{StaticResource ButtonPrimary}" 
                     Margin="5 10 10 0" Width="50" Height="50"
@@ -40,7 +40,7 @@
         <StackPanel Grid.Row="0" Grid.RowSpan="3" Grid.Column="1" 
                     HorizontalAlignment="Center" VerticalAlignment="Center" 
                     Width="300">
-            <Image Source="../../Assets/icon_256x256.png" Width="100"/>
+            <Image Source="../../../Assets/icon_256x256.png" Width="100"/>
             <TextBlock Text="Регистрация" 
                        Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="24" 
                        HorizontalAlignment="Center" 

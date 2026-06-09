@@ -1,6 +1,7 @@
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Text.Json;
 using System.Windows.Media.Imaging;
 using Desktop_Amethyst_Audio.Models.Clients.Abstraction;
@@ -181,6 +182,22 @@ public class PlaylistApiClient : IPlaylistApiClient
     
         using var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
+    }
+    
+    public async Task<bool> IsPlaylistSavedAsync(long id)
+    {
+        var baseUrl = BaseUrl.TrimEnd('/');
+        var path = PLAYLIST_API_PATH.TrimStart('/');
+        var fullUrl = $"{baseUrl}/{path}/{id}/save";
+
+        var request = new HttpRequestMessage(HttpMethod.Get, fullUrl);
+        
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settingsService.Load().User.Token);
+    
+        using var response = await _httpClient.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+        bool result = await response.Content.ReadFromJsonAsync<bool>();
+        return result;
     }
 
     public async Task SavePlaylistAsync(long id)

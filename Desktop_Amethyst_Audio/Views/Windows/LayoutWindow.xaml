@@ -91,7 +91,8 @@
             <ListBox x:Name="SavedPlaylistsListBox" Visibility="Collapsed" BorderThickness="0" VerticalAlignment="Stretch"
                      Background="Transparent" SelectionChanged="SavedPlaylistsListBox_OnSelectionChanged"/>
             <ListBox x:Name="SavedAlbumsListBox" Visibility="Collapsed" BorderThickness="0" VerticalAlignment="Stretch"
-                     Background="Transparent" SelectionChanged="SavedAlbumsListBox_OnSelectionChanged">
+                     Background="Transparent" SelectionChanged="SavedAlbumsListBox_OnSelectionChanged"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Columns="2" />
@@ -164,12 +165,12 @@
                                 <Image Source="../../Assets/skip_previous_filled.png" Width="25"/>
                             </Button.Content>
                         </Button>
-                        <Button x:Name="PlayPauseToggleButton" Grid.Column="1" 
+                        <Button x:Name="PlayPauseButton" Grid.Column="1" 
                                       Background="{DynamicResource OutlineSubtleBrush}" Padding="10"  
                                       BorderThickness="0" VerticalAlignment="Center"
                                       Click="PlayPauseButton_Click">
                             <Button.Content>
-                                <Image Source="../../Assets/test.jpg" Width="25"/>
+                                <Image x:Name="PlayPauseImage" Source="../../Assets/pause.png" Width="25"/>
                             </Button.Content>
                         </Button>
                         <Button x:Name="NextButton" Grid.Column="2" Background="Transparent" Padding="10"  

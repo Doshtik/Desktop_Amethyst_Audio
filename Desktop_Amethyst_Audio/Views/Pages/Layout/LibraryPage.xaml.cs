@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using CommunityToolkit.Mvvm.Messaging;
 using Desktop_Amethyst_Audio.Messages.Action;
+using Desktop_Amethyst_Audio.Messages.Data;
 using Desktop_Amethyst_Audio.Models.Clients.Abstraction;
 using Desktop_Amethyst_Audio.Models.Clients.Implementation;
 using Desktop_Amethyst_Audio.Models.DTO.Tracks;
@@ -21,6 +22,7 @@ public partial class LibraryPage : Page
         InitializeComponent();
         Loaded += (s, e) => LoadTrackListBox();
         _profileApiClient = new ProfileApiClient();
+        WeakReferenceMessenger.Default.Register<LibraryChangedMessage>(this, (recipient, message) => LoadTrackListBox());
     }
     
     public async void LoadTrackListBox()
@@ -61,7 +63,7 @@ public partial class LibraryPage : Page
         
         foreach (TrackInfoDto track in tracks)
         {
-            TrackControl control = new TrackControl();
+            TrackControl control = new TrackControl(true);
             control.Track = track;
             control.Width = ActualWidth - 40;
             TrackListBox.Items.Add(control);

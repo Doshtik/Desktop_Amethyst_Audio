@@ -12,6 +12,7 @@ using Desktop_Amethyst_Audio.Models.DTO.Pages;
 using Desktop_Amethyst_Audio.Models.DTO.Tracks;
 using Desktop_Amethyst_Audio.Models.Entities;
 using Desktop_Amethyst_Audio.Models.Services.Implementation;
+using Desktop_Amethyst_Audio.Views.UserControls;
 using Microsoft.Win32;
 
 namespace Desktop_Amethyst_Audio.Views.ModalWindows;
@@ -20,8 +21,6 @@ public partial class TrackFormModalWindow : Window
 {
     private List<Pace> _paces = new List<Pace>();
     private List<Mood> _moods = new List<Mood>();
-    private ObservableCollection<SelectableGenre> AvailableGenres { get; } = new();
-    public HashSet<short> SelectedGenreIds { get; private set; } = new();
     
     private SearchApiClient _searchApiClient;
     private TrackApiClient _trackApiClient;
@@ -38,7 +37,6 @@ public partial class TrackFormModalWindow : Window
         _searchApiClient = new SearchApiClient();
         _trackApiClient = new TrackApiClient();
         _recommendationApiClient = new RecommendationApiClient();
-        GenreListBox.ItemsSource = AvailableGenres;
     }
 
     private async void TrackFormModalWindow_OnLoaded(object sender, RoutedEventArgs e)
@@ -46,16 +44,18 @@ public partial class TrackFormModalWindow : Window
         try
         {
             List<GenreInfoDto> genres = await _searchApiClient.GetGenresAsync();
-            AvailableGenres.Clear();
+            GenreListBox.Items.Clear();
             foreach (GenreInfoDto genre in genres)
             {
-                SelectableGenre control = new(genre);
-                AvailableGenres.Add(control);
+                GenreControl control = new();
+                control.Genre = genre;
+                GenreListBox.Items.Add(genre);
             }
         }
         catch (Exception exception)
         {
             MessageBox.Show("Произошла ошибка во время загрузки");
+            Close();
         }
 
         try
@@ -84,11 +84,9 @@ public partial class TrackFormModalWindow : Window
             return;
         }
 
-        short paceId = 0;
-        short moodId = 0;
-        SelectedGenreIds = new HashSet<short>(
-            AvailableGenres.Where(g => g.IsSelected).Select(g => g.Id)
-        );
+        List<short> selectedGenreIds = (GenreListBox.SelectedItems as List<GenreControl>)
+            .Select(x => x.Genre.Id)
+            .ToList();
         
         //TODO: Проверить подходит ли string для TrackFile и CoverFile
         CreateTrackDto trackDto = new()
@@ -100,9 +98,9 @@ public partial class TrackFormModalWindow : Window
             {
                 _settingsService.Load().User.Id
             },
-            PaceId = paceId,
-            MoodId = moodId,
-            GenresIdList = SelectedGenreIds.ToList(),
+            PaceId = (short)PacesComboBox.SelectedValue,
+            MoodId = (short)MoodsComboBox.SelectedValue,
+            GenresIdList = selectedGenreIds,
             IsExplicit = IsExplicitToggleButton.IsChecked,
             IsTextless = IsTextlessToggleButton.IsChecked
         };

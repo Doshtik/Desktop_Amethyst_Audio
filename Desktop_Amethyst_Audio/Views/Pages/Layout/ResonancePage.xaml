@@ -16,7 +16,7 @@
                 HorizontalAlignment="Right" Width="50" Height="50"
                 Style="{DynamicResource ButtonPrimary}" Margin="5" Click="ResonanceSettingsButton_OnClick">
             <Button.Content>
-                <Image Source="../../Assets/gear.png" Width="25"/>
+                <Image Source="../../../Assets/gear.png" Width="25"/>
             </Button.Content>
         </Button>
         

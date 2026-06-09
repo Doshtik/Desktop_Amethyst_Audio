@@ -2,6 +2,7 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Text.Json;
 using System.Windows.Media.Imaging;
 using Desktop_Amethyst_Audio.Models.Clients.Abstraction;
@@ -18,7 +19,7 @@ public class AlbumApiClient : IAlbumApiClient
 
     private static string BaseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "http://localhost:5278";
     
-    private const string ALBUM_API_PATH = "api/album";
+    private const string ALBUM_API_PATH = "api/albums";
     
     private static readonly JsonSerializerOptions JsonOptions = new() 
     { 
@@ -179,6 +180,22 @@ public class AlbumApiClient : IAlbumApiClient
     
         using var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
+    }
+    
+    public async Task<bool> IsAlbumSavedAsync(long id)
+    {
+        var baseUrl = BaseUrl.TrimEnd('/');
+        var path = ALBUM_API_PATH.TrimStart('/');
+        var fullUrl = $"{baseUrl}/{path}/{id}/save";
+
+        var request = new HttpRequestMessage(HttpMethod.Get, fullUrl);
+        
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settingsService.Load().User.Token);
+    
+        using var response = await _httpClient.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+        bool result = await response.Content.ReadFromJsonAsync<bool>();
+        return result;
     }
     
     public async Task SaveAlbumAsync(long id)

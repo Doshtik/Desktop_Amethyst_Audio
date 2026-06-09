@@ -101,4 +101,9 @@ public partial class AuthPage : Page
 
         return true;
     }
+
+    private void ForgetPasswordHyperlink_OnClick(object sender, RoutedEventArgs e)
+    {
+        WeakReferenceMessenger.Default.Send(new NavigateToForgetPasswordMessage());
+    }
 }

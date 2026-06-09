@@ -17,6 +17,7 @@ public partial class AuthWindow : Window
         MainFrame.Navigate(AuthPage);
         
         WeakReferenceMessenger.Default.Register<NavigateToAuthMessage>(this, (r, m) => MainFrame.Navigate(AuthPage));
+        WeakReferenceMessenger.Default.Register<NavigateToForgetPasswordMessage>(this, (r, m) => MainFrame.Navigate(new ForgetPasswordPage()));
         WeakReferenceMessenger.Default.Register<NavigateToRegisterMessage>(this, (r, m) => MainFrame.Navigate(RegisterPage));
         WeakReferenceMessenger.Default.Register<NavigateToMainLayoutMessage>(this, (recipient, message) =>
         {

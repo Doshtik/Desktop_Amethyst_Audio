@@ -14,6 +14,7 @@ public interface IAlbumApiClient
     Task<AlbumInfoDto> UpdateAlbumAsync(ChangeAlbumInfoDto dto);
     Task DeleteAlbumAsync(long id);
     
+    Task<bool> IsAlbumSavedAsync(long id);
     Task SaveAlbumAsync(long id);
     Task UnsaveAlbumAsync(long id);
 }

@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using CommunityToolkit.Mvvm.Messaging;
+using Desktop_Amethyst_Audio.Messages.Data;
 using Desktop_Amethyst_Audio.Messages.Navigation;
 using Desktop_Amethyst_Audio.Messages.Navigation.System;
 using Desktop_Amethyst_Audio.Models;
@@ -28,6 +29,7 @@ public partial class ProfilePage : Page
     
     private long _userId;
     private bool _isOwnProfile;
+    private bool _isFollowed;
     private UserInfoDto _user;
     
     private List<TrackInfoDto> _trackList;
@@ -51,19 +53,6 @@ public partial class ProfilePage : Page
     
     private async void ProfilePage_OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (_isOwnProfile)
-        {
-            ActionStackPanel.Visibility = Visibility.Visible;
-            UserProfileActionsStackPanel.Visibility = Visibility.Collapsed;
-            LoadUserPopup();
-        }
-        else
-        {
-            UserProfileActionsStackPanel.Visibility = Visibility.Visible;
-            ActionStackPanel.Visibility = Visibility.Collapsed;
-            LoadArtistPopup();
-        }
-        
         try
         {
             _user = await _profileApiClient.GetUserByIdAsync(_userId);
@@ -98,6 +87,36 @@ public partial class ProfilePage : Page
             MessageBox.Show("Не удалось загрузить обложку пользователя");
             Debug.WriteLine(ex.InnerException);
             UserHeaderImage.Source = _avatarHeader;
+        }
+        
+        if (_isOwnProfile)
+        {
+            ActionStackPanel.Visibility = Visibility.Visible;
+            UserProfileActionsStackPanel.Visibility = Visibility.Collapsed;
+            LoadUserPopup();
+        }
+        else
+        {
+            UserProfileActionsStackPanel.Visibility = Visibility.Visible;
+            ActionStackPanel.Visibility = Visibility.Collapsed;
+            LoadArtistPopup();
+
+            try
+            {
+                _isFollowed = await _profileApiClient.IsUserFollowedAsync(_user.Id);
+                if (_isFollowed)
+                {
+                    FollowingUserButton.Content = "Отписаться";
+                }
+                else
+                {
+                    FollowingUserButton.Content = "Подписаться";
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
         }
         
         try
@@ -194,9 +213,12 @@ public partial class ProfilePage : Page
     private void LoadTrackListBox()
     {
         UserTrackListBox.Items.Clear();
+        List<TrackInfoDto> savedTracks = new List<TrackInfoDto>();
+        WeakReferenceMessenger.Default.Register<SavedTracksTransferMessage>(this, (recipient, message) => savedTracks = message.savedTracks);
         foreach (var item in _trackList)
         {
-            TrackControl trackControl = new TrackControl();
+            bool isSaved = savedTracks.Contains(item);
+            TrackControl trackControl = new TrackControl(isSaved);
             trackControl.Track = item;
             UserTrackListBox.Items.Add(trackControl);
         }
@@ -237,33 +259,24 @@ public partial class ProfilePage : Page
 
     }
 
-    private async void FollowUserButton_Click(object sender, System.Windows.RoutedEventArgs e)
+    private async void FollowingUserButton_Click(object sender, System.Windows.RoutedEventArgs e)
     {
         try
         {
-            FollowUserButton.IsEnabled = false;
-            await _profileApiClient.FollowUserAsync(_userId);
-            UnfollowUserButton.IsEnabled = true;
+            if (_isFollowed)
+            {
+                await _profileApiClient.UnfollowUserAsync(_userId);
+                FollowingUserButton.Content = "Подписаться";
+            }
+            else
+            {
+                await _profileApiClient.FollowUserAsync(_userId);
+                FollowingUserButton.Content = "Отписаться";
+            }
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Во время подписки произошла ошибка");
-            Console.WriteLine(ex.InnerException);
-        }
-    }
-
-    private async void UnfollowUserButton_Click(object sender, System.Windows.RoutedEventArgs e)
-    {
-        try
-        {
-            UnfollowUserButton.IsEnabled = false;
-            await _profileApiClient.UnfollowUserAsync(_userId);
-            FollowUserButton.IsEnabled = true;
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show("Во время отписки произошла ошибка");
-            Console.WriteLine(ex.InnerException);
+            Debug.WriteLine(ex.InnerException);
         }
     }
 

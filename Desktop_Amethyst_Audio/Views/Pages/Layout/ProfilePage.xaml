@@ -61,16 +61,14 @@
                         </StackPanel>
                         <StackPanel x:Name="UserProfileActionsStackPanel" Orientation="Horizontal" 
                                     Grid.Row="2" Visibility="Visible" Margin="0 5 0 0">
-                            <Button x:Name="FollowUserButton" Content="Подписаться" Style="{StaticResource ButtonPrimary}" 
-                                    Click="FollowUserButton_Click"/>
-                            <Button x:Name="UnfollowUserButton" Content="Отписаться" Style="{StaticResource ButtonPrimary}" 
-                                    Click="UnfollowUserButton_Click"/>
+                            <Button x:Name="FollowingUserButton" Content="Подписаться" Style="{StaticResource ButtonPrimary}" 
+                                    Click="FollowingUserButton_Click"/>
                             <ToggleButton x:Name="NotificationToggleButton" 
                                           Padding="5" Margin="5 0 0 0"
                                           Background="{DynamicResource SurfaceContainerBrush}"
                                           BorderThickness="1" BorderBrush="{DynamicResource OutlineSubtleBrush}">
                                 <ToggleButton.Content>
-                                    <Image Source="../../Assets/Bell.png" Width="15"/>
+                                    <Image Source="../../../Assets/Bell.png" Width="15"/>
                                 </ToggleButton.Content>
                             </ToggleButton>
                         </StackPanel>

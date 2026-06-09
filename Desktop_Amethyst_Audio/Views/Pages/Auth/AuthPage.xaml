@@ -26,7 +26,7 @@
             <Button x:Name="AuthChangeThemeButton" Style="{StaticResource ButtonPrimary}" 
                     Margin="0 10 5 0" Width="50" Height="50" 
                     Click="AuthChangeThemeButton_OnClick">
-                    <Image Source="../../Assets/test.jpg" Width="24" />
+                    <Image Source="../../../Assets/sun_icon.png" Width="24" />
             </Button>
             <Button x:Name="AuthChangeLanguageButton" Style="{StaticResource ButtonPrimary}" 
                     Margin="5 10 10 0" Width="50" Height="50"
@@ -39,7 +39,7 @@
         <StackPanel Grid.Row="0" Grid.RowSpan="3" Grid.Column="1" 
                     HorizontalAlignment="Center" VerticalAlignment="Center" 
                     Width="300">
-            <Image Source="../../Assets/icon_256x256.png" Width="100"/>
+            <Image Source="../../../Assets/icon_256x256.png" Width="100"/>
             <TextBlock x:Name="AuthTitleTextBlock" Text="Amethyst Audio" 
                        Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="24" 
                        HorizontalAlignment="Center" 
@@ -70,9 +70,10 @@
                 
                     <TextBlock x:Name="AuthForgetPasswordTextBlock"
                         HorizontalAlignment="Right">
-                        <Hyperlink
+                        <Hyperlink x:Name="ForgetPasswordHyperlink"
                             FontSize="14"
-                            Foreground="{DynamicResource ContentPrimaryBrush}">
+                            Foreground="{DynamicResource ContentPrimaryBrush}"
+                            Click="ForgetPasswordHyperlink_OnClick">
                             Забыли пароль?
                         </Hyperlink>
                     </TextBlock>
@@ -95,7 +96,7 @@
                 <Button x:Name="AuthExternalGoogleButton" Style="{DynamicResource ButtonPrimary}"
                         FontSize="18" FontFamily="Inter" Margin="0,5">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="../../Assets/google_logo.png" Width="25" Margin="0 0 5 0"
+                        <Image Source="../../../Assets/google_logo.png" Width="25" Margin="0 0 5 0"
                                VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         <TextBlock Text="Google" Margin="0 5 10 5" VerticalAlignment="Center"
                                    FontSize="18" Foreground="{DynamicResource ContentPrimaryBrush}"/>
@@ -104,7 +105,7 @@
                 <Button x:Name="AuthExternalYandexButton" Style="{DynamicResource ButtonPrimary}"
                         FontSize="18" FontFamily="Inter" Margin="0,5">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="../../Assets/yandex_logo.png" Width="25" Margin="0 0 5 0"/>
+                        <Image Source="../../../Assets/yandex_logo.png" Width="25" Margin="0 0 5 0"/>
                         <TextBlock Text="Яндекс" Margin="0 5 0 5" VerticalAlignment="Center"
                                    FontSize="18" Foreground="{DynamicResource ContentPrimaryBrush}"/>
                     </StackPanel>

@@ -305,6 +305,22 @@ public class ProfileApiClient : IProfileApiClient
         return bitmap;
     }
 
+    public async Task<bool> IsUserFollowedAsync(long targetId)
+    {
+        var baseUrl = BaseUrl.TrimEnd('/');
+        var path = PROFILE_API_PATH.TrimStart('/');
+        var fullUrl = $"{baseUrl}/{path}/subscription/{targetId}";
+
+        using var request = new HttpRequestMessage(HttpMethod.Get, fullUrl);
+        
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settingsService.Load().User.Token);
+    
+        using var response = await _httpClient.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+        bool result = await response.Content.ReadFromJsonAsync<bool>();
+        return result;
+    }
+
     public async Task FollowUserAsync(long targetId)
     {
         object tmpObj = new

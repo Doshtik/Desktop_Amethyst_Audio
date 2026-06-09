@@ -29,6 +29,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using Desktop_Amethyst_Audio.Messages.Data;
 using Desktop_Amethyst_Audio.Models.DTO.Albums;
 using Desktop_Amethyst_Audio.Models.DTO.Playlists;
 using Desktop_Amethyst_Audio.Models.Enums;
@@ -46,8 +47,9 @@ public partial class LayoutWindow : Window
     private readonly IProfileApiClient _profileApiClient;
     private readonly ITrackApiClient _trackApiClient;
     
-    public ObservableCollection<AlbumControl> Albums { get; } = new ();
-    public ObservableCollection<PlaylistControl> Playlists { get; } = new ();
+    public List<TrackInfoDto> SavedTracks { get; private set; }
+    public ObservableCollection<AlbumControl> SavedAlbums { get; private set; } = new ();
+    public ObservableCollection<PlaylistControl> SavedPlaylists { get; private set; } = new ();
     
     private DispatcherTimer _progressTimer;
     
@@ -57,6 +59,8 @@ public partial class LayoutWindow : Window
     private bool _isRepeat;
     private Brush _defaultButtonBackground;
     private Brush _activeButtonBackground;
+    private BitmapImage _playImage = new BitmapImage(new Uri("pack://application:,,,/Assets/play-fill.png"));
+    private BitmapImage _pauseImage = new BitmapImage(new Uri("pack://application:,,,/Assets/pause.png"));
     
     private SearchPage SearchPage { get; }
     private ResonancePage ResonancePage { get; }
@@ -105,9 +109,9 @@ public partial class LayoutWindow : Window
         WeakReferenceMessenger.Default.Register<NavigateToProfileMessage>(this, (r, m) 
             => ContentFrame.Navigate(new ProfilePage(m.userId, m.isOwnProfile)));
         WeakReferenceMessenger.Default.Register<NavigateToAlbumMessage>(this, (r, m) 
-            => ContentFrame.Navigate(new AlbumPage(m.album)));
+            => ContentFrame.Navigate(new AlbumPage(m.album, m.isOwnAlbum)));
         WeakReferenceMessenger.Default.Register<NavigateToPlaylistMessage>(this, (r, m) 
-            => ContentFrame.Navigate(new PlaylistPage(m.playlist)));
+            => ContentFrame.Navigate(new PlaylistPage(m.playlist, m.isOwnPlaylist)));
         WeakReferenceMessenger.Default.Register<NavigateToQueueMessage>(this, (r, m) 
             => ContentFrame.Navigate(new QueuePage()));
         WeakReferenceMessenger.Default.Register<NavigateToAuthMessage>(this, (r, m) =>
@@ -152,12 +156,12 @@ public partial class LayoutWindow : Window
         {
             var albums = await _profileApiClient.GetUserSavedAlbumsAsync(user.Id) ?? new List<AlbumInfoDto>();
     
-            Albums.Clear();
+            SavedAlbums.Clear();
             foreach (var albumDto in albums)
             {
                 AlbumControl control = new AlbumControl();
                 control.Album = albumDto;
-                Albums.Add(control);
+                SavedAlbums.Add(control);
             }
         }
         catch (Exception ex)
@@ -165,26 +169,36 @@ public partial class LayoutWindow : Window
             Debug.WriteLine($"[LayoutWindow] Ошибка загрузки альбомов: {ex.Message}\n{ex.StackTrace}");
             MessageBox.Show($"КРИТИЧЕСКАЯ ОШИБКА загрузки альбомов:\n\n{ex.Message}\n\n{ex.StackTrace}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
         }
-        SavedAlbumsListBox.ItemsSource = Albums;
+        SavedAlbumsListBox.ItemsSource = SavedAlbums;
         
         try
         {
             var playlists = await _profileApiClient.GetUserSavedPlaylistsAsync(user.Id) ?? new List<PlaylistInfoDto>();
             
-            Playlists.Clear();
+            SavedPlaylists.Clear();
             foreach (PlaylistInfoDto playlistDto in playlists)
             {
                 PlaylistControl control = new PlaylistControl();
                 control.Playlist = playlistDto;
                 control.Width = 280;
-                Playlists.Add(control);
+                SavedPlaylists.Add(control);
             }
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"[LayoutWindow] Ошибка загрузки плейлистов: {ex.Message}\n{ex.StackTrace}");
         }
-        SavedPlaylistsListBox.ItemsSource = Playlists;
+        SavedPlaylistsListBox.ItemsSource = SavedPlaylists;
+
+        try
+        {
+            SavedTracks = await _profileApiClient.GetUserLibraryAsync();
+            WeakReferenceMessenger.Default.Send(new SavedTracksTransferMessage(SavedTracks));
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+        }
     }
     
     private void OnPlaybackEnded()
@@ -353,10 +367,12 @@ public partial class LayoutWindow : Window
         if (_audioService.State is PlaybackState.Paused)
         {
             _audioService.Play();
+            PlayPauseImage.Source = _pauseImage;
         }
         else
         {
             _audioService.Pause();
+            PlayPauseImage.Source = _playImage;
         }
     }
 
@@ -436,15 +452,23 @@ public partial class LayoutWindow : Window
     private void SavedPlaylistsListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         PlaylistControl? control = SavedPlaylistsListBox.SelectedItem as PlaylistControl;
-        if (control is not null)
-            WeakReferenceMessenger.Default.Send(new NavigateToPlaylistMessage(control.Playlist));
+        AppSettings settings = _settingsService.Load();
+        if (control is null || settings.User is null)
+            return;
+        bool isOwnPlaylist = settings.User.Id == control.Playlist.Id;
+        SavedPlaylistsListBox.SelectedItem = null;
+        WeakReferenceMessenger.Default.Send(new NavigateToPlaylistMessage(control.Playlist,  isOwnPlaylist));
     }
 
     private void SavedAlbumsListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         AlbumControl? control = SavedAlbumsListBox.SelectedItem as AlbumControl;
-        if (control is not null)
-            WeakReferenceMessenger.Default.Send(new NavigateToAlbumMessage(control.Album));
+        AppSettings settings = _settingsService.Load();
+        if (control is null || settings.User is null)
+            return;
+        bool isOwnPlaylist = settings.User.Id == control.Album.Id;
+        SavedAlbumsListBox.SelectedItem = null;
+        WeakReferenceMessenger.Default.Send(new NavigateToAlbumMessage(control.Album, isOwnPlaylist));
     }
 
     private void QueueButton_Click(object sender, RoutedEventArgs e)

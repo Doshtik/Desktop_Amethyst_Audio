@@ -79,40 +79,105 @@ public class TrackApiClient : ITrackApiClient
 
     public async Task<TrackInfoDto> CreateAsync(CreateTrackDto dto)
     {
-        var json = JsonSerializer.Serialize(dto);
-        using var content = new StringContent(json, Encoding.UTF8, "application/json");
-        
         var baseUrl = BaseUrl.TrimEnd('/');
         var path = TRACK_API_PATH.TrimStart('/');
         var fullUrl = $"{baseUrl}/{path}/";
-    
+
         using var request = new HttpRequestMessage(HttpMethod.Post, fullUrl);
-    
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settingsService.Load().User.Token);
-    
+
+        // Создаем multipart form data
+        using var content = new MultipartFormDataContent();
+        
+        // Добавляем текстовые поля
+        content.Add(new StringContent(dto.Name), "Name");
+        content.Add(new StringContent(string.Join(",", dto.AuthorsIdList)), "AuthorsIdList");
+        content.Add(new StringContent(dto.PaceId.ToString()), "PaceId");
+        content.Add(new StringContent(dto.MoodId.ToString()), "MoodId");
+        content.Add(new StringContent(string.Join(",", dto.GenresIdList)), "GenresIdList");
+        
+        if (dto.IsTextless.HasValue)
+            content.Add(new StringContent(dto.IsTextless.Value.ToString()), "IsTextless");
+        
+        if (dto.IsExplicit.HasValue)
+            content.Add(new StringContent(dto.IsExplicit.Value.ToString()), "IsExplicit");
+        
+        if (!string.IsNullOrEmpty(dto.Country))
+            content.Add(new StringContent(dto.Country), "Country");
+
+        // Добавляем файлы
+        if (!string.IsNullOrEmpty(dto.CoverFilePath) && File.Exists(dto.CoverFilePath))
+        {
+            var coverStream = File.OpenRead(dto.CoverFilePath);
+            var coverContent = new StreamContent(coverStream);
+            coverContent.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
+            content.Add(coverContent, "CoverFile", Path.GetFileName(dto.CoverFilePath));
+        }
+
+        if (!string.IsNullOrEmpty(dto.TrackFilePath) && File.Exists(dto.TrackFilePath))
+        {
+            var trackStream = File.OpenRead(dto.TrackFilePath);
+            var trackContent = new StreamContent(trackStream);
+            trackContent.Headers.ContentType = new MediaTypeHeaderValue("audio/mpeg");
+            content.Add(trackContent, "TrackFile", Path.GetFileName(dto.TrackFilePath));
+        }
+
+        request.Content = content;
+
         using var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
-    
+
         var responseJson = await response.Content.ReadAsStringAsync();
         return JsonSerializer.Deserialize<TrackInfoDto>(responseJson, JsonOptions);
     }
 
     public async Task<TrackInfoDto> UpdateAsync(long trackId, ChangeTrackInfoDto dto)
     {
-        var json = JsonSerializer.Serialize(dto);
-        using var content = new StringContent(json, Encoding.UTF8, "application/json");
+        using var content = new MultipartFormDataContent();
+
+        content.Add(new StringContent(dto.Id.ToString()), "Id");
+        content.Add(new StringContent(dto.Name ?? ""), "Name");
+        content.Add(new StringContent(dto.PaceId.ToString()), "PaceId");
+        content.Add(new StringContent(dto.MoodId.ToString()), "MoodId");
         
+        if (dto.IsExplicit.HasValue) 
+            content.Add(new StringContent(dto.IsExplicit.Value.ToString().ToLower()), "IsExplicit");
+        if (dto.IsTextless.HasValue) 
+            content.Add(new StringContent(dto.IsTextless.Value.ToString().ToLower()), "IsTextless");
+        if (!string.IsNullOrEmpty(dto.Country)) 
+            content.Add(new StringContent(dto.Country), "Country");
+        content.Add(new StringContent(string.Join(",", dto.GenresIdList)), "GenresIdList");
+        
+        if (!string.IsNullOrEmpty(dto.CoverFilePath) && File.Exists(dto.CoverFilePath))
+        {
+            var coverStream = File.OpenRead(dto.CoverFilePath);
+            var coverContent = new StreamContent(coverStream);
+            coverContent.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
+            content.Add(coverContent, "CoverFile", Path.GetFileName(dto.CoverFilePath));
+        }
+
+        if (!string.IsNullOrEmpty(dto.TrackFilePath) && File.Exists(dto.TrackFilePath))
+        {
+            var trackStream = File.OpenRead(dto.TrackFilePath);
+            var trackContent = new StreamContent(trackStream);
+            trackContent.Headers.ContentType = new MediaTypeHeaderValue("audio/mpeg");
+            content.Add(trackContent, "TrackFile", Path.GetFileName(dto.TrackFilePath));
+        }
+
         var baseUrl = BaseUrl.TrimEnd('/');
         var path = TRACK_API_PATH.TrimStart('/');
         var fullUrl = $"{baseUrl}/{path}/{trackId}";
-    
-        using var request = new HttpRequestMessage(HttpMethod.Put, fullUrl);
-    
+
+        using var request = new HttpRequestMessage(HttpMethod.Put, fullUrl)
+        {
+            Content = content
+        };
+
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settingsService.Load().User.Token);
-    
+
         using var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
-    
+
         var responseJson = await response.Content.ReadAsStringAsync();
         return JsonSerializer.Deserialize<TrackInfoDto>(responseJson, JsonOptions);
     }

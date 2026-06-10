@@ -5,9 +5,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:Desktop_Amethyst_Audio.Views.ModalWindows"
         mc:Ignorable="d" Loaded="TrackFormModalWindow_OnLoaded"
-        Background="{DynamicResource SurfaceBaseBrush}" FontSize="14"
+        Background="Transparent" FontSize="14"
         Title="TrackFormModalWindow" Height="650" Width="800">
-    <Grid Margin="10">
+    <Border BorderThickness="2"
+            BorderBrush="{DynamicResource OutlineSubtleBrush}"
+            Background="{DynamicResource SurfaceBaseBrush}"
+            CornerRadius="10">
+        <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
@@ -108,4 +112,5 @@
                 BorderThickness="2"
                 Click="ConfirmButton_OnClick"/>
     </Grid>
+    </Border>
 </Window>

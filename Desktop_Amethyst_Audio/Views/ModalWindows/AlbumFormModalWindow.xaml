@@ -4,9 +4,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:Desktop_Amethyst_Audio.Views.ModalWindows"
-        mc:Ignorable="d"
-        Title="AlbumFormModalWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        mc:Ignorable="d" Background="Transparent"
+        Title="AlbumFormModalWindow" Height="450" Width="600">
+    <Border Background="{DynamicResource SurfaceBaseBrush}" 
+            BorderBrush="{DynamicResource OutlineSubtleBrush}"
+            BorderThickness="2"
+            CornerRadius="10">
+        <Grid>
+            
+        </Grid>
+    </Border>
 </Window>

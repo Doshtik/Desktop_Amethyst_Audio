@@ -11,6 +11,7 @@ using Desktop_Amethyst_Audio.Models.Clients.Implementation;
 using Desktop_Amethyst_Audio.Models.DTO.Pages;
 using Desktop_Amethyst_Audio.Models.DTO.Tracks;
 using Desktop_Amethyst_Audio.Models.Entities;
+using Desktop_Amethyst_Audio.Models.Enums;
 using Desktop_Amethyst_Audio.Models.Services.Implementation;
 using Desktop_Amethyst_Audio.Views.UserControls;
 using Microsoft.Win32;
@@ -19,6 +20,9 @@ namespace Desktop_Amethyst_Audio.Views.ModalWindows;
 
 public partial class TrackFormModalWindow : Window
 {
+    public TrackInfoDto? Track { get; set; }
+    public FormMode Mode { get; set; } = FormMode.Add;
+    
     private List<Pace> _paces = new List<Pace>();
     private List<Mood> _moods = new List<Mood>();
     
@@ -28,8 +32,8 @@ public partial class TrackFormModalWindow : Window
     
     private SettingsService _settingsService;
 
-    private string _trackFilePath = string.Empty;
-    private string _trackCoverPath = string.Empty;
+    private string? _trackFilePath = string.Empty;
+    private string? _trackCoverPath = string.Empty;
     
     public TrackFormModalWindow()
     {
@@ -66,7 +70,7 @@ public partial class TrackFormModalWindow : Window
             PacesComboBox.DisplayMemberPath = "PaceName";
             PacesComboBox.SelectedValuePath = "Id";
             _moods = config.AvailableMoods;
-            MoodsComboBox.ItemsSource = _paces;
+            MoodsComboBox.ItemsSource = _moods;
             MoodsComboBox.DisplayMemberPath = "MoodName";
             MoodsComboBox.SelectedValuePath = "Id";
         }
@@ -74,9 +78,34 @@ public partial class TrackFormModalWindow : Window
         {
             Debug.WriteLine(exception.InnerException);
         }
+
+        if (Track is not null)
+        {
+            Mode = FormMode.Edit;
+            BitmapImage coverImage = await _trackApiClient.GetTrackCoverAsync(Track.CoverUrl);
+            CoverImage.Source = coverImage;
+            NameTextBox.Text = Track.Name;
+            PacesComboBox.SelectedValue = _paces
+                .Where(x => x.PaceName == Track.PaceName)
+                .Select(x => x.Id)
+                .First();
+            MoodsComboBox.SelectedValue = _moods
+                .Where(x => x.MoodName == Track.MoodName)
+                .Select(x => x.Id)
+                .First();
+            GenreListBox.Items.Clear();
+            foreach (GenreInfoDto genre in Track.GenreList)
+            {
+                GenreControl control = new();
+                control.Genre = genre;
+                GenreListBox.Items.Add(control);
+            }
+            IsExplicitToggleButton.IsChecked = Track.IsExplicit;
+            IsTextlessToggleButton.IsChecked = Track.IsTextless;
+        }
     }
 
-    private void ConfirmButton_OnClick(object sender, RoutedEventArgs e)
+    private async void ConfirmButton_OnClick(object sender, RoutedEventArgs e)
     {
         if (IsFieldsCorrect(out string errorMessage))
         {
@@ -84,41 +113,113 @@ public partial class TrackFormModalWindow : Window
             return;
         }
 
-        List<short> selectedGenreIds = (GenreListBox.SelectedItems as List<GenreControl>)
-            .Select(x => x.Genre.Id)
+        List<short> selectedGenreIds = GenreListBox.SelectedItems
+            .Cast<GenreInfoDto>()
+            .Select(x => x.Id)
             .ToList();
-        
-        //TODO: Проверить подходит ли string для TrackFile и CoverFile
-        CreateTrackDto trackDto = new()
+
+        if (Mode is FormMode.Add)
         {
-            Name = NameTextBox.Text.Trim(),
-            TrackFile = _trackFilePath,
-            CoverFile = _trackCoverPath,
-            AuthorsIdList = new List<long>()
+            CreateTrackDto trackDto = new()
             {
-                _settingsService.Load().User.Id
-            },
-            PaceId = (short)PacesComboBox.SelectedValue,
-            MoodId = (short)MoodsComboBox.SelectedValue,
-            GenresIdList = selectedGenreIds,
-            IsExplicit = IsExplicitToggleButton.IsChecked,
-            IsTextless = IsTextlessToggleButton.IsChecked
-        };
-        
-        try
-        {
-            _trackApiClient.CreateAsync(trackDto);
+                Name = NameTextBox.Text.Trim(),
+                CoverFilePath = _trackCoverPath,
+                TrackFilePath = _trackFilePath,
+                AuthorsIdList = new List<long> { _settingsService.Load().User.Id },
+                PaceId = (short)PacesComboBox.SelectedValue,
+                MoodId = (short)MoodsComboBox.SelectedValue,
+                GenresIdList = selectedGenreIds,
+                IsExplicit = IsExplicitToggleButton.IsChecked,
+                IsTextless = IsTextlessToggleButton.IsChecked
+            };
+    
+            try
+            {
+                var result = await _trackApiClient.CreateAsync(trackDto);
+                MessageBox.Show("Трек успешно создан");
+                this.DialogResult = true;
+                this.Close();
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show($"Не удалось создать трек: {exception.Message}");
+                Debug.WriteLine(exception);
+            }
         }
-        catch (Exception exception)
+        else
         {
-            MessageBox.Show("Не удалось создать трек");
+            var updateDto = new ChangeTrackInfoDto
+            {
+                Id = Track.Id,
+                Name = NameTextBox.Text.Trim(),
+                PaceId = (short)PacesComboBox.SelectedValue,
+                MoodId = (short)MoodsComboBox.SelectedValue,
+                GenresIdList = selectedGenreIds,
+                IsExplicit = IsExplicitToggleButton.IsChecked,
+                IsTextless = IsTextlessToggleButton.IsChecked,
+    
+                TrackFilePath = _trackFilePath, 
+                CoverFilePath = _trackCoverPath 
+            };
+            
+            try
+            {
+                var result = await _trackApiClient.UpdateAsync(Track.Id, updateDto);
+                MessageBox.Show("Трек успешно обновлен");
+                this.DialogResult = true;
+                this.Close();
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show($"Не удалось обновлен трек: {exception.Message}");
+                Debug.WriteLine(exception);
+            }
         }
     }
 
     private bool IsFieldsCorrect(out string errorMessage)
     {
         errorMessage = string.Empty;
-        //TODO: Сделать проверку полей
+    
+        if (string.IsNullOrWhiteSpace(NameTextBox.Text))
+        {
+            errorMessage = "Введите название трека";
+            return false;
+        }
+    
+        if (Mode == FormMode.Add)
+        {
+            if (string.IsNullOrEmpty(_trackFilePath) || !File.Exists(_trackFilePath))
+            {
+                errorMessage = "Выберите аудиофайл";
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(_trackCoverPath) || !File.Exists(_trackCoverPath))
+            {
+                errorMessage = "Выберите обложку";
+                return false;
+            }
+        }
+    
+        if (PacesComboBox.SelectedValue == null)
+        {
+            errorMessage = "Выберите темп";
+            return false;
+        }
+    
+        if (MoodsComboBox.SelectedValue == null)
+        {
+            errorMessage = "Выберите настроение";
+            return false;
+        }
+    
+        if (GenreListBox.SelectedItems.Count == 0)
+        {
+            errorMessage = "Выберите хотя бы один жанр";
+            return false;
+        }
+    
         return true;
     }
 
@@ -126,33 +227,7 @@ public partial class TrackFormModalWindow : Window
     {
         OpenFileDialog openFileDialog = new OpenFileDialog
         {
-            Title = "Выберите файл для загрузки",
-            InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic),
-            Filter = "MP3 файлы (*.mp3)|*.mp3",
-            FilterIndex = 1,
-            Multiselect = false
-        };
-
-        if (openFileDialog.ShowDialog() is true)
-        {
-            string filePath = openFileDialog.FileName;
-            _trackCoverPath = filePath;
-        }
-
-        BitmapImage bitmap = new BitmapImage();
-        bitmap.BeginInit();
-        bitmap.CacheOption = BitmapCacheOption.OnLoad; 
-        bitmap.UriSource = new Uri(_trackCoverPath, UriKind.Absolute);
-        bitmap.EndInit();
-        
-        CoverImage.Source = bitmap;
-    }
-
-    private void TrackFileSelectorButton_OnClick(object sender, RoutedEventArgs e)
-    {
-        OpenFileDialog openFileDialog = new OpenFileDialog
-        {
-            Title = "Выберите файл для загрузки",
+            Title = "Выберите обложку",
             InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
             Filter = "Изображения (*.jpg, *.png)|*.jpg;*.png",
             FilterIndex = 1,
@@ -161,8 +236,33 @@ public partial class TrackFormModalWindow : Window
 
         if (openFileDialog.ShowDialog() is true)
         {
-            string filePath = openFileDialog.FileName;
-            _trackFilePath = filePath;
+            _trackCoverPath = openFileDialog.FileName;
+        
+            BitmapImage bitmap = new BitmapImage();
+            bitmap.BeginInit();
+            bitmap.CacheOption = BitmapCacheOption.OnLoad; 
+            bitmap.UriSource = new Uri(_trackCoverPath, UriKind.Absolute);
+            bitmap.EndInit();
+        
+            CoverImage.Source = bitmap;
+        }
+    }
+
+    private void TrackFileSelectorButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        OpenFileDialog openFileDialog = new OpenFileDialog
+        {
+            Title = "Выберите аудиофайл",
+            InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic),
+            Filter = "MP3 файлы (*.mp3)|*.mp3|WAV файлы (*.wav)|*.wav|Все аудиофайлы|*.*",
+            FilterIndex = 1,
+            Multiselect = false
+        };
+
+        if (openFileDialog.ShowDialog() is true)
+        {
+            _trackFilePath = openFileDialog.FileName;
+            ChooseTrackFileButton.Content = Path.GetFileName(_trackFilePath);
         }
     }
 }

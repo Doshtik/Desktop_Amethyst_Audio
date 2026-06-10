@@ -19,13 +19,13 @@
             </Grid.ColumnDefinitions>
 
             <Border Grid.Column="0" Background="{DynamicResource ContentMutedBrush}" 
-            Margin="0 0 10 0" CornerRadius="10" BorderThickness="0">
-                <TextBox FontSize="18" VerticalAlignment="Center" Padding="5" Background="Transparent" Foreground="{DynamicResource ContentPrimaryBrush}" 
-                 BorderThickness="0"/>
+                    Margin="0 0 10 0" CornerRadius="10" BorderThickness="0">
+                <TextBox FontSize="18" VerticalAlignment="Center" Padding="5" Background="Transparent" 
+                         Foreground="{DynamicResource ContentPrimaryBrush}" BorderThickness="0"/>
             </Border>
             <Button Grid.Column="1" FontSize="16" Style="{DynamicResource ButtonPrimary}">
                 <StackPanel Orientation="Horizontal">
-                    <Image x:Name="SearchImage" Width="30" Source="../../Assets/test.jpg" Margin="0 0 5 0"/>
+                    <Image x:Name="SearchImage" Width="20" Source="../../../Assets/search.png" Margin="0 0 5 0"/>
                     <TextBlock FontSize="18" Text="Поиск" Padding="2.5"/>
                 </StackPanel>
             </Button>
@@ -37,15 +37,15 @@
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" Text="Новые альбомы" FontSize="18" Foreground="{DynamicResource ContentPrimaryBrush}" />
-            <ListBox Grid.Row="1"
-             Background="Transparent" BorderThickness="0"
-             ScrollViewer.HorizontalScrollBarVisibility="Auto"
-             ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <UniformGrid Rows="2" />
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
+            <ListBox x:Name="AlbumListBox" Grid.Row="1"
+                     Background="Transparent" BorderThickness="0"
+                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                     ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Rows="2" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
             </ListBox>
         </Grid>
 
@@ -54,8 +54,8 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Text="Ваши любимые жанры" FontSize="18" Foreground="{DynamicResource ContentPrimaryBrush}"/>
-            <ListBox Grid.Row="1" Background="Transparent" BorderThickness="0"/>
+            <TextBlock Grid.Row="0" Text="Популярные жанры" FontSize="18" Foreground="{DynamicResource ContentPrimaryBrush}"/>
+            <ListBox x:Name="GenreListBox" Grid.Row="1" Background="Transparent" BorderThickness="0"/>
         </Grid>
     </Grid>
 </Page>

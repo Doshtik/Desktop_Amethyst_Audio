@@ -11,18 +11,25 @@ using Desktop_Amethyst_Audio.Models.Clients.Abstraction;
 using Desktop_Amethyst_Audio.Models.Clients.Implementation;
 using Desktop_Amethyst_Audio.Models.DTO.Tracks;
 using Desktop_Amethyst_Audio.Models.DTO.Users;
+using Desktop_Amethyst_Audio.Models.Services.Abstraction;
+using Desktop_Amethyst_Audio.Models.Services.Implementation;
+using Desktop_Amethyst_Audio.Views.ModalWindows;
 
 namespace Desktop_Amethyst_Audio.Views.UserControls;
 
 public partial class TrackControl : UserControl
 {
     private IProfileApiClient _profileApiClient;
+    private ITrackApiClient _trackApiClient;
+    private ISettingsService _settingsService;
     public TrackInfoDto Track { get; set; }
     private bool _isSaved;
     public TrackControl(bool isSaved)
     {
         InitializeComponent();
         _profileApiClient = new ProfileApiClient();
+        _trackApiClient = new TrackApiClient();
+        _settingsService = new SettingsService();
         _isSaved = isSaved;
     }
 
@@ -50,6 +57,7 @@ public partial class TrackControl : UserControl
         }
 
         TrackNameTextBlock.Text = Track.Name;
+        UserInfoDto author = _settingsService.Load().User;
         foreach (UserInfoDto dto in Track.UserList)
         {
             TextBlock user = new TextBlock();
@@ -63,6 +71,36 @@ public partial class TrackControl : UserControl
             TextBlock space = new TextBlock();
             space.Margin = new Thickness(5,0,0,0);
             TrackUsersPanel.Children.Add(space);
+
+            if (user.Equals(author))
+            {
+                Button editTrackButton = new Button();
+                editTrackButton.Content = "Редактировать";
+                editTrackButton.Click += (s, e) =>
+                {
+                    TrackFormModalWindow window = new TrackFormModalWindow();
+                    window.Track = Track;
+                };
+                Button deleteTrackButton = new Button();
+                deleteTrackButton.Content = "Удалить";
+                deleteTrackButton.Click += (s, e) =>
+                {
+                    MessageBoxResult result = MessageBox.Show("Вы уверены, что хотите удалить трек?");
+                    if (result is MessageBoxResult.Yes)
+                    {
+                        try
+                        {
+                            _trackApiClient.DeleteAsync(Track.Id);
+                            MessageBox.Show("Трек успешно удалён");
+                        }
+                        catch (Exception exception)
+                        {
+                            MessageBox.Show("Не удалось удалить трек");
+                            Debug.WriteLine(exception);
+                        }
+                    }
+                };
+            }
         }
     }
 

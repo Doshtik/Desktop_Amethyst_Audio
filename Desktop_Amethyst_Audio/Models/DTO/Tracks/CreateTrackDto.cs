@@ -4,9 +4,9 @@ public class CreateTrackDto
 {
     public string Name { get; set; } = null!;
 
-    public string CoverFile { get; set; } = null!;
+    public string CoverFilePath { get; set; } = null!;
 
-    public string TrackFile { get; set; } = null!;
+    public string TrackFilePath { get; set; } = null!;
     
     public List<long> AuthorsIdList { get; set; }
     

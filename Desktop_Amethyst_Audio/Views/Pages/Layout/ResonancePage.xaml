@@ -28,6 +28,10 @@
                 <TextBlock Text="Настроить резонанс" 
                            Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="18"/>
                 <Button x:Name="ResonanceConfigButton" Content="Настроить" Margin="0 10 0 0" FontSize="14" 
+                        Foreground="{DynamicResource ContentPrimaryBrush}"
+                        Background="#9933FF" 
+                        BorderBrush="#AD5CFF" 
+                        BorderThickness="2"
                         Click="ResonanceConfigButton_OnClick"/>
             </StackPanel>
         </Border>

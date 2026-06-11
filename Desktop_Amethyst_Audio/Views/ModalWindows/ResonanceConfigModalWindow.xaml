@@ -5,58 +5,80 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:Desktop_Amethyst_Audio.Views.ModalWindows"
         mc:Ignorable="d" Loaded="ResonanceConfigModalWindow_OnLoaded"
+        Background="Transparent" FontSize="14"
         Title="ResonanceConfigModalWindow" Height="350" Width="800">
-    <Grid Margin="10">
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
+    <Border Background="{DynamicResource SurfaceBaseBrush}"
+            BorderBrush="{DynamicResource OutlineSubtleBrush}"
+            BorderThickness="2">
+        <Grid Margin="10">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Text="Темп:"/>
-            <ListBox x:Name="PacesListBox" Grid.Row="1" ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                     ScrollViewer.VerticalScrollBarVisibility="Disabled" Height="75">
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <VirtualizingStackPanel Orientation="Horizontal"/>
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Value}" FontWeight="Bold" Foreground="DarkBlue" />
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+            <Grid Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Темп:" 
+                           Foreground="{DynamicResource ContentPrimaryBrush}"/>
+                <ListBox x:Name="PacesListBox" Grid.Row="1" ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                         Foreground="{DynamicResource ContentPrimaryBrush}"
+                         VerticalContentAlignment="Center"
+                         ScrollViewer.VerticalScrollBarVisibility="Disabled" Height="75"
+                         Background="Transparent" BorderThickness="0"
+                         DisplayMemberPath="PaceName" 
+                         SelectedValuePath="Id">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
+            </Grid>
+            <Grid Grid.Row="1" Margin="0 5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Настроение:" 
+                           Foreground="{DynamicResource ContentPrimaryBrush}"/>
+                <ListBox x:Name="MoodsListBox" Grid.Row="1" ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                         Foreground="{DynamicResource ContentPrimaryBrush}"
+                         VerticalContentAlignment="Center"
+                         ScrollViewer.VerticalScrollBarVisibility="Disabled" Height="75"
+                         Background="Transparent" BorderThickness="0"
+                         DisplayMemberPath="MoodName" 
+                         SelectedValuePath="Id">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
+            </Grid>
+            <Grid Grid.Row="2" Margin="0 5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <ToggleButton x:Name="IsTextlessToggleButton" Grid.Column="0" Content="Должен содержать текст?"
+                              VerticalAlignment="Center" Padding="10"
+                              Foreground="{DynamicResource ContentPrimaryBrush}"
+                              Background="{DynamicResource SurfaceContainerBrush}" 
+                              BorderBrush="{DynamicResource OutlineSubtleBrush}" 
+                              BorderThickness="2" Margin="0 0 5 0"/>
+                <ComboBox Grid.Column="1" x:Name="CountryCodeComboBox" Margin="5 0 0 0"/>
+            </Grid>
+            <Button x:Name="ConfirmButton" Grid.Row="3" Margin="0 5"
+                    Padding="10" Content="Подтвердить"
+                    Foreground="{DynamicResource ContentPrimaryBrush}"
+                    Background="{DynamicResource SurfaceContainerBrush}" 
+                    BorderBrush="{DynamicResource OutlineSubtleBrush}" 
+                    BorderThickness="2"
+                    Click="ConfirmButton_OnClick" />
         </Grid>
-        <Grid Grid.Row="1" Margin="0 5">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Text="Настроение:"/>
-            <ListBox x:Name="MoodsListBox" Grid.Row="1" ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                     ScrollViewer.VerticalScrollBarVisibility="Disabled" Height="75">
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <VirtualizingStackPanel Orientation="Horizontal"/>
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-            </ListBox>
-        </Grid>
-        <Grid Grid.Row="2" Margin="0 5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <ToggleButton x:Name="IsTextlessToggleButton" Grid.Column="0" Content="Должен содержать текст?" VerticalAlignment="Center" Padding="10"/>
-            <ComboBox Grid.Column="1" x:Name="CountryCodeComboBox"/>
-        </Grid>
-        <Button x:Name="ConfirmButton" Grid.Row="3" Margin="0 5" Padding="10" Content="Подтвердить"
-                Click="ConfirmButton_OnClick"/>
-    </Grid>
+    </Border>
 </Window>

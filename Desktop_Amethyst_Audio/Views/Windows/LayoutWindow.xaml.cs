@@ -101,7 +101,7 @@ public partial class LayoutWindow : Window
         WeakReferenceMessenger.Default.Register<NavigateToSearchMessage>(this, (r, m) 
             => ContentFrame.Navigate(SearchPage));
         WeakReferenceMessenger.Default.Register<NavigateToSearchResultMessage>(this, (r, m) 
-            => ContentFrame.Navigate(new SearchResultPage("")));
+            => ContentFrame.Navigate(new SearchResultPage(m.searchLine)));
         WeakReferenceMessenger.Default.Register<NavigateToResonanceMessage>(this, (r, m) 
             => ContentFrame.Navigate(ResonancePage));
         WeakReferenceMessenger.Default.Register<NavigateToLibraryMessage>(this, (r, m) 

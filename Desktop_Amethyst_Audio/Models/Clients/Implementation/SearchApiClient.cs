@@ -17,7 +17,7 @@ public class SearchApiClient : ISearchApiClient
 
     private static string BaseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "http://localhost:5278";
     
-    private const string RECOMMENDATION_API_PATH = "api/reports";
+    private const string SEARCH_API_PATH = "api/search";
     
     private static readonly JsonSerializerOptions JsonOptions = new() 
     { 
@@ -27,7 +27,7 @@ public class SearchApiClient : ISearchApiClient
     public async Task<List<GenreInfoDto>> GetGenresAsync()
     {
         var baseUrl = BaseUrl.TrimEnd('/');
-        var path = RECOMMENDATION_API_PATH.TrimStart('/');
+        var path = SEARCH_API_PATH.TrimStart('/');
         var fullUrl = $"{baseUrl}/{path}/genres";
     
         using var request = new HttpRequestMessage(HttpMethod.Get, fullUrl);
@@ -44,7 +44,7 @@ public class SearchApiClient : ISearchApiClient
     public async Task<List<TrackInfoDto>> GetListByGenreAsync(string genreName)
     {
         var baseUrl = BaseUrl.TrimEnd('/');
-        var path = RECOMMENDATION_API_PATH.TrimStart('/');
+        var path = SEARCH_API_PATH.TrimStart('/');
         var fullUrl = $"{baseUrl}/{path}/genres/{genreName}";
 
         using var request = new HttpRequestMessage(HttpMethod.Post, fullUrl);
@@ -59,7 +59,7 @@ public class SearchApiClient : ISearchApiClient
     public async Task<SearchInfoDto> GetBySearchAsync(string searchLine)
     {
         var baseUrl = BaseUrl.TrimEnd('/');
-        var path = RECOMMENDATION_API_PATH.TrimStart('/');
+        var path = SEARCH_API_PATH.TrimStart('/');
         var fullUrl = $"{baseUrl}/{path}/{searchLine}";
     
         using var request = new HttpRequestMessage(HttpMethod.Post, fullUrl);

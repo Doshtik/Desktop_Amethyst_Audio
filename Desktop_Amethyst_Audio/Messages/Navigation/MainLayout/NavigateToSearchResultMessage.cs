@@ -1,3 +1,3 @@
 namespace Desktop_Amethyst_Audio.Messages.Navigation.MainLayout;
 
-public record NavigateToSearchResultMessage();
+public record NavigateToSearchResultMessage(string searchLine);

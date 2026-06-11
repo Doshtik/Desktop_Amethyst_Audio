@@ -94,7 +94,7 @@
             </Button>
             <StackPanel x:Name="AuthProvidersStackPanel" Orientation="Vertical">
                 <Button x:Name="AuthExternalGoogleButton" Style="{DynamicResource ButtonPrimary}"
-                        FontSize="18" FontFamily="Inter" Margin="0,5">
+                        FontSize="18" FontFamily="Inter" Margin="0,5" Click="AuthExternalGoogleButton_OnClick">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="../../../Assets/google_logo.png" Width="25" Margin="0 0 5 0"
                                VerticalAlignment="Center" HorizontalAlignment="Center"/>
@@ -103,7 +103,7 @@
                     </StackPanel>
                 </Button>
                 <Button x:Name="AuthExternalYandexButton" Style="{DynamicResource ButtonPrimary}"
-                        FontSize="18" FontFamily="Inter" Margin="0,5">
+                        FontSize="18" FontFamily="Inter" Margin="0,5" Click="AuthExternalGoogleButton_OnClick">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="../../../Assets/yandex_logo.png" Width="25" Margin="0 0 5 0"/>
                         <TextBlock Text="Яндекс" Margin="0 5 0 5" VerticalAlignment="Center"

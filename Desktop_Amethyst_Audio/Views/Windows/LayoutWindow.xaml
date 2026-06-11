@@ -92,7 +92,8 @@
                      Background="Transparent" SelectionChanged="SavedPlaylistsListBox_OnSelectionChanged"/>
             <ListBox x:Name="SavedAlbumsListBox" Visibility="Collapsed" BorderThickness="0" VerticalAlignment="Stretch"
                      Background="Transparent" SelectionChanged="SavedAlbumsListBox_OnSelectionChanged"
-                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     VerticalContentAlignment="Stretch">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Columns="2" />

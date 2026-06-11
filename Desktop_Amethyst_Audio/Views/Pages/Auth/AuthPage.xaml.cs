@@ -106,4 +106,9 @@ public partial class AuthPage : Page
     {
         WeakReferenceMessenger.Default.Send(new NavigateToForgetPasswordMessage());
     }
+
+    private void AuthExternalGoogleButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        MessageBox.Show("В разработке");
+    }
 }

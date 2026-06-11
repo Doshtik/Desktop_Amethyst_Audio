@@ -1,0 +1,28 @@
+﻿<UserControl x:Class="Desktop_Amethyst_Audio.Views.UserControls.UsersControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Desktop_Amethyst_Audio.Views.UserControls"
+             mc:Ignorable="d" Loaded="UsersControl_OnLoaded" Background="Transparent"
+             Height="100" Width="350">
+    <Border Background="{DynamicResource SurfaceContainerBrush}"
+            BorderBrush="{DynamicResource OutlineSubtleBrush}"
+            BorderThickness="2"
+            CornerRadius="10">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Image x:Name="AvatarImage" Grid.Column="0" Margin="10"
+                   Width="80"
+                   VerticalAlignment="Center"
+                   Source="../../Assets/test.jpg" />
+            <TextBlock x:Name="NickNameTextBlock" Grid.Column="1"
+                       Foreground="{DynamicResource ContentPrimaryBrush}"
+                       FontSize="18"
+                       Text="Nickname" VerticalAlignment="Center" />
+        </Grid>
+    </Border>
+</UserControl>

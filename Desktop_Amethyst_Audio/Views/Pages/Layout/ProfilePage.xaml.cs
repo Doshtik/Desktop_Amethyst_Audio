@@ -62,7 +62,6 @@ public partial class ProfilePage : Page
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Не удалось загрузить профиль пользователя");
             Debug.WriteLine(ex.InnerException);
         }
 
@@ -73,7 +72,6 @@ public partial class ProfilePage : Page
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Не удалось загрузить аватарку пользователя");
             Debug.WriteLine(ex.InnerException);
         }
         
@@ -84,7 +82,6 @@ public partial class ProfilePage : Page
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Не удалось загрузить обложку пользователя");
             Debug.WriteLine(ex.InnerException);
             UserHeaderImage.Source = _avatarHeader;
         }
@@ -126,7 +123,6 @@ public partial class ProfilePage : Page
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Не удалось загрузить треки пользователя");
             Debug.WriteLine(ex.InnerException);
         }
         try
@@ -136,7 +132,6 @@ public partial class ProfilePage : Page
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Не удалось загрузить альбомы пользователя");
             Debug.WriteLine(ex.InnerException);
         }
         
@@ -147,7 +142,6 @@ public partial class ProfilePage : Page
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Не удалось загрузить плейлисты пользователя");
             Debug.WriteLine(ex.InnerException);
         }
     }
@@ -230,6 +224,8 @@ public partial class ProfilePage : Page
         {
             AlbumControl trackControl = new AlbumControl();
             trackControl.Album = item;
+            trackControl.Width = 130;
+            trackControl.Height = 160;
             UserAlbumListBox.Items.Add(trackControl);
         }
     }
@@ -242,21 +238,6 @@ public partial class ProfilePage : Page
             trackControl.Playlist = item;
             UserPlaylistListBox.Items.Add(trackControl);
         }
-    }
-
-    private void NavigateToListOfTracks_Click(object sender, System.Windows.RoutedEventArgs e)
-    {
-
-    }
-
-    private void NavigateToListOfAlbums_Click(object sender, System.Windows.RoutedEventArgs e)
-    {
-
-    }
-
-    private void NavigateToListOfPlaylists_Click(object sender, System.Windows.RoutedEventArgs e)
-    {
-
     }
 
     private async void FollowingUserButton_Click(object sender, System.Windows.RoutedEventArgs e)

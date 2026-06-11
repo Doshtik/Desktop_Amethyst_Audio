@@ -97,6 +97,27 @@ public partial class AlbumPage : Page
             editButton.Content = "Редактировать";
             editButton.Click += EditAlbum_Selected;
             AlbumActionsStackPanel.Children.Add(editButton);
+            Button deleteButton = new Button();
+            deleteButton.Content = "Удалить";
+            deleteButton.Click += (s, e) =>
+            {
+                MessageBoxResult result = MessageBox.Show("Вы уверены, что хотите удалить альбом?", "Подтверждениие",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.No)
+                    return;
+
+                try
+                {
+                    _albumApiClient.DeleteAlbumAsync(Album.Id);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Не удалось удалить альбом");
+                    Debug.WriteLine(ex);
+                }
+            };
+            AlbumActionsStackPanel.Children.Add(editButton);
         }
         else
         {

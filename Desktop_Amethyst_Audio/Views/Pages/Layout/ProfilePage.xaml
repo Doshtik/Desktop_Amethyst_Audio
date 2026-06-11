@@ -18,7 +18,7 @@
                 VerticalAlignment="Top" HorizontalAlignment="Right" 
                 Background="Transparent" BorderThickness="0">
                 <ToggleButton.Content>
-                    <Image Source="../../Assets/dots_white.png"/>
+                    <Image Source="../../../Assets/dots_white.png"/>
                 </ToggleButton.Content>
             </ToggleButton>
             <Popup x:Name="ProfileActionsPopup"
@@ -104,8 +104,7 @@
                     <TextBlock Text="Список треков" Grid.Column="0" Foreground="{DynamicResource ContentPrimaryBrush}" 
                                FontSize="14"/>
                     <TextBlock Grid.Column="1" HorizontalAlignment="Right" Visibility="Collapsed">
-                        <Hyperlink x:Name="NavigateToListOfTracks" Foreground="{DynamicResource ContentPrimaryBrush}" 
-                                   FontSize="14" Click="NavigateToListOfTracks_Click">
+                        <Hyperlink x:Name="NavigateToListOfTracks" Foreground="{DynamicResource ContentPrimaryBrush}">
                             Все
                         </Hyperlink>
                     </TextBlock>
@@ -134,7 +133,7 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Список альбомов" Grid.Column="0" Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="14"/>
                     <TextBlock Grid.Column="1" HorizontalAlignment="Right" Visibility="Collapsed">
-                        <Hyperlink x:Name="NavigateToListOfAlbums" Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="14" Click="NavigateToListOfAlbums_Click">
+                        <Hyperlink x:Name="NavigateToListOfAlbums" Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="14">
                             Все
                         </Hyperlink>
                     </TextBlock>
@@ -163,7 +162,7 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Список плейлистов" Grid.Column="0" Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="14"/>
                     <TextBlock Grid.Column="1" HorizontalAlignment="Right" Visibility="Collapsed">
-                        <Hyperlink x:Name="NavigateToListOfPlaylists" Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="14" Click="NavigateToListOfPlaylists_Click">
+                        <Hyperlink x:Name="NavigateToListOfPlaylists" Foreground="{DynamicResource ContentPrimaryBrush}" FontSize="14">
                             Все
                         </Hyperlink>
                     </TextBlock>

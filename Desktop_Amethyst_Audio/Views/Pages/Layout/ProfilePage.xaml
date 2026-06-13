@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:Desktop_Amethyst_Audio.Views.Pages" 
       d:Background="{DynamicResource SurfaceBaseBrush}" Loaded="ProfilePage_OnLoaded"
+      KeepAlive="False"
       Title="ProfilePage" d:DesignHeight="600" d:DesignWidth="800"
       mc:Ignorable="d">
     <Grid>
@@ -89,7 +90,8 @@
                         Style="{StaticResource ButtonPrimary}"
                         Margin="0 0 5 0" Click="ReleaseTrackButton_OnClick"/> 
                 <Button x:Name="ReleaseAlbumButton" Content="Выпустить альбом"
-                        Style="{StaticResource ButtonPrimary}"/>
+                        Style="{StaticResource ButtonPrimary}"
+                        Click="ReleaseAlbumButton_OnClick"/>
             </StackPanel>
             <Grid Grid.Row="1" Margin="5">
                 <Grid.RowDefinitions>
@@ -109,7 +111,7 @@
                         </Hyperlink>
                     </TextBlock>
                 </Grid>
-                <ListBox x:Name="UserTrackListBox" Grid.Row="1" Margin="0 5 0 0" 
+                <ListBox x:Name="UserTrackListBox" Grid.Row="1" Margin="0 5 0 0"
                      Background="Transparent" BorderThickness="0"
                      SelectionChanged="UserTrackListBox_OnSelectionChanged"
                      ScrollViewer.HorizontalScrollBarVisibility="Auto"

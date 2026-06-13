@@ -72,7 +72,7 @@ public partial class TrackControl : UserControl
             space.Margin = new Thickness(5,0,0,0);
             TrackUsersPanel.Children.Add(space);
 
-            if (user.Equals(author))
+            if (dto.Equals(author))
             {
                 Button editTrackButton = new Button();
                 editTrackButton.Content = "Редактировать";

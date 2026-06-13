@@ -53,23 +53,25 @@
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Column="0">
                     <Grid.RowDefinitions>
-                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <TextBlock Text="Треки" Grid.Row="0"
-                               Foreground="{DynamicResource ContentPrimaryBrush}"/>
+                               Foreground="{DynamicResource ContentPrimaryBrush}" />
                     <ListBox x:Name="TrackListBox" Grid.Row="1" SelectionMode="Multiple" 
                              Background="Transparent"
-                             BorderThickness="0"/>
+                             BorderThickness="0" />
                 </Grid>
                 <Grid Grid.Column="1">
                     <Grid.RowDefinitions>
-                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <TextBlock Text="Название" Grid.Row="0"
                                Foreground="{DynamicResource ContentPrimaryBrush}"/>
                     <TextBox x:Name="NameTextBox" Grid.Row="1" 
+                             Padding="5"
+                             VerticalAlignment="Top"
                              Background="{DynamicResource SurfaceContainerBrush}"
                              Foreground="{DynamicResource ContentPrimaryBrush}"
                              BorderBrush="{DynamicResource OutlineSubtleBrush}"

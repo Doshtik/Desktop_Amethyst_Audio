@@ -91,10 +91,12 @@ public class TrackApiClient : ITrackApiClient
         
         // Добавляем текстовые поля
         content.Add(new StringContent(dto.Name), "Name");
-        content.Add(new StringContent(string.Join(",", dto.AuthorsIdList)), "AuthorsIdList");
+        string authorsJson = JsonSerializer.Serialize(dto.AuthorsIdList);
+        content.Add(new StringContent(authorsJson, Encoding.UTF8, "application/json"), "AuthorsIdList");
         content.Add(new StringContent(dto.PaceId.ToString()), "PaceId");
         content.Add(new StringContent(dto.MoodId.ToString()), "MoodId");
-        content.Add(new StringContent(string.Join(",", dto.GenresIdList)), "GenresIdList");
+        string genresJson = JsonSerializer.Serialize(dto.GenresIdList);
+        content.Add(new StringContent(genresJson, Encoding.UTF8, "application/json"), "GenresIdList");
         
         if (dto.IsTextless.HasValue)
             content.Add(new StringContent(dto.IsTextless.Value.ToString()), "IsTextless");

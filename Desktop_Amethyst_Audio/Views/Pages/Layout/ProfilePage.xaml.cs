@@ -3,8 +3,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using CommunityToolkit.Mvvm.Messaging;
+using Desktop_Amethyst_Audio.Messages.Action;
 using Desktop_Amethyst_Audio.Messages.Data;
 using Desktop_Amethyst_Audio.Messages.Navigation;
+using Desktop_Amethyst_Audio.Messages.Navigation.MainLayout;
 using Desktop_Amethyst_Audio.Messages.Navigation.System;
 using Desktop_Amethyst_Audio.Models;
 using Desktop_Amethyst_Audio.Models.Clients.Implementation;
@@ -46,6 +48,7 @@ public partial class ProfilePage : Page
         _trackApiClient = new TrackApiClient();
         _albumApiClient = new AlbumApiClient();
         _playlistApiClient = new PlaylistApiClient();
+        _settingsService = new SettingsService();
         
         _userId = userId;
         _isOwnProfile = isOwnProfile;
@@ -118,6 +121,7 @@ public partial class ProfilePage : Page
         
         try
         {
+            _trackList = new List<TrackInfoDto>();
             _trackList = await _trackApiClient.GetListByUserIdAsync(_userId);
             LoadTrackListBox();
         }
@@ -127,6 +131,7 @@ public partial class ProfilePage : Page
         }
         try
         {
+            _albumList = new List<AlbumInfoDto>();
             _albumList = await _albumApiClient.GetListByUserIdAsync(_userId);
             LoadAlbumListBox();
         }
@@ -137,6 +142,7 @@ public partial class ProfilePage : Page
         
         try
         {
+            _playlistList = new List<PlaylistInfoDto>();
             _playlistList = await _playlistApiClient.GetListByUserIdAsync(_userId);
             LoadPlaylistListBox();
         }
@@ -191,28 +197,34 @@ public partial class ProfilePage : Page
 
     private void UserTrackListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        
+        TrackControl? control = UserTrackListBox.SelectedItem as TrackControl;
+        if (control is not null)
+        {
+            PlaybackService.CurrentTrack = control.Track;
+            WeakReferenceMessenger.Default.Send(new TrackChangedMessage(PlaybackService.CurrentTrack));
+        }
     }
 
     private void UserAlbumListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         
+        AlbumInfoDto album = (UserAlbumListBox.SelectedItem as AlbumControl).Album;
+        WeakReferenceMessenger.Default.Send(new NavigateToAlbumMessage(album, false));
     }
 
     private void UserPlaylistListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         
+        PlaylistInfoDto playlist = (UserTrackListBox.SelectedItem as PlaylistControl).Playlist;
+        WeakReferenceMessenger.Default.Send(new NavigateToPlaylistMessage(playlist, false));
     }
 
     private void LoadTrackListBox()
     {
         UserTrackListBox.Items.Clear();
-        List<TrackInfoDto> savedTracks = new List<TrackInfoDto>();
-        WeakReferenceMessenger.Default.Register<SavedTracksTransferMessage>(this, (recipient, message) => savedTracks = message.savedTracks);
         foreach (var item in _trackList)
         {
-            bool isSaved = savedTracks.Contains(item);
-            TrackControl trackControl = new TrackControl(isSaved);
+            TrackControl trackControl = new TrackControl(_isOwnProfile);
             trackControl.Track = item;
             UserTrackListBox.Items.Add(trackControl);
         }
@@ -265,6 +277,14 @@ public partial class ProfilePage : Page
     {
         TrackFormModalWindow window = new TrackFormModalWindow();
         window.ShowDialog();
+        ProfilePage_OnLoaded(sender, e);
+    }
+
+    private void ReleaseAlbumButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        AlbumFormModalWindow window = new AlbumFormModalWindow();
+        window.ShowDialog();
+        ProfilePage_OnLoaded(sender, e);
     }
 
     private void OpenReportModalWindow_OnClick(object sender, RoutedEventArgs e)

@@ -41,6 +41,7 @@ public partial class TrackFormModalWindow : Window
         _searchApiClient = new SearchApiClient();
         _trackApiClient = new TrackApiClient();
         _recommendationApiClient = new RecommendationApiClient();
+        _settingsService = new SettingsService();
     }
 
     private async void TrackFormModalWindow_OnLoaded(object sender, RoutedEventArgs e)
@@ -120,7 +121,7 @@ public partial class TrackFormModalWindow : Window
 
         if (Mode is FormMode.Add)
         {
-            CreateTrackDto trackDto = new()
+            CreateTrackDto trackDto = new CreateTrackDto()
             {
                 Name = NameTextBox.Text.Trim(),
                 CoverFilePath = _trackCoverPath,
@@ -148,7 +149,7 @@ public partial class TrackFormModalWindow : Window
         }
         else
         {
-            var updateDto = new ChangeTrackInfoDto
+            ChangeTrackInfoDto updateDto = new ChangeTrackInfoDto
             {
                 Id = Track.Id,
                 Name = NameTextBox.Text.Trim(),
@@ -183,42 +184,39 @@ public partial class TrackFormModalWindow : Window
     
         if (string.IsNullOrWhiteSpace(NameTextBox.Text))
         {
-            errorMessage = "Введите название трека";
-            return false;
+            errorMessage += "Введите название трека\n";
         }
     
         if (Mode == FormMode.Add)
         {
             if (string.IsNullOrEmpty(_trackFilePath) || !File.Exists(_trackFilePath))
             {
-                errorMessage = "Выберите аудиофайл";
-                return false;
+                errorMessage += "Выберите аудиофайл\n";
             }
 
             if (string.IsNullOrEmpty(_trackCoverPath) || !File.Exists(_trackCoverPath))
             {
-                errorMessage = "Выберите обложку";
-                return false;
+                errorMessage += "Выберите обложку\n";
             }
         }
     
         if (PacesComboBox.SelectedValue == null)
         {
-            errorMessage = "Выберите темп";
-            return false;
+            errorMessage += "Выберите темп\n";
         }
     
         if (MoodsComboBox.SelectedValue == null)
         {
-            errorMessage = "Выберите настроение";
-            return false;
+            errorMessage += "Выберите настроение\n";
         }
     
         if (GenreListBox.SelectedItems.Count == 0)
         {
-            errorMessage = "Выберите хотя бы один жанр";
-            return false;
+            errorMessage += "Выберите хотя бы один жанр\n";
         }
+
+        if (errorMessage == string.Empty)
+            return false;
     
         return true;
     }

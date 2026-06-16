@@ -30,9 +30,12 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using Desktop_Amethyst_Audio.Messages.Data;
+using Desktop_Amethyst_Audio.Messages.Navigation.ModalWindow;
 using Desktop_Amethyst_Audio.Models.DTO.Albums;
 using Desktop_Amethyst_Audio.Models.DTO.Playlists;
 using Desktop_Amethyst_Audio.Models.Enums;
+using Desktop_Amethyst_Audio.Views.ModalWindows;
+using Desktop_Amethyst_Audio.Views.Pages.Select;
 using Desktop_Amethyst_Audio.Views.UserControls;
 
 namespace Desktop_Amethyst_Audio.Views.Windows;
@@ -56,9 +59,9 @@ public partial class LayoutWindow : Window
     private bool _isChangingTrack = false;
     private bool _isDraggingSlider = false;
 
-    private bool _isRepeat;
     private Brush _defaultButtonBackground;
     private Brush _activeButtonBackground;
+    
     private BitmapImage _playImage = new BitmapImage(new Uri("pack://application:,,,/Assets/play-fill.png"));
     private BitmapImage _pauseImage = new BitmapImage(new Uri("pack://application:,,,/Assets/pause.png"));
     
@@ -81,8 +84,7 @@ public partial class LayoutWindow : Window
         LibraryPage = new LibraryPage();
 
         TrackPanel.Visibility = Visibility.Collapsed;
-
-        _isRepeat = false;
+        
         BrushConverter cc = new BrushConverter();
         _defaultButtonBackground = (Brush)cc.ConvertFrom("#00000000");
         _activeButtonBackground = (Brush)cc.ConvertFrom("#5A5959");
@@ -98,6 +100,8 @@ public partial class LayoutWindow : Window
         
         _audioService.PlaybackEnded += OnPlaybackEnded;
 
+        WeakReferenceMessenger.Default.Register<DataChangedMessage>(this, (r, m) 
+            => Window_Loaded(this, new RoutedEventArgs()));
         WeakReferenceMessenger.Default.Register<NavigateToSearchMessage>(this, (r, m) 
             => ContentFrame.Navigate(SearchPage));
         WeakReferenceMessenger.Default.Register<NavigateToSearchResultMessage>(this, (r, m) 
@@ -120,8 +124,6 @@ public partial class LayoutWindow : Window
             window.Show();
             Close();
         });
-        
-        ContentFrame.Navigate(LibraryPage);
         
         WeakReferenceMessenger.Default.Register<TrackChangedMessage>(this, (r, m) 
             => ChangeTrack(m.Track));
@@ -176,6 +178,14 @@ public partial class LayoutWindow : Window
             var playlists = await _profileApiClient.GetUserSavedPlaylistsAsync(user.Id) ?? new List<PlaylistInfoDto>();
             
             SavedPlaylists.Clear();
+            PlaylistControl createControl = new PlaylistControl();
+            createControl.Playlist = new PlaylistInfoDto()
+            {
+                CoverUrl = "pack://application:,,,/Assets/plus.png",
+                Name = "Создать плейлист"
+            };
+            createControl.Width = 280;
+            SavedPlaylists.Add(createControl);
             foreach (PlaylistInfoDto playlistDto in playlists)
             {
                 PlaylistControl control = new PlaylistControl();
@@ -199,6 +209,8 @@ public partial class LayoutWindow : Window
         {
             Console.WriteLine(ex.InnerException);
         }
+        
+        ContentFrame.Navigate(LibraryPage);
     }
     
     private void OnPlaybackEnded()
@@ -258,7 +270,6 @@ public partial class LayoutWindow : Window
     public void NavigateToLibrary(object sender, RoutedEventArgs args)
         => WeakReferenceMessenger.Default.Send(new NavigateToLibraryMessage());
 
-
     private async void ChangeTrack(TrackInfoDto track)
     {
         if (_isChangingTrack) return;
@@ -297,7 +308,13 @@ public partial class LayoutWindow : Window
             VolumeSlider.Value = _audioService.Volume;
             TimeSlider.Value = 0;
 
-            // 3. Запускаем воспроизведение (AudioService сам скачает, декодирует и сыграет)
+            if (SavedTracks.Contains(track))
+                LibraryActionButton.Content = "Удалить из библиотеки";
+            else 
+                LibraryActionButton.Content = "Добавить в библиотеку";
+
+            PlayPauseImage.Source = _pauseImage;
+            
             await _audioService.StartAsync(response);
             _audioService.SetVolume((float)(VolumeSlider.Value));
             _progressTimer.Start();
@@ -451,6 +468,13 @@ public partial class LayoutWindow : Window
 
     private void SavedPlaylistsListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
+        if (SavedPlaylistsListBox.SelectedIndex == 0)
+        {
+            PlaylistFormModalWindow window = new PlaylistFormModalWindow();
+            window.ShowDialog();
+            WeakReferenceMessenger.Default.Send(new DataChangedMessage());
+            return;
+        }
         PlaylistControl? control = SavedPlaylistsListBox.SelectedItem as PlaylistControl;
         AppSettings settings = _settingsService.Load();
         if (control is null || settings.User is null)
@@ -474,18 +498,59 @@ public partial class LayoutWindow : Window
     private void QueueButton_Click(object sender, RoutedEventArgs e)
         => WeakReferenceMessenger.Default.Send(new NavigateToQueueMessage());
 
-    private void AddToLibrary_OnClick(object sender, RoutedEventArgs e)
+    private void LibraryActionButton_OnClick(object sender, RoutedEventArgs e)
     {
-        
+        if (SavedTracks.Contains(PlaybackService.CurrentTrack)) 
+        {
+            try
+            {
+                _profileApiClient.RemoveTrackFromUserLibraryAsync(PlaybackService.CurrentTrack.Id);
+                LibraryActionButton.Content = "Добавить в библиотеку";
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception);
+            }
+        }
+        else
+        {
+            try
+            {
+                _profileApiClient.AddTrackToUserLibraryAsync(PlaybackService.CurrentTrack.Id);
+                LibraryActionButton.Content = "Удалить из библиотеки";
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception);
+            }
+        }
     }
 
-    private void RemoveFromLibrary_OnClick(object sender, RoutedEventArgs e)
+    private void QueueActionButton_OnClick(object sender, RoutedEventArgs e)
     {
-        
+        if (PlaybackService.Queue.Count > 1)
+        {
+            var queue = PlaybackService.Queue.ToList();
+            bool removed = queue.Remove(PlaybackService.CurrentTrack);
+            if (!removed) return;
+
+            PlaybackService.SetQueue(queue);
+            PlaybackService.NextTrack();
+        }
+        else
+        {
+            PlaybackService.RemoveTrack(PlaybackService.CurrentTrack);
+        }
+
+        _audioService.Pause();
+        TrackPanel.Visibility = PlaybackService.CurrentTrack == null 
+            ? Visibility.Collapsed 
+            : Visibility.Visible;
     }
 
-    private void AddToPlaylistButton_OnClick(object sender, RoutedEventArgs e)
+    private void PlaylistActionButton_OnClick(object sender, RoutedEventArgs e)
     {
-        
+        PlaylistSelectorModalWindow window = new PlaylistSelectorModalWindow(PlaybackService.CurrentTrack);
+        window.ShowDialog();
     }
 }

@@ -4,9 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Desktop_Amethyst_Audio.Views.ModalWindows"
-        mc:Ignorable="d"
-        Title="NotificationModalWindow" Height="450" Width="800">
-    <Grid>
-        
+        mc:Ignorable="d" Background="{DynamicResource SurfaceBaseBrush}"
+        FontSize="14" Title="NotificationModalWindow" Height="450" Width="800">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Уведомления" Foreground="{DynamicResource ContentPrimaryBrush}" Margin="0 0 0 10"/>
+        <ListBox x:Name="NotificationListBox" Grid.Row="1"
+                 Background="Transparent" BorderThickness="0"/>
     </Grid>
 </Window>

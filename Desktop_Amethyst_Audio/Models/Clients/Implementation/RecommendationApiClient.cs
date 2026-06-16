@@ -49,8 +49,8 @@ public class RecommendationApiClient : IRecommendationApiClient
         var path = RECOMMENDATION_API_PATH.TrimStart('/');
         var fullUrl = $"{baseUrl}/{path}/query";
     
-        using var request = new HttpRequestMessage(HttpMethod.Get, fullUrl);
-    
+        using var request = new HttpRequestMessage(HttpMethod.Post, fullUrl);
+        request.Content = content; 
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settingsService.Load().User.Token);
     
         using var response = await _httpClient.SendAsync(request);

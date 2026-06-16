@@ -23,5 +23,10 @@ namespace Desktop_Amethyst_Audio.Views.ModalWindows
         {
             InitializeComponent();
         }
+
+        private void SettingsModalWindow_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

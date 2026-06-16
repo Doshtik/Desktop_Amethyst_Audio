@@ -90,20 +90,31 @@
                     </ListBox.ItemsPanel>
                 </ListBox>
             </StackPanel>
-            <TextBlock Text="Содержит ли текст" Foreground="{DynamicResource ContentPrimaryBrush}" Margin="0 5"/>
-            <ToggleButton x:Name="IsTextlessToggleButton"
-                          Background="{DynamicResource SurfaceContainerBrush}"
-                          Foreground="{DynamicResource ContentMutedBrush}"
-                          BorderBrush="{DynamicResource OutlineSubtleBrush}"
-                          BorderThickness="2"
-                          Padding="10"/>
-            <TextBlock Text="Содержит ли шокирующий контент" Foreground="{DynamicResource ContentPrimaryBrush}" Margin="0 5"/>
-            <ToggleButton x:Name="IsExplicitToggleButton"
-                          Background="{DynamicResource SurfaceContainerBrush}"
-                          Foreground="{DynamicResource ContentMutedBrush}"
-                          BorderBrush="{DynamicResource OutlineSubtleBrush}"
-                          BorderThickness="2"
-                          Padding="10"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                
+                <ToggleButton x:Name="IsTextlessToggleButton"
+                              Content="Содержит ли текст"
+                              Background="{DynamicResource SurfaceContainerBrush}"
+                              Foreground="{DynamicResource ContentMutedBrush}"
+                              BorderBrush="{DynamicResource OutlineSubtleBrush}"
+                              BorderThickness="2"
+                              Grid.Column="0"
+                              Padding="10"
+                              Margin="0 0 5 0"/>
+                <ToggleButton x:Name="IsExplicitToggleButton"
+                              Content="Содержит ли шокирующий контент"
+                              Background="{DynamicResource SurfaceContainerBrush}"
+                              Foreground="{DynamicResource ContentMutedBrush}"
+                              BorderBrush="{DynamicResource OutlineSubtleBrush}"
+                              BorderThickness="2"
+                              Grid.Column="1"
+                              Padding="10"
+                              Margin="5 0 0 0"/>
+            </Grid>
         </StackPanel>
         <Button x:Name="ConfirmButton" Grid.Row="2" Content="Подтвердить" Padding="0 10"
                 Background="{DynamicResource SurfaceContainerBrush}"

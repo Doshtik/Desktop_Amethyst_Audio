@@ -9,6 +9,7 @@ public interface ITrackApiClient
     Task<TrackInfoDto> GetByIdAsync(long id);
     Task<List<TrackInfoDto>> GetAllAsync();
     Task<List<TrackInfoDto>> GetListByUserIdAsync(long userId);
+    Task<List<TrackInfoDto>> GetListByTrackNameAsync(string trackName);
     
     Task<TrackInfoDto> CreateAsync(CreateTrackDto dto);
     Task<TrackInfoDto> UpdateAsync(long trackId, ChangeTrackInfoDto dto);

@@ -127,7 +127,34 @@ public partial class PlaylistPage : Page
 
     private void AddToSaved_Selected(object sender, System.Windows.RoutedEventArgs e)
     {
-        //TODO: Сделать логику добавления плейлиста в сохраненные
+        if (_isSaved)
+        {
+            try
+            {
+                _playlistApiClient.UnsavePlaylistAsync(Playlist.Id);
+                _isSaved = false;
+                SavePlaylistButton.Content = "Сохранить";
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message);
+                Debug.WriteLine(exception);
+            }
+        }
+        else
+        {
+            try
+            {
+                _playlistApiClient.SavePlaylistAsync(Playlist.Id);
+                _isSaved = true;
+                SavePlaylistButton.Content = "Удалить";
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message);
+                Debug.WriteLine(exception);
+            }
+        }
     }
 
     private void EditPlaylist_Selected(object sender, System.Windows.RoutedEventArgs e)

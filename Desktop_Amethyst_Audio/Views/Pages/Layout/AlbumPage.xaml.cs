@@ -160,6 +160,33 @@ public partial class AlbumPage : Page
 
     private void SaveAlbumButton_OnClick(object sender, RoutedEventArgs e)
     {
-        throw new NotImplementedException();
+        if (_isSaved)
+        {
+            try
+            {
+                _albumApiClient.UnsaveAlbumAsync(Album.Id);
+                _isSaved = false;
+                SaveAlbumButton.Content = "Сохранить";
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message);
+                Debug.WriteLine(exception);
+            }
+        }
+        else
+        {
+            try
+            {
+                _albumApiClient.SaveAlbumAsync(Album.Id);
+                _isSaved = true;
+                SaveAlbumButton.Content = "Удалить";
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message);
+                Debug.WriteLine(exception);
+            }
+        }
     }
 }

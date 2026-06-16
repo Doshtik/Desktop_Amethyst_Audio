@@ -17,12 +17,16 @@ public partial class LibraryPage : Page
 {
     private readonly IProfileApiClient _profileApiClient;
     private SortTracksEnum _sortEnum = SortTracksEnum.Default;
+    
+    private List<TrackInfoDto> _savedTracks;
     public LibraryPage()
     {
         InitializeComponent();
-        Loaded += (s, e) => LoadTrackListBox();
         _profileApiClient = new ProfileApiClient();
+        WeakReferenceMessenger.Default.Register<SavedTracksTransferMessage>(this, (recipient, message) 
+            => _savedTracks = message.savedTracks);
         WeakReferenceMessenger.Default.Register<LibraryChangedMessage>(this, (recipient, message) => LoadTrackListBox());
+        Loaded += (s, e) => LoadTrackListBox();
     }
     
     public async void LoadTrackListBox()
@@ -34,7 +38,7 @@ public partial class LibraryPage : Page
         List<TrackInfoDto> tracks = new List<TrackInfoDto>();
         try
         {
-            tracks = await _profileApiClient.GetUserLibraryAsync();
+            tracks = _savedTracks;
         }
         catch (Exception e)
         {

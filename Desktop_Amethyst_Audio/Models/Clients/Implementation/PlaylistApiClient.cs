@@ -85,7 +85,7 @@ public class PlaylistApiClient : IPlaylistApiClient
         using var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
     
-        var imageBytes = await response.Content.ReadAsByteArrayAsync();
+        var imageBytes = await response.Content.ReadAsByteArrayAsync()  ;
     
         return LoadBitmapFromBytes(imageBytes);
     }

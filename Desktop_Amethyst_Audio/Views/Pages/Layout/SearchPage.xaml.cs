@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using Backend_Amethyst_Audio.DTO;
 using CommunityToolkit.Mvvm.Messaging;
 using Desktop_Amethyst_Audio.Messages.Navigation.MainLayout;
+using Desktop_Amethyst_Audio.Models.DTO.Tracks;
 using Desktop_Amethyst_Audio.Views.UserControls;
 
 namespace Desktop_Amethyst_Audio.Views.Pages;
@@ -73,8 +74,19 @@ public partial class SearchPage : Page
         WeakReferenceMessenger.Default.Send(new NavigateToAlbumMessage(control.Album,  false));
     }
 
-    private void GenreListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    private async void GenreListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        
+        GenreControl control = GenreListBox.SelectedItem as GenreControl;
+        if (control is null)
+            return;
+        try
+        {
+            List<TrackInfoDto> tracks = await _searchApiClient.GetListByGenreAsync(control.Genre.GenreName);
+        }
+        catch (Exception exception)
+        {
+            MessageBox.Show(exception.Message);
+            Debug.WriteLine(exception);
+        }
     }
 }

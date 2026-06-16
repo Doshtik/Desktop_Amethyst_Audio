@@ -13,6 +13,7 @@ namespace Desktop_Amethyst_Audio.Models.Clients.Implementation;
 
 public class TrackApiClient : ITrackApiClient
 {
+    private ITrackApiClient _trackApiClientImplementation;
     private static readonly HttpClient _httpClient = new();
     
     private static readonly SettingsService _settingsService = new();
@@ -65,6 +66,23 @@ public class TrackApiClient : ITrackApiClient
         var baseUrl = BaseUrl.TrimEnd('/');
         var path = TRACK_API_PATH.TrimStart('/');
         var fullUrl = $"{baseUrl}/{path}/user/{userId}";
+    
+        using var request = new HttpRequestMessage(HttpMethod.Get, fullUrl);
+    
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settingsService.Load().User.Token);
+    
+        using var response = await _httpClient.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+    
+        var json = await response.Content.ReadAsStringAsync();
+        return JsonSerializer.Deserialize<List<TrackInfoDto>>(json, JsonOptions);
+    }
+
+    public async Task<List<TrackInfoDto>> GetListByTrackNameAsync(string trackName)
+    {
+        var baseUrl = BaseUrl.TrimEnd('/');
+        var path = TRACK_API_PATH.TrimStart('/');
+        var fullUrl = $"{baseUrl}/{path}/search/{trackName}";
     
         using var request = new HttpRequestMessage(HttpMethod.Get, fullUrl);
     

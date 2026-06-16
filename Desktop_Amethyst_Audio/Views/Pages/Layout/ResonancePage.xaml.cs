@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using Desktop_Amethyst_Audio.Models.Services.Implementation;
@@ -25,7 +26,6 @@ public partial class ResonancePage : Page
     private void ResonanceConfigButton_OnClick(object sender, RoutedEventArgs e)
     {
         ResonanceConfigModalWindow window = new ResonanceConfigModalWindow();
-        window.Owner = Window.GetWindow(this);
         window.ShowDialog();
     }
 }

@@ -52,9 +52,9 @@ public partial class TrackFormModalWindow : Window
             GenreListBox.Items.Clear();
             foreach (GenreInfoDto genre in genres)
             {
-                GenreControl control = new();
+                GenreControl control = new GenreControl();
                 control.Genre = genre;
-                GenreListBox.Items.Add(genre);
+                GenreListBox.Items.Add(control);
             }
         }
         catch (Exception exception)

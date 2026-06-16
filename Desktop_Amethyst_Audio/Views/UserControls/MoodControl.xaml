@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="Desktop_Amethyst_Audio.Views.UserControls.MoodControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Desktop_Amethyst_Audio.Views.UserControls"
+             mc:Ignorable="d" Background="Transparent" Loaded="MoodControl_OnLoaded">
+    <Border CornerRadius="10" 
+            Background="{DynamicResource SurfaceContainerBrush}"  
+            BorderBrush="{DynamicResource OutlineSubtleBrush}"
+            BorderThickness="2" Padding="20 10">
+        <TextBlock x:Name="MoodNameTextBlock" Text="Пример" Foreground="{DynamicResource ContentPrimaryBrush}"
+                   VerticalAlignment="Center" HorizontalAlignment="Center"/>
+    </Border>
+</UserControl>

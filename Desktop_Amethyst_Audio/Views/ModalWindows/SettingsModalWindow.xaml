@@ -4,9 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Desktop_Amethyst_Audio.Views.ModalWindows"
-        mc:Ignorable="d"
-        Title="SettingsModalWindow" Height="450" Width="800">
-    <Grid>
+        mc:Ignorable="d" Loaded="SettingsModalWindow_OnLoaded"
+        Background="{DynamicResource SurfaceBaseBrush}"
+        Title="SettingsModalWindow" Height="600" Width="800">
+    <Grid Margin="10">
         
     </Grid>
 </Window>

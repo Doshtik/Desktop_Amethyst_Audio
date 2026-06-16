@@ -47,7 +47,7 @@ public class SearchApiClient : ISearchApiClient
         var path = SEARCH_API_PATH.TrimStart('/');
         var fullUrl = $"{baseUrl}/{path}/genres/{genreName}";
 
-        using var request = new HttpRequestMessage(HttpMethod.Post, fullUrl);
+        using var request = new HttpRequestMessage(HttpMethod.Get, fullUrl);
     
         using var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
@@ -62,7 +62,9 @@ public class SearchApiClient : ISearchApiClient
         var path = SEARCH_API_PATH.TrimStart('/');
         var fullUrl = $"{baseUrl}/{path}/{searchLine}";
     
-        using var request = new HttpRequestMessage(HttpMethod.Post, fullUrl);
+        using var request = new HttpRequestMessage(HttpMethod.Get, fullUrl);
+        
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settingsService.Load().User.Token);
     
         using var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();

@@ -47,7 +47,7 @@ public partial class SearchResultPage : Page
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Не удалось выполнить запрос");
+            MessageBox.Show(ex.Message);
             Debug.WriteLine(ex);
         }
 

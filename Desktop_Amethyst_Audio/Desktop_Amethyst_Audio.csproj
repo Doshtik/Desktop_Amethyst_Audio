@@ -183,6 +183,8 @@
       <Resource Include="Assets\arrow-left.png" />
       <None Remove="Assets\repeat-one.png" />
       <Resource Include="Assets\repeat-one.png" />
+      <None Remove="Assets\plus.png" />
+      <Resource Include="Assets\plus.png" />
     </ItemGroup>
 
     <ItemGroup>

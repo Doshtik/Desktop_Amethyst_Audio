@@ -51,9 +51,6 @@ public partial class LibraryPage : Page
         //Да, switch бесполезен, пофиг, don't care
         switch (_sortEnum)
         {
-            case SortTracksEnum.Default:
-                tracks = tracks.OrderBy(x => x.Name).ToList();
-                break;
             case SortTracksEnum.ByName:
                 tracks = tracks.OrderBy(x => x.Name).ToList();
                 break;
@@ -63,6 +60,7 @@ public partial class LibraryPage : Page
             case SortTracksEnum.ByDate:
                 tracks = tracks.OrderBy(x => x.Name).ToList();
                 break;
+            default: break;
         }
         
         foreach (TrackInfoDto track in tracks)
@@ -103,11 +101,11 @@ public partial class LibraryPage : Page
                 case "По-умолчанию":
                     _sortEnum = SortTracksEnum.Default;
                     break;
-                case "По дате добавления":
-                    _sortEnum = SortTracksEnum.ByDate;
-                    break;
                 case "По названию":
                     _sortEnum = SortTracksEnum.ByName;
+                    break;
+                case "По дате добавления":
+                    _sortEnum = SortTracksEnum.ByDate;
                     break;
                 case "По исполнителю":
                     _sortEnum = SortTracksEnum.ByAuthor;

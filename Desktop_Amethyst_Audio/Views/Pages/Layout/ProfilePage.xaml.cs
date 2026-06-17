@@ -226,6 +226,7 @@ public partial class ProfilePage : Page
         {
             TrackControl trackControl = new TrackControl(_isOwnProfile);
             trackControl.Track = item;
+            trackControl.Width = UserTrackListBox.ActualWidth / 2 - 10;
             UserTrackListBox.Items.Add(trackControl);
         }
     }

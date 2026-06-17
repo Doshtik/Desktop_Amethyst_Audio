@@ -76,20 +76,58 @@
                 </Button.Content>
             </Button>
             
-            <Border Margin="0 10 0 10" Background="{DynamicResource ContentPrimaryBrush}" Padding="2" CornerRadius="2"/>
+            <Border Margin="0 10 0 10" Background="{DynamicResource OutlineSubtleBrush}" Padding="2" CornerRadius="2"/>
             
             <UniformGrid>
                 <UniformGrid.Resources>
-                    <Style TargetType="RadioButton" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
+                    <Style TargetType="RadioButton">
+                        <Setter Property="Foreground" Value="{DynamicResource ContentPrimaryBrush}"/>
+                        <Setter Property="BorderThickness" Value="2"/>
+                        <Setter Property="Padding" Value="5"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                        
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="RadioButton">
+                                    <Border x:Name="ButtonBorder" 
+                                            Background="{DynamicResource SurfaceContainerBrush}" 
+                                            BorderBrush="{DynamicResource OutlineSubtleBrush}" 
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            CornerRadius="5">
+                                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                          Margin="{TemplateBinding Padding}"/>
+                                    </Border>
+                                    
+                                    <ControlTemplate.Triggers>
+                                        <!-- Состояние: Выделена (IsChecked = True) -->
+                                        <Trigger Property="IsChecked" Value="True">
+                                            <Setter TargetName="ButtonBorder" Property="Background" Value="{DynamicResource AccentMainBrush}"/>
+                                            <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="{DynamicResource AccentHoverBrush}"/>
+                                        </Trigger>
+                                        
+                                        <!-- Состояние: Наведение мыши (опционально, для улучшения UX) -->
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="ButtonBorder" Property="Opacity" Value="0.9"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
                 </UniformGrid.Resources>
-                <RadioButton GroupName="CollectionMode" x:Name="ChangeCollectionPlaylistButton" Content="Playlist" 
-                             IsChecked="True"
+                
+                <RadioButton GroupName="CollectionMode" x:Name="ChangeCollectionPlaylistButton" Content="Плейлисты" 
+                             Margin="0 0 5 0" FontSize="22" FontFamily="Inter"
                              Checked="ChangeCollectionToPlaylistButton_OnChecked"/>
-                <RadioButton GroupName="CollectionMode" x:Name="ChangeCollectionAlbumButton" Content="Album" 
+                <RadioButton GroupName="CollectionMode" x:Name="ChangeCollectionAlbumButton" Content="Альбомы" 
+                             Margin="5 0 0 0" FontSize="22" FontFamily="Inter" 
                              Checked="ChangeCollectionToAlbumButton_OnChecked"/>
             </UniformGrid>
             <ListBox x:Name="SavedPlaylistsListBox" Visibility="Collapsed" BorderThickness="0" VerticalAlignment="Stretch"
-                     Background="Transparent" SelectionChanged="SavedPlaylistsListBox_OnSelectionChanged"/>
+                     Background="Transparent" SelectionChanged="SavedPlaylistsListBox_OnSelectionChanged"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
             <ListBox x:Name="SavedAlbumsListBox" Visibility="Collapsed" BorderThickness="0" VerticalAlignment="Stretch"
                      Background="Transparent" SelectionChanged="SavedAlbumsListBox_OnSelectionChanged"
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"

@@ -4,9 +4,9 @@ using Desktop_Amethyst_Audio.Models.Clients.Abstraction;
 using Desktop_Amethyst_Audio.Models.Clients.Implementation;
 using Desktop_Amethyst_Audio.Models.DTO.Albums;
 using System.Windows.Controls;
-using Backend_Amethyst_Audio.DTO;
 using CommunityToolkit.Mvvm.Messaging;
 using Desktop_Amethyst_Audio.Messages.Navigation.MainLayout;
+using Desktop_Amethyst_Audio.Models.DTO;
 using Desktop_Amethyst_Audio.Models.DTO.Tracks;
 using Desktop_Amethyst_Audio.Views.UserControls;
 

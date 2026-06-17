@@ -5,9 +5,9 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using Backend_Amethyst_Audio.DTO;
 using Desktop_Amethyst_Audio.Models;
 using Desktop_Amethyst_Audio.Models.Clients.Implementation;
+using Desktop_Amethyst_Audio.Models.DTO;
 using Desktop_Amethyst_Audio.Models.DTO.Pages;
 using Desktop_Amethyst_Audio.Models.DTO.Tracks;
 using Desktop_Amethyst_Audio.Models.Entities;
@@ -115,8 +115,8 @@ public partial class TrackFormModalWindow : Window
         }
 
         List<short> selectedGenreIds = GenreListBox.SelectedItems
-            .Cast<GenreInfoDto>()
-            .Select(x => x.Id)
+            .Cast<GenreControl>()
+            .Select(x => x.Genre.Id)
             .ToList();
 
         if (Mode is FormMode.Add)

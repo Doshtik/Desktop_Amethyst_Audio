@@ -45,10 +45,11 @@
                 <ComboBox x:Name="SortComboBox" Grid.Column="2" HorizontalAlignment="Right" SelectedIndex="0" 
                           FontSize="14" Foreground="{DynamicResource ContentPrimaryBrush}"
                           Background="Transparent" BorderThickness="0"
+                          Style="{StaticResource CustomComboBoxStyle}"
                           SelectionChanged="SortComboBox_OnSelectionChanged">
                     <ComboBoxItem Content="По-умолчанию"/>
-                    <ComboBoxItem Content="По дате добавления"/>
                     <ComboBoxItem Content="По названию"/>
+                    <ComboBoxItem Content="По дате добавления"/>
                     <ComboBoxItem Content="По исполнителю"/>
                 </ComboBox>
             </Grid>

@@ -77,12 +77,16 @@
                      Padding="10 5"/>
             <StackPanel Margin="0 10">
                 <TextBlock Text="Темп" Foreground="{DynamicResource ContentPrimaryBrush}" Margin="0 5"/>
-                <ComboBox x:Name="PacesComboBox"/>
+                <ComboBox x:Name="PacesComboBox" 
+                          Background="{DynamicResource SurfaceContainerBrush}" 
+                          BorderBrush="{DynamicResource OutlineSubtleBrush}"
+                          BorderThickness="2"/>
                 <TextBlock Text="Настроение" Foreground="{DynamicResource ContentPrimaryBrush}" Margin="0 5"/>
                 <ComboBox x:Name="MoodsComboBox"/>
                 <TextBlock Text="Жанры" Foreground="{DynamicResource ContentPrimaryBrush}" Margin="0 5"/>
                 <ListBox x:Name="GenreListBox" Height="50" Background="Transparent" BorderThickness="0"
-                         SelectionMode="Multiple">
+                         SelectionMode="Multiple"
+                         ScrollViewer.VerticalScrollBarVisibility="Disabled">
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
                             <VirtualizingStackPanel Orientation="Horizontal"/>

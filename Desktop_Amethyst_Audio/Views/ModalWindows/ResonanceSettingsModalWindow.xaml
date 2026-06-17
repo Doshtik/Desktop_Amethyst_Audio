@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Desktop_Amethyst_Audio.Views.ModalWindows"
         mc:Ignorable="d"
-        Title="Настройки Резонанса" Height="640" Width="440"
+        Title="Настройки Резонанса" Height="650" Width="440"
         WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
         Background="{DynamicResource SurfaceBaseBrush}">
     <Grid Margin="24 20">
@@ -22,7 +22,7 @@
             <StackPanel>
                 <TextBlock Text="Стиль визуализации" Foreground="{DynamicResource ContentMutedBrush}"
                            FontSize="13" Margin="0 0 0 6"/>
-                <ComboBox x:Name="StyleBox" SelectedIndex="0" Margin="0 0 0 16"
+                <ComboBox x:Name="StyleBox" SelectedIndex="0" Margin="0 0 0 16" Style="{StaticResource OtherComboBox}"
                           SelectionChanged="StyleBox_Changed">
                     <ComboBoxItem Content="Кольцо-эквалайзер"/>
                     <ComboBoxItem Content="Сфера"/>
@@ -31,7 +31,7 @@
 
                 <TextBlock Text="Цветовая схема" Foreground="{DynamicResource ContentMutedBrush}"
                            FontSize="13" Margin="0 0 0 6"/>
-                <ComboBox x:Name="ColorBox" SelectedIndex="0" Margin="0 0 0 16"
+                <ComboBox x:Name="ColorBox" SelectedIndex="0" Margin="0 0 0 16" Style="{StaticResource OtherComboBox}"
                           SelectionChanged="ColorBox_Changed">
                     <ComboBoxItem Content="Аметист"/>
                     <ComboBoxItem Content="Океан"/>

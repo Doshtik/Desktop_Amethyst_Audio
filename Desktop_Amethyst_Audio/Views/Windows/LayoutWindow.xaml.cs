@@ -184,13 +184,13 @@ public partial class LayoutWindow : Window
                 CoverUrl = "pack://application:,,,/Assets/plus.png",
                 Name = "Создать плейлист"
             };
-            createControl.Width = 280;
+            createControl.Width = 270;
             SavedPlaylists.Add(createControl);
             foreach (PlaylistInfoDto playlistDto in playlists)
             {
                 PlaylistControl control = new PlaylistControl();
                 control.Playlist = playlistDto;
-                control.Width = 280;
+                control.Width = 270;
                 SavedPlaylists.Add(control);
             }
         }

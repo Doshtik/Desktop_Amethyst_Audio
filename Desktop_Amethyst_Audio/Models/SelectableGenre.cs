@@ -1,6 +1,6 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Backend_Amethyst_Audio.DTO;
+using Desktop_Amethyst_Audio.Models.DTO;
 
 namespace Desktop_Amethyst_Audio.Models;
 

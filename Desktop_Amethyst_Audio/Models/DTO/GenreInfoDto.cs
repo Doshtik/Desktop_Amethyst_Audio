@@ -1,6 +1,4 @@
-using Desktop_Amethyst_Audio.Models.DTO;
-
-namespace Backend_Amethyst_Audio.DTO;
+namespace Desktop_Amethyst_Audio.Models.DTO;
 
 public class GenreInfoDto
 {

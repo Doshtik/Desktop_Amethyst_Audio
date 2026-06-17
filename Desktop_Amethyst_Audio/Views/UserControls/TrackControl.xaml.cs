@@ -57,6 +57,7 @@ public partial class TrackControl : UserControl
         }
 
         TrackNameTextBlock.Text = Track.Name;
+        DurationTextBlock.Text = TimeSpan.FromSeconds(Track.DurationSec).ToString(@"mm\:ss");
         UserInfoDto author = _settingsService.Load().User;
         foreach (UserInfoDto dto in Track.UserList)
         {

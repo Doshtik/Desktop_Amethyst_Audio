@@ -84,6 +84,6 @@
                 Background="{DynamicResource SurfaceContainerBrush}"
                 BorderBrush="{DynamicResource OutlineSubtleBrush}"
                 BorderThickness="2"/>
-        <Frame x:Name="TrackFrame" Grid.Row="0" Grid.RowSpan="4" Visibility="Collapsed"/>
+        <Frame x:Name="TrackFrame" Grid.Row="0" Grid.RowSpan="3" Visibility="Collapsed"/>
     </Grid>
 </Window>
